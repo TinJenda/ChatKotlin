@@ -14,5 +14,5 @@ Import project vào Android Studio
 ```
 ## Một số hình ảnh
 <p align="center">
-  <img src="https://i.imgur.com/gi0vSrq.png" width="350"/>
+  <img src="https://i.imgur.com/ejQe5oL.png" width="350"/>
 </p>
