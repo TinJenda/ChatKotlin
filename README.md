@@ -13,4 +13,6 @@ git clone https://github.com/TinJenda/ChatKotlin.git
 Import project vào Android Studio 
 ```
 ## Một số hình ảnh
-![alt text](https://imgur.com/a/Z28gA)
+<p align="center">
+  <img src="https://i.imgur.com/gi0vSrq.png" width="350"/>
+</p>
