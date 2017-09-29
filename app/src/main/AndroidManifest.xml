@@ -18,10 +18,6 @@
         <activity android:name=".Activity.Activity_flash_screen">
 
         </activity>
-        <!--<activity android:name=".Fragment.fragment_chat" />-->
-        <!--<activity android:name=".Fragment.fragment_contacts" />-->
-        <!--<activity android:name=".Fragment.fragment_time" />-->
-        <!--<activity android:name=".Fragment.fragment_more"></activity>-->
     </application>
 
 </manifest>

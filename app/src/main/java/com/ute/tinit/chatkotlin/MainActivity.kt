@@ -3,6 +3,7 @@ package com.ute.tinit.chatkotlin
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.ute.tinit.chatkotlin.Fragment.fragment_chat
 import com.ute.tinit.chatkotlin.Fragment.fragment_contacts
 import com.ute.tinit.chatkotlin.Fragment.fragment_more
@@ -91,6 +92,10 @@ class MainActivity : AppCompatActivity () {
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
+        btnInsertMore.visibility= View.VISIBLE
+        btnInsertFriend.visibility=View.GONE
+        btnInsertPicture.visibility=View.GONE
+        btnSetting.visibility=View.GONE
     }
     fun clickContacts()
     {
@@ -98,9 +103,17 @@ class MainActivity : AppCompatActivity () {
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
         btnChat.setImageResource(R.drawable.ic_message_black)
+        btnInsertMore.visibility= View.GONE
+        btnInsertFriend.visibility=View.VISIBLE
+        btnInsertPicture.visibility=View.GONE
+        btnSetting.visibility=View.GONE
     }
     fun clickTimeline()
     {
+        btnInsertMore.visibility= View.GONE
+        btnInsertFriend.visibility=View.GONE
+        btnInsertPicture.visibility=View.VISIBLE
+        btnSetting.visibility=View.GONE
         btnTimeLine.setImageResource(R.drawable.ic_timeline_active)
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
@@ -108,70 +121,15 @@ class MainActivity : AppCompatActivity () {
     }
     fun clickMore()
     {
+        btnInsertMore.visibility= View.GONE
+        btnInsertFriend.visibility=View.GONE
+        btnInsertPicture.visibility=View.GONE
+        btnSetting.visibility=View.VISIBLE
         btnMore.setImageResource(R.drawable.ic_more_active)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
         btnChat.setImageResource(R.drawable.ic_message_black)
     }
 
-
-
-
-//    fun tabHost()
-//    {
-//        //Creating tab menu.
-//        var tab1: TabHost.TabSpec = tabhost.newTabSpec("1")
-//        var tab2: TabHost.TabSpec = tabhost.newTabSpec("2")
-//        var tab3: TabHost.TabSpec = tabhost.newTabSpec("3")
-//        var tab4: TabHost.TabSpec = tabhost.newTabSpec("4")
-//
-//        var inflater:LayoutInflater = getLayoutInflater()
-//        var custom_home_tab:View? = inflater.inflate(R.layout.custom_search_tab, null)
-//        var custom_home_tab2:View? = inflater.inflate(R.layout.custom_search_tab, null)
-//        var custom_home_tab3:View? = inflater.inflate(R.layout.custom_search_tab, null)
-//        var custom_home_tab4:View? = inflater.inflate(R.layout.custom_search_tab, null)
-//
-//
-//        //Set tab 1 activity to tab 1 menu.
-//        var intentTab1= Intent(this@MainActivity,fragment_chat::class.java)
-//        var intentTab2= Intent(this@MainActivity,fragment_contacts::class.java)
-//        var intentTab3= Intent(this@MainActivity,fragment_time::class.java)
-//        var intentTab4= Intent(this@MainActivity,layout_activity_more::class.java)
-//        tab1.setContent(intentTab1)
-//        tab2.setContent(intentTab2)
-//        tab3.setContent(intentTab3)
-//        tab4.setContent(intentTab4)
-//
-//        //
-//        //setting tabHome
-//        tab1.setIndicator(custom_home_tab)
-//        tab2.setIndicator(custom_home_tab2)
-//        tab3.setIndicator(custom_home_tab3)
-//        tab4.setIndicator(custom_home_tab4)
-////        tab2.setIndicator(custom_collection);
-////        //Set tab 3 activity to tab 1 menu.
-////        tab2.setContent(new Intent(this, CollectionActivity.class));
-////
-////
-////        //Set tab 1 activity to tab 1 menu.
-////        tab3.setIndicator(custom_search);
-////        tab3.setContent(new Intent(this, SearchActivity.class));
-//////
-////        //Set tab 1 activity to tab 1 menu.
-////        tab4.setContent(new Intent(this, AccountActivity.class));
-////        tab4.setIndicator(custom_account);
-//        //Set tab 1 activity to tab 1 menu.
-//
-////        //Set tab 1 activity to tab 1 menu.
-//
-//        tabhost.addTab(tab1)
-//        tabhost.addTab(tab2)
-//        tabhost.addTab(tab3)
-//        tabhost.addTab(tab4)
-//
-//
-//        tabhost.getTabWidget().setDividerDrawable(null)
-//
-//   }
 }
 
