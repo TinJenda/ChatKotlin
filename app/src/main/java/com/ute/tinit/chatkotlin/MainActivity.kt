@@ -87,31 +87,31 @@ class MainActivity : AppCompatActivity () {
 
     fun clickChat()
     {
-        btnChat.setImageResource(R.drawable.ic_chat_active)
+        btnChat.setImageResource(R.drawable.ic_message_active)
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
     }
     fun clickContacts()
     {
-        btnContacts.setImageResource(R.drawable.ic_contacts_active)
+        btnContacts.setImageResource(R.drawable.ic_contact_active)
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
-        btnChat.setImageResource(R.drawable.ic_chat_black)
+        btnChat.setImageResource(R.drawable.ic_message_black)
     }
     fun clickTimeline()
     {
         btnTimeLine.setImageResource(R.drawable.ic_timeline_active)
         btnMore.setImageResource(R.drawable.ic_more_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
-        btnChat.setImageResource(R.drawable.ic_chat_black)
+        btnChat.setImageResource(R.drawable.ic_message_black)
     }
     fun clickMore()
     {
         btnMore.setImageResource(R.drawable.ic_more_active)
         btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
         btnContacts.setImageResource(R.drawable.ic_contacts_black)
-        btnChat.setImageResource(R.drawable.ic_chat_black)
+        btnChat.setImageResource(R.drawable.ic_message_black)
     }
 
 
