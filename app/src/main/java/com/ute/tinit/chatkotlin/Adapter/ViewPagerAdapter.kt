@@ -1,4 +1,4 @@
-package com.ute.tinit.chatkotlin
+package com.ute.tinit.chatkotlin.Adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

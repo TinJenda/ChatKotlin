@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ute.tinit.chatkotlin.activity_time">
+    tools:context="com.ute.tinit.chatkotlin.Fragment.fragment_time">
 <TextView
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhile">#ffffff</color>
     <color name="mainColor">#6e86ff</color>
+    <color name="tabColorBackground">#e5e7ea</color>
 </resources>

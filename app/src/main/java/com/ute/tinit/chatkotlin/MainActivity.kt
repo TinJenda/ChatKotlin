@@ -1,13 +1,13 @@
 package com.ute.tinit.chatkotlin
 
-import android.app.Fragment
-import android.app.TabActivity
-import android.content.Intent
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.TabHost
+import com.ute.tinit.chatkotlin.Fragment.fragment_chat
+import com.ute.tinit.chatkotlin.Fragment.fragment_contacts
+import com.ute.tinit.chatkotlin.Fragment.fragment_more
+import com.ute.tinit.chatkotlin.Fragment.fragment_time
+import com.ute.tinit.chatkotlin.Adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity () {
@@ -16,18 +16,107 @@ class MainActivity : AppCompatActivity () {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tabViewPage()
-        //tabHost()
     }
 
     fun tabViewPage()
     {
-        var viewPageAdapter=ViewPagerAdapter(supportFragmentManager)
-        viewPageAdapter.addFragment(activity_chat(),"Chat")
-        viewPageAdapter.addFragment(activity_contacts(),"Contacts")
-        viewPageAdapter.addFragment(activity_time(),"TimeLine")
-        viewPageAdapter.addFragment(activity_more(),"More")
+        var viewPageAdapter= ViewPagerAdapter(supportFragmentManager)
+        viewPageAdapter.addFragment(fragment_chat(),"Chat")
+        viewPageAdapter.addFragment(fragment_contacts(),"Contacts")
+        viewPageAdapter.addFragment(fragment_time(),"TimeLine")
+        viewPageAdapter.addFragment(fragment_more(),"More")
         viewpager_main.adapter=viewPageAdapter
+
+        viewpager_main.setCurrentItem(0)
+        btnChat.isPressed()
+        clickChat()
+
+        /*Event click change icon tabview*/
+        btnChat.setOnClickListener {
+            viewpager_main.setCurrentItem(0,true);
+            clickChat()
+        }
+        btnContacts.setOnClickListener{
+            clickContacts()
+            viewpager_main.setCurrentItem(1,true);
+        }
+        btnTimeLine.setOnClickListener {
+            clickTimeline()
+            viewpager_main.setCurrentItem(2,true);
+        }
+        btnMore.setOnClickListener {
+            clickMore()
+            viewpager_main.setCurrentItem(3,true);
+
+        }
+
+        viewpager_main.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
+                        btnChat.isPressed()
+                        clickChat()
+                    }
+                    1 -> {
+                        btnContacts.isPressed()
+                        clickContacts()
+                    }
+                    2->{
+                        btnTimeLine.isPressed()
+                        clickTimeline()
+                    }
+                    3->{
+                        btnMore.isPressed()
+                        clickMore()
+                    }
+                }
+            }
+
+
+
+        })
+   }
+
+    fun clickChat()
+    {
+        btnChat.setImageResource(R.drawable.ic_chat_active)
+        btnMore.setImageResource(R.drawable.ic_more_black)
+        btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
+        btnContacts.setImageResource(R.drawable.ic_contacts_black)
     }
+    fun clickContacts()
+    {
+        btnContacts.setImageResource(R.drawable.ic_contacts_active)
+        btnMore.setImageResource(R.drawable.ic_more_black)
+        btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
+        btnChat.setImageResource(R.drawable.ic_chat_black)
+    }
+    fun clickTimeline()
+    {
+        btnTimeLine.setImageResource(R.drawable.ic_timeline_active)
+        btnMore.setImageResource(R.drawable.ic_more_black)
+        btnContacts.setImageResource(R.drawable.ic_contacts_black)
+        btnChat.setImageResource(R.drawable.ic_chat_black)
+    }
+    fun clickMore()
+    {
+        btnMore.setImageResource(R.drawable.ic_more_active)
+        btnTimeLine.setImageResource(R.drawable.ic_timeline_black)
+        btnContacts.setImageResource(R.drawable.ic_contacts_black)
+        btnChat.setImageResource(R.drawable.ic_chat_black)
+    }
+
+
+
+
 //    fun tabHost()
 //    {
 //        //Creating tab menu.
@@ -44,9 +133,9 @@ class MainActivity : AppCompatActivity () {
 //
 //
 //        //Set tab 1 activity to tab 1 menu.
-//        var intentTab1= Intent(this@MainActivity,activity_chat::class.java)
-//        var intentTab2= Intent(this@MainActivity,activity_contacts::class.java)
-//        var intentTab3= Intent(this@MainActivity,activity_time::class.java)
+//        var intentTab1= Intent(this@MainActivity,fragment_chat::class.java)
+//        var intentTab2= Intent(this@MainActivity,fragment_contacts::class.java)
+//        var intentTab3= Intent(this@MainActivity,fragment_time::class.java)
 //        var intentTab4= Intent(this@MainActivity,layout_activity_more::class.java)
 //        tab1.setContent(intentTab1)
 //        tab2.setContent(intentTab2)
@@ -83,6 +172,6 @@ class MainActivity : AppCompatActivity () {
 //
 //        tabhost.getTabWidget().setDividerDrawable(null)
 //
-//    }
+//   }
 }
 

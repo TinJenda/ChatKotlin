@@ -1,4 +1,4 @@
-package com.ute.tinit.chatkotlin
+package com.ute.tinit.chatkotlin.Activity
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -6,7 +6,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
+import com.ute.tinit.chatkotlin.MainActivity
+import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_flash_screen.*
 
 class Activity_flash_screen : AppCompatActivity() {

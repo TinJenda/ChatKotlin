@@ -1,12 +1,13 @@
-package com.ute.tinit.chatkotlin
+package com.ute.tinit.chatkotlin.Fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v4.app.Fragment
+import com.ute.tinit.chatkotlin.R
 
-class activity_chat : Fragment() {
+class fragment_chat : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

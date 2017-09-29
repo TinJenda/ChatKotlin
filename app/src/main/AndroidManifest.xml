@@ -16,11 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity_flash_screen" />
-        <activity android:name=".activity_chat" />
-        <activity android:name=".activity_contacts" />
-        <activity android:name=".activity_time" />
-        <activity android:name=".activity_more"></activity>
+        <activity android:name=".Activity.Activity_flash_screen" />
+        <activity android:name=".Fragment.fragment_chat" />
+        <activity android:name=".Fragment.fragment_contacts" />
+        <activity android:name=".Fragment.fragment_time" />
+        <activity android:name=".Fragment.fragment_more"></activity>
     </application>
 
 </manifest>
