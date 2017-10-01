@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter
 
 import java.util.ArrayList
 
-//Adapter view page
+//ChildrenTabAdapter view page
 class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     internal var fragments: MutableList<Fragment> = ArrayList()

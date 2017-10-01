@@ -12,12 +12,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Activity_flash_screen">
-
-        </activity>
+        <activity android:name=".Activity.Activity_flash_screen" />
     </application>
 
 </manifest>

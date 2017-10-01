@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ute.tinit.chatkotlin.Fragment.fragment_contacts">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textSize="50dp"
-    android:text="DAY LA TAB CONTACTs"/>
+    tools:context="com.ute.tinit.chatkotlin.Fragment.fragment_contacts_group">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/colorRed"
+        android:text="Group"
+        android:textSize="30dp"
+        android:gravity="center"/>
 </android.support.constraint.ConstraintLayout>

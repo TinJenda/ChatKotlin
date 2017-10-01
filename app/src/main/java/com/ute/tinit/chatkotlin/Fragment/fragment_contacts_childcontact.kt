@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ute.tinit.chatkotlin.R
 
-class fragment_time : Fragment() {
+class fragment_contacts_childcontact : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +15,7 @@ class fragment_time : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.layout_fragment_timeline, container, false)
+        val view = inflater!!.inflate(R.layout.layout_fragment_contact_contactchild, container, false)
         return view
     }
 }
