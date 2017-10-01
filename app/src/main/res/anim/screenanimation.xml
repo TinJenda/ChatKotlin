@@ -7,14 +7,14 @@
         android:toDegrees="360"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:duration="1500" >
+        android:duration="1000" >
     </rotate>
     <rotate xmlns:android="http://schemas.android.com/apk/res/android"
-        android:startOffset="1800"
+        android:startOffset="1300"
         android:fromDegrees="360"
         android:toDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:duration="1500" >
+        android:duration="1000" >
     </rotate>
 </set>

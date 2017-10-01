@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relative_anh_bia"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/anh_bia"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avarta" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/anh_dai_dien"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/avarta"
+                    app:civ_border_color="@color/colorWhile"
+                    app:civ_border_width="3dp" />
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:text="Tín Jenda"
+                    android:textColor="@color/colorWhile"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/id_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="\u02BD\u02BDCâu giới thiệu bản thân ghi gì vào cho trất\u02BC\u02BC"
+                    android:textColor="@color/colorDefaultBackground"
+                    android:textSize="@dimen/text_size_default"
+                    android:textStyle="italic" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/liner_nhatky_anh"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_toolbar"
+            android:layout_below="@id/relative_anh_bia"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnNhatKy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/tab_selector"
+                android:text="Nhật ký"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_size_default" />
+
+            <Button
+                android:id="@+id/btnAnh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/tab_selector"
+                android:text="Ảnh"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_size_default" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/liner_nhatky"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/liner_nhatky_anh"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Tính năng sẽ không bao giờ được cập nhập"
+                android:textAllCaps="false"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/liner_hinhanh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/liner_nhatky_anh"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:src="@drawable/avarta" />
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

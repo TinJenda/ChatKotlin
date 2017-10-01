@@ -5,4 +5,5 @@
     <dimen name="size_toolbar">45dp</dimen>
     <dimen name="size_icon_tab">24dp</dimen>
     <dimen name="size_icon_tab_active">32dp</dimen>
+    <dimen name="text_size_default">16dp</dimen>
 </resources>

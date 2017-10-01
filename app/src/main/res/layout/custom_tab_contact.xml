@@ -17,7 +17,8 @@
         android:gravity="center"
         android:textAllCaps="false"
         android:paddingBottom="7dp"
-        android:textSize="20sp"
+        android:textColor="@drawable/bg_textcolor"
+        android:textSize="@dimen/text_size_default"
         android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="match_parent"

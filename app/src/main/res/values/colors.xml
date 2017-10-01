@@ -7,7 +7,10 @@
     <color name="mainColor">#6e86ff</color>
     <color name="tabColorBackground">#e5e7ea</color>
     <color name="colorRed">#ff000d</color>
-<color name="colorXam">#EFF0F1</color>
+    <color name="colorMain">#EFF0F1</color>
     <color name="colorPress">#F5F5F5</color>
     <color name="colorYellow">#FFFF00</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorDefaultText">#888888</color>
+    <color name="colorDefaultBackground">#FAFAFA</color>
 </resources>

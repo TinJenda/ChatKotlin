@@ -22,7 +22,7 @@ class Activity_flash_screen : AppCompatActivity() {
             var intent: Intent = Intent(this@Activity_flash_screen, MainActivity::class.java);
             startActivity(intent)
             finish()
-        }, 6400)
+        }, 4600)
     }
 
     fun logoAnimation() {
