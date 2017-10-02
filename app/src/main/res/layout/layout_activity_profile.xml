@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/mainColor"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -35,6 +35,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 app:layout_collapseMode="pin"
+                android:theme="@style/Theme.BackWhile"
                 android:layout_height="65dp">
 
             </android.support.v7.widget.Toolbar>
@@ -83,6 +84,7 @@
                         android:text="\u02BD\u02BDCâu giới thiệu bản thân ghi gì vào cho trất\u02BC\u02BC"
                         android:textColor="@color/colorDefaultBackground"
                         android:textSize="@dimen/text_size_default"
+                        android:paddingLeft="5dp"
                         android:textStyle="italic" />
                 </LinearLayout>
 
@@ -118,11 +120,12 @@
                     android:textSize="@dimen/text_size_default">
 
                     <TextView
+                        android:id="@+id/txtNhatKy"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="Nhật ký"
-                        android:textColor="@drawable/bg_textcolor"
+                        android:textColor="@color/mainColor"
                         android:textSize="@dimen/text_size_default" />
                 </LinearLayout>
 
@@ -137,11 +140,12 @@
                     android:textSize="@dimen/text_size_default">
 
                     <TextView
+                        android:id="@+id/txtAnh"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="Ảnh"
-                        android:textColor="@drawable/bg_textcolor"
+                        android:textColor="@color/colorDefaultText"
                         android:textSize="@dimen/text_size_default" />
                 </LinearLayout>
             </LinearLayout>
@@ -180,10 +184,15 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_more_black"
+        android:id="@+id/btnFloatProfile"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:backgroundTint="@color/mainColor"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="30dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_pluss"
         app:layout_anchor="@id/appBar"
         app:layout_anchorGravity="bottom|end" />
+
 </android.support.design.widget.CoordinatorLayout>

@@ -4,5 +4,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-
+    <string name="string_thong_tin">Thông tin</string>
+    <string name="string_cap_nhap_anh_dai_dien">Cập nhập ảnh đại diện</string>
+    <string name="string_doi_mat_khau">Đỗi mật khẩu</string>
+    <string name="string_dang_xuat">Đăng xuất</string>
+    <string name="string_yeu_cau_ket_ban">Yêu cầu kết bạn</string>
+    <string name="string_danh_sach_den">Danh sách đen</string>
 </resources>

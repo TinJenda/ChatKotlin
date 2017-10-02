@@ -1,24 +1,23 @@
 package com.ute.tinit.chatkotlin.Activity
 
-import android.graphics.BitmapFactory
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import com.ute.tinit.chatkotlin.R
-import kotlinx.android.synthetic.main.layout_activity_profile.*
+import com.ute.tinit.chatkotlin.R.id.toolbar
 import kotlinx.android.synthetic.main.layout_activity_profile_more.*
-import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 
-class activity_profile_more_myprofile : AppCompatActivity() {
+class activity_profile_more : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_activity_profile_more_myprofile)
-        setSupportActionBar(toolbar1)
+        setContentView(R.layout.layout_activity_profile_more)
+        setSupportActionBar(toolbar)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        blurImage()
+        btnThongTin()
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -38,16 +37,12 @@ class activity_profile_more_myprofile : AppCompatActivity() {
         finish()
     }
 
-    fun blurImage()
+    fun btnThongTin()
     {
-        val resultBmp = BlurBuilder.blur(this@activity_profile_more_myprofile, BitmapFactory.decodeResource(resources, R.drawable.avarta))
-        toolbarImage1.setImageBitmap(resultBmp)
-    }
-
-    fun doiThongTin()
-    {
-        btn_doithongtin.setOnClickListener {
-            
+        btn_liner_thongtin.setOnClickListener {
+            var intent=Intent(this@activity_profile_more,activity_profile_more_myprofile::class.java)
+            startActivity(intent)
         }
+
     }
 }

@@ -1,0 +1,177 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <RelativeLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical"
+            app:contentScrim="@color/mainColor"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/toolbarImage1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avarta"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar1"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:theme="@style/Theme.BackWhile"
+                app:layout_collapseMode="pin">
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/anh_dai_dien"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/avarta"
+                    app:civ_border_color="@color/colorWhile"
+                    app:civ_border_width="1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="Tín Jenda"
+                        android:textColor="@color/colorWhile"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/id_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:text="\u02BD\u02BDCâu giới thiệu bản thân ghi gì vào cho trất\u02BC\u02BC"
+                        android:textColor="@color/colorDefaultBackground"
+                        android:textSize="@dimen/text_size_default"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhile"
+        android:paddingLeft="20dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_default"
+            android:text="Giới tính:       "
+            android:textColor="@color/colorBlack"
+            android:gravity="left|center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Nam"
+                android:gravity="center|left"/>
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/text_size_default"
+                android:text="Ngày sinh:    "
+                android:textColor="@color/colorBlack"
+                android:gravity="left|center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="22/04/1996"
+                android:gravity="center|left"/>
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/text_size_default"
+                android:text="Điện thoại:    "
+                android:textColor="@color/colorBlack"
+                android:gravity="left|center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="01674251607"
+                android:gravity="center|left"/>
+        </LinearLayout>
+</LinearLayout>
+    <Button
+        android:id="@+id/btn_doithongtin"
+        android:layout_width="220dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorWhile"
+        android:background="@drawable/custom_button_doithongtin"
+        android:textSize="18dp"
+        android:text="ĐỖI THÔNG TIN"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
+</LinearLayout>

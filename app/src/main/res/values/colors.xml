@@ -13,4 +13,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorDefaultText">#888888</color>
     <color name="colorDefaultBackground">#FAFAFA</color>
+    <color name="colorLine">#DDDDDD</color>
+    <color name="colorLineeee">#BBBBBB</color>
 </resources>

@@ -16,10 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Activity_flash_screen" >
-
-        </activity>
-        <activity android:name=".Activity.activity_profile"></activity>
+        <activity android:name=".Activity.Activity_flash_screen" />
+        <activity android:name=".Activity.activity_profile" />
+        <activity android:name=".Activity.activity_profile_more" />
+        <activity android:name=".Activity.activity_profile_more_myprofile" />
+        <activity android:name=".Activity.activity_profile_more_myprofile_changeprofile"></activity>
     </application>
 
 </manifest>
