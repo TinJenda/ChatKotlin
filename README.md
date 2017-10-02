@@ -7,7 +7,7 @@
 
 ###### Link project: https://github.com/TinJenda/ChatKotlin.git
 
-## ***Setup***
+## ***Setup*** 
 ```
 git clone https://github.com/TinJenda/ChatKotlin.git
 Import project vào Android Studio 

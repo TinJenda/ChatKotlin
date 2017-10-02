@@ -4,9 +4,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.ute.tinit.chatkotlin.R
 import android.graphics.BitmapFactory
-import android.graphics.Color
+
 import android.view.View
-import android.widget.LinearLayout
 import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import kotlinx.android.synthetic.main.layout_activity_profile.*
 
@@ -16,6 +15,11 @@ class activity_profile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_profile)
+        toolbar.setTitle("")
+        setSupportActionBar(toolbar)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+
         blurImage()
         nhatky_hinhanh()
     }
@@ -23,7 +27,7 @@ class activity_profile : AppCompatActivity() {
     fun blurImage()
     {
        val resultBmp = BlurBuilder.blur(this@activity_profile, BitmapFactory.decodeResource(resources, R.drawable.avarta))
-        anh_bia.setImageBitmap(resultBmp)
+        toolbarImage.setImageBitmap(resultBmp)
     }
 
     fun nhatky_hinhanh()
