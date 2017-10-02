@@ -71,8 +71,9 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/tab_selector"
+                android:background="@drawable/bg_button"
                 android:text="Nhật ký"
+                android:textColor="@drawable/bg_textcolor"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_size_default" />
 
@@ -82,8 +83,9 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/tab_selector"
+                android:background="@drawable/bg_button"
                 android:text="Ảnh"
+                android:textColor="@drawable/bg_textcolor"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_size_default" />
         </LinearLayout>

@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/tab_selector">
+    android:background="@drawable/bg_button">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="5dp"></LinearLayout>

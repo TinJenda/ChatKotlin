@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.ute.tinit.chatkotlin.R
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.view.View
 import android.widget.LinearLayout
 import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
@@ -27,18 +28,22 @@ class activity_profile : AppCompatActivity() {
 
     fun nhatky_hinhanh()
     {
-        btnAnh.setBackgroundResource(R.drawable.click_btn_contact)
+
         btnAnh.setOnClickListener{
-            btnAnh.setBackgroundResource(R.drawable.click_btn_contact)
-            btnNhatKy.setBackgroundResource(R.drawable.tab_bg_unselected)
+//            btnAnh.setBackgroundResource(R.drawable.click_btn_contact)
+//            btnNhatKy.setBackgroundResource(R.drawable.tab_bg_unselected)
             liner_nhatky.visibility= View.GONE
             liner_hinhanh.visibility=View.VISIBLE
         }
         btnNhatKy.setOnClickListener {
-            btnNhatKy.setBackgroundResource(R.drawable.click_btn_contact)
-            btnAnh.setBackgroundResource(R.drawable.tab_bg_unselected)
+//            btnNhatKy.setBackgroundResource(R.drawable.click_btn_contact)
+//            btnAnh.setBackgroundResource(R.drawable.tab_bg_unselected)
             liner_nhatky.visibility= View.VISIBLE
             liner_hinhanh.visibility=View.GONE
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
