@@ -22,10 +22,9 @@ import com.ute.tinit.chatkotlin.Activity.activity_setting
 import android.widget.AdapterView.AdapterContextMenuInfo
 
 
-
 class MainActivity : AppCompatActivity() {
 
-    var doubleClickExit:Boolean=false
+    var doubleClickExit: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -145,9 +144,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if(viewpager_main.currentItem==3||viewpager_main.currentItem==2||viewpager_main.currentItem==1)
-        {
-            viewpager_main.currentItem=0
+        if (viewpager_main.currentItem == 3 || viewpager_main.currentItem == 2 || viewpager_main.currentItem == 1) {
+            viewpager_main.currentItem = 0
             return
         }
         this@MainActivity.doubleClickExit = true
@@ -155,7 +153,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun toastShow(text: String,context:Context) { /*show toast*/
+    fun toastShow(text: String, context: Context) { /*show toast*/
         var m_currentToast: Toast? = null
         if (m_currentToast != null) {
             m_currentToast!!.cancel()
@@ -165,18 +163,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun btnSetting()
-    {
+    fun btnSetting() {
         btnSetting.setOnClickListener {
-            var intent= Intent(this@MainActivity,activity_setting::class.java)
+            var intent = Intent(this@MainActivity, activity_setting::class.java)
             startActivity(intent)
         }
     }
 
-    fun btnInsertMore()
-    {
+    fun btnInsertMore() {
 
-        btnInsertMore.setOnClickListener(object : View.OnClickListener{
+        btnInsertMore.setOnClickListener(object : View.OnClickListener {
 
             override fun onClick(v: View) {
                 //Creating the instance of PopupMenu
@@ -187,16 +183,13 @@ class MainActivity : AppCompatActivity() {
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem): Boolean {
-                       // Toast.makeText(this@MainActivity,"CLick "+item.title,Toast.LENGTH_SHORT).show()
-                        if(item.title.toString().equals("Thêm bạn"))
-                        {
-                            Log.d("AAA","Bạn click thêm bạn")
-                            toastShow("Bạn click thêm bạn",this@MainActivity)
-                        }
-                        else
-                        {
-                            Log.d("AAA","Bạn click tạo nhóm")
-                            toastShow("Bạn click tạo nhóm",this@MainActivity)
+                        // Toast.makeText(this@MainActivity,"CLick "+item.title,Toast.LENGTH_SHORT).show()
+                        if (item.title.toString().equals("Thêm bạn")) {
+                            Log.d("AAA", "Bạn click thêm bạn")
+                            toastShow("Bạn click thêm bạn", this@MainActivity)
+                        } else {
+                            Log.d("AAA", "Bạn click tạo nhóm")
+                            toastShow("Bạn click tạo nhóm", this@MainActivity)
                         }
                         return true
                     }
@@ -219,14 +212,13 @@ class MainActivity : AppCompatActivity() {
                     // These exceptions should never happen since we're shipping the AppCompat library in our own apk,
                     // but in the case that they do, we simply can't force icons to display, so log the error and
                     // show the menu normally.
-                  //  Log.d("AAA",""+e.message)
+                    //  Log.d("AAA",""+e.message)
                 }
 
                 popup.show()//showing popup menu
             }
         })
     }
-
 
 
 }

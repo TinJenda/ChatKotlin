@@ -15,6 +15,7 @@ class activity_profile_more_myprofile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_profile_more_myprofile)
+        toolbar1.setTitle("")
         setSupportActionBar(toolbar1)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
@@ -38,16 +39,14 @@ class activity_profile_more_myprofile : AppCompatActivity() {
         finish()
     }
 
-    fun blurImage()
-    {
+    fun blurImage() {
         val resultBmp = BlurBuilder.blur(this@activity_profile_more_myprofile, BitmapFactory.decodeResource(resources, R.drawable.avarta))
         toolbarImage1.setImageBitmap(resultBmp)
     }
 
-    fun doiThongTin()
-    {
+    fun doiThongTin() {
         btn_doithongtin.setOnClickListener {
-            
+
         }
     }
 }

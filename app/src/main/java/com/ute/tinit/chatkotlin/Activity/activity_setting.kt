@@ -1,23 +1,24 @@
 package com.ute.tinit.chatkotlin.Activity
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.ute.tinit.chatkotlin.R
-import com.ute.tinit.chatkotlin.R.id.toolbar
-import kotlinx.android.synthetic.main.layout_activity_profile_more.*
+import kotlinx.android.synthetic.main.layout_activity_profile.*
+import kotlinx.android.synthetic.main.layout_activity_setting.*
 
-class activity_profile_more : AppCompatActivity() {
+class activity_setting : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_activity_profile_more)
-        setSupportActionBar(toolbar)
+        setContentView(R.layout.layout_activity_setting)
+        toolbarSetting.setTitle("")
+        setSupportActionBar(toolbarSetting)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        btnThongTin()
+    }
 
+    override fun onBackPressed() {
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -31,17 +32,5 @@ class activity_profile_more : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        finish()
-    }
-
-    fun btnThongTin() {
-        btn_liner_thongtin.setOnClickListener {
-            var intent = Intent(this@activity_profile_more, activity_profile_more_myprofile::class.java)
-            startActivity(intent)
-        }
-
     }
 }
