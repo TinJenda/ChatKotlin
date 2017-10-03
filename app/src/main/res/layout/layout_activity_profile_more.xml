@@ -44,6 +44,7 @@
         android:id="@+id/btn_liner_thongtin"
         android:layout_width="match_parent"
         android:layout_gravity="center"
+        android:background="@drawable/bg_button_1"
         android:gravity="center"
         android:layout_height="@dimen/size_toolbar">
         <TextView
@@ -62,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/bg_button_1"
         android:layout_height="@dimen/size_toolbar">
         <TextView
             android:layout_width="match_parent"
@@ -91,6 +93,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/bg_button_1"
         android:layout_height="@dimen/size_toolbar">
         <TextView
             android:layout_width="match_parent"
@@ -108,6 +111,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/bg_button_1"
         android:layout_height="@dimen/size_toolbar">
         <TextView
             android:layout_width="match_parent"
@@ -137,6 +141,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/bg_button_1"
         android:layout_height="@dimen/size_toolbar">
         <TextView
             android:layout_width="match_parent"
@@ -154,6 +159,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@drawable/bg_button_1"
         android:layout_height="@dimen/size_toolbar">
         <TextView
             android:layout_width="match_parent"

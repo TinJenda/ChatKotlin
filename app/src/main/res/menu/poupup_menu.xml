@@ -1,0 +1,14 @@
+<menu xmlns:androclass="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/taonhom"
+        android:icon="@drawable/addgroup"
+        android:title="Tạo nhóm"/>
+    <item
+        android:id="@+id/themban"
+        android:icon="@drawable/addone"
+        android:title="Thêm bạn"/>
+</menu>
