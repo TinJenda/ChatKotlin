@@ -1,6 +1,10 @@
-package com.ute.tinit.chatkotlin.Chat_Adapter
+package com.ute.tinit.chatkotlin.Chat_contact_Adapter
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,7 +13,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
+import com.ute.tinit.chatkotlin.Activity.activity_chat_active
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.R
 
@@ -68,7 +74,6 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
         var checked: CheckBox
 
         init {
-
             tvName = row.findViewById(R.id.tv_user_name)
             //selectedOverlay = (View) itemView.findViewById(R.id.selected_overlay);
             tvTime = row.findViewById(R.id.tv_time)
@@ -77,8 +82,11 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
             onlineView = row.findViewById(R.id.online_indicator)
             checked = row.findViewById(R.id.chk_list)
 
-            row.setOnClickListener(this)
-
+            row.setOnClickListener{
+                Toast.makeText(row.context,tvName.text,Toast.LENGTH_SHORT).show()
+                var intent=Intent(row.context,activity_chat_active::class.java)
+                startActivity(row.context,intent, Bundle())
+            }
             row.setOnLongClickListener(this)
         }
 

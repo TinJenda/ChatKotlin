@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.ute.tinit.chatkotlin.Chat_Adapter.ChatAdapter
+import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ChatAdapter
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.R
 import java.util.ArrayList

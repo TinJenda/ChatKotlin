@@ -1,4 +1,4 @@
-package com.ute.tinit.chatkotlin.Chat_Adapter
+package com.ute.tinit.chatkotlin.Chat_contact_Adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
