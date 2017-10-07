@@ -85,19 +85,21 @@
         <LinearLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:background="@color/tabColorBackgrounddd"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_height="@dimen/size_toolbar">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar"
+                android:background="@color/tabColorBackgrounddd"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size_toolbar">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorDefaultBackground"
+                    android:background="@color/tabColorBackgrounddd"
                     android:orientation="horizontal"
                     android:weightSum="4">
 
@@ -106,7 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_button"
+                        android:background="@drawable/bg_button_main"
                         android:textAllCaps="false" />
 
                     <ImageButton
@@ -114,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_button"
+                        android:background="@drawable/bg_button_main"
                         android:textAllCaps="false" />
 
                     <ImageButton
@@ -122,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_button"
+                        android:background="@drawable/bg_button_main"
                         android:textAllCaps="false" />
 
                     <ImageButton
@@ -130,7 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_button"
+                        android:background="@drawable/bg_button_main"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </android.support.design.widget.AppBarLayout>

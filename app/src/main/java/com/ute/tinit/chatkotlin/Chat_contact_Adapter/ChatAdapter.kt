@@ -1,11 +1,9 @@
 package com.ute.tinit.chatkotlin.Chat_contact_Adapter
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,14 +14,8 @@ import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_chat_active
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.R
-import com.ute.tinit.chatkotlin.MainActivity
-import android.content.DialogInterface
-import android.text.method.PasswordTransformationMethod
 import android.widget.*
-import java.util.zip.Inflater
 import android.widget.TextView
-
-
 
 
 /**
@@ -32,12 +24,12 @@ import android.widget.TextView
 class ChatAdapter(private val mContext: Context, private val mArrayList: List<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ChatAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
-        return  mArrayList.size
+        return mArrayList.size
     }
 
     // Create new views
     override fun onCreateViewHolder(parent: ViewGroup,
-                           viewType: Int): ChatAdapter.ViewHolder {
+                                    viewType: Int): ChatAdapter.ViewHolder {
 
         val itemLayoutView = LayoutInflater.from(parent.context).inflate(
                 R.layout.list_item_chat, null)
@@ -50,13 +42,7 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.tvName.setText(mArrayList[position].mName)
-        if (isSelected(position)) {
-            viewHolder.checked.isChecked = true
-            viewHolder.checked.visibility = View.VISIBLE
-        } else {
-            viewHolder.checked.isChecked = false
-            viewHolder.checked.visibility = View.GONE
-        }
+
         viewHolder.tvTime.setText(mArrayList[position].mTime)
 //        viewHolder.userPhoto.setImageResource(mArrayList.get(position).mImage)
         Picasso.with(mContext).load("http://taihinhanhdep.xyz/wp-content/uploads/2015/11/anh-dep-cho-dien-thoai-2.jpg")
@@ -78,7 +64,6 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
         var userPhoto: ImageView
         var online = false
         val onlineView: View
-        var checked: CheckBox
 
         init {
             tvName = row.findViewById(R.id.tv_user_name)
@@ -87,14 +72,13 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
             tvLastChat = row.findViewById(R.id.tv_last_chat)
             userPhoto = row.findViewById(R.id.iv_user_photo)
             onlineView = row.findViewById(R.id.online_indicator)
-            checked = row.findViewById(R.id.chk_list)
 
-            row.setOnClickListener{
-                Toast.makeText(row.context,tvName.text,Toast.LENGTH_SHORT).show()
-                var intent=Intent(row.context,activity_chat_active::class.java)
-                startActivity(row.context,intent, Bundle())
+            row.setOnClickListener {
+                Toast.makeText(row.context, tvName.text, Toast.LENGTH_SHORT).show()
+                var intent = Intent(row.context, activity_chat_active::class.java)
+                startActivity(row.context, intent, Bundle())
             }
-            row.setOnLongClickListener(object :View.OnLongClickListener{
+            row.setOnLongClickListener(object : View.OnLongClickListener {
                 override fun onLongClick(v: View?): Boolean {
                     val dialog = Dialog(row.context)
                     // Include dialog.xml file
@@ -105,16 +89,16 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
                     // set values for custom dialog components - text, image and button
                     val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
                     val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
-                    val tv_user_name_chat=dialog.findViewById<TextView>(R.id.tv_user_name_chat)
+                    val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
                     tv_user_name_chat.setText(tvName.text)
                     btnXoaTinNhan.setOnClickListener {
-                        Toast.makeText(row.context,"Hello xoa tin nhan",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(row.context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
-                    btnThongTin.setOnClickListener{
-                            Toast.makeText(row.context,"Hello thong tin "+tvName.text,Toast.LENGTH_SHORT).show()
-                            dialog.dismiss()
-                        }
+                    btnThongTin.setOnClickListener {
+                        Toast.makeText(row.context, "Hello thong tin " + tvName.text, Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
                     dialog.show()
                     return true
                 }

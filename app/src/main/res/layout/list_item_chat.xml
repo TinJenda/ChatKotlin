@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="75dp"
     android:background="@drawable/bg_item_list">
-    <CheckBox
-        android:id="@+id/chk_list"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:button="@drawable/checkbox"
-        android:layout_marginLeft="@dimen/space10"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
     <RelativeLayout
         android:id="@+id/rl_photo"
-        android:layout_toRightOf="@id/chk_list"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_centerVertical="true"
+        android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/space10"
         android:layout_marginRight="@dimen/space10">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/avarta"/>
+            android:src="@drawable/avarta" />
         <TextView
-            android:id="@+id/tv_unread"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/bg_unread"
-            android:gravity="center"
             android:text="N"
             android:textColor="@color/colorWhile"
             android:textSize="@dimen/h5" />
@@ -42,7 +34,7 @@
         android:id="@+id/ln_contact"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="75dp"
         android:paddingRight="@dimen/space10"
         android:paddingLeft="10dp"
         android:layout_toRightOf="@+id/rl_photo"
@@ -51,17 +43,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
+
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
-                android:textColor="@color/colorBlack"
                 android:layout_height="wrap_content"
-                android:text="Laura Owens"/>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="Laura Owens"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/h2" />
             <View
                 android:id="@+id/online_indicator"
                 android:layout_toRightOf="@id/tv_user_name"
                 android:layout_alignTop="@id/tv_user_name"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="@dimen/space5"
                 android:layout_width="10dp"
                 android:layout_height="10dp"

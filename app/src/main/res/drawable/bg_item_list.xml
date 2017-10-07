@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="#33000000"
-    android:radius="100dp"
+    android:color="@color/colorWhile"
+    android:radius="10dp"
     tools:targetApi="lollipop">
     <item>
         <shape android:shape="rectangle">

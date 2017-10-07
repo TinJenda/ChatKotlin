@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/space10"
             android:text="Hi, Mình là Tín đen, hiện tại đang học tại đại học sPKT TP HCM, hihi"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/h3"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
