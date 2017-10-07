@@ -10,4 +10,8 @@ class activity_chat : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat)
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }

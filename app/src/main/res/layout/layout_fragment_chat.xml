@@ -6,8 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.ute.tinit.chatkotlin.Fragment.fragment_chat">
 <TextView
+    android:id="@+id/tvchat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textSize="50dp"
     android:text="GIAO DIEN CHAT"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -34,20 +34,22 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                app:layout_collapseMode="pin"
+                android:layout_height="65dp"
                 android:theme="@style/Theme.BackWhile"
-                android:layout_height="65dp">
+                app:layout_collapseMode="pin">
 
             </android.support.v7.widget.Toolbar>
+
             <LinearLayout
-                android:layout_marginLeft="50dp"
                 android:layout_width="match_parent"
-                app:layout_collapseMode="pin"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
-                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
                 android:gravity="left|center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
+
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/anh_dai_dien"
                     android:layout_width="50dp"
@@ -59,17 +61,18 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_gravity="left"
                     android:layout_height="match_parent"
+                    android:layout_gravity="left"
                     android:layout_marginLeft="15dp"
                     android:gravity="left|center"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/user_name"
                         android:layout_width="match_parent"
-                        android:gravity="left"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:gravity="left"
                         android:maxLines="1"
                         android:text="Tín Jenda"
                         android:textColor="@color/colorWhile"
@@ -79,12 +82,12 @@
                         android:id="@+id/id_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:gravity="left"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
                         android:text="\u02BD\u02BDCâu giới thiệu bản thân ghi gì vào cho trất\u02BC\u02BC"
                         android:textColor="@color/colorDefaultBackground"
                         android:textSize="@dimen/text_size_default"
-                        android:paddingLeft="5dp"
                         android:textStyle="italic" />
                 </LinearLayout>
 
