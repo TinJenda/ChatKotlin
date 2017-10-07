@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/tv_user_name_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tín Trương"
+        android:textColor="@color/mainColor"
+        android:textSize="@dimen/text_size_big_20"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="1dp"
+        android:background="@color/mainColor"></View>
+    <Button
+        android:id="@+id/btnXoaTinNhan"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/size_toolbar"
+        android:background="@drawable/bg_button"
+        android:text="Xóa" />
+
+    <Button
+        android:id="@+id/btnThongTin"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/size_toolbar"
+        android:background="@drawable/bg_button"
+        android:text="Thông tin" />
+</LinearLayout>

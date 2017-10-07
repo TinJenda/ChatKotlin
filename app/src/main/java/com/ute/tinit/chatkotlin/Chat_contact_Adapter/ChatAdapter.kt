@@ -1,5 +1,7 @@
 package com.ute.tinit.chatkotlin.Chat_contact_Adapter
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,14 +12,19 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_chat_active
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.R
+import com.ute.tinit.chatkotlin.MainActivity
+import android.content.DialogInterface
+import android.text.method.PasswordTransformationMethod
+import android.widget.*
+import java.util.zip.Inflater
+import android.widget.TextView
+
+
+
 
 /**
  * Created by tin3p on 10/7/2017.
@@ -87,7 +94,32 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
                 var intent=Intent(row.context,activity_chat_active::class.java)
                 startActivity(row.context,intent, Bundle())
             }
-            row.setOnLongClickListener(this)
+            row.setOnLongClickListener(object :View.OnLongClickListener{
+                override fun onLongClick(v: View?): Boolean {
+                    val dialog = Dialog(row.context)
+                    // Include dialog.xml file
+                    dialog.setContentView(R.layout.dialog_list_chat)
+                    // Set dialog title
+                    dialog.setTitle("")
+
+                    // set values for custom dialog components - text, image and button
+                    val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
+                    val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
+                    val tv_user_name_chat=dialog.findViewById<TextView>(R.id.tv_user_name_chat)
+                    tv_user_name_chat.setText(tvName.text)
+                    btnXoaTinNhan.setOnClickListener {
+                        Toast.makeText(row.context,"Hello xoa tin nhan",Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                    btnThongTin.setOnClickListener{
+                            Toast.makeText(row.context,"Hello thong tin "+tvName.text,Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                    dialog.show()
+                    return true
+                }
+
+            })
         }
 
         override fun onClick(v: View) {
@@ -108,5 +140,6 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: List<Ch
 
             fun onCreateOptionsMenu(menu: Menu): Boolean
         }
+
     }
 }
