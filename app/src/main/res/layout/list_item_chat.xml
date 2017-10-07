@@ -24,25 +24,27 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/avarta"/>
-
         <TextView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/bg_unread"
             android:gravity="center"
-            android:text="3"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/h4" />
+            android:text="N"
+            android:textColor="@color/colorWhile"
+            android:textSize="@dimen/h5" />
     </RelativeLayout>
     <LinearLayout
+        android:id="@+id/ln_contact"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:paddingRight="@dimen/space10"
         android:paddingLeft="10dp"
         android:layout_toRightOf="@+id/rl_photo"
-        android:background="@drawable/bg_bottom_grey"
         android:gravity="center_vertical">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -86,4 +88,10 @@
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
     </LinearLayout>
+    <View
+        android:layout_below="@+id/ln_contact"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="60dp"
+        android:background="@color/colorDefaultBackground"/>
 </RelativeLayout>

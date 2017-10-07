@@ -1,19 +1,13 @@
 package com.ute.tinit.chatkotlin.Fragment
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.TextView
-import com.ute.tinit.chatkotlin.Activity.activity_chat
-import com.ute.tinit.chatkotlin.Chat_Activity.ChatAdapter
+import com.ute.tinit.chatkotlin.Chat_Adapter.ChatAdapter
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
-import com.ute.tinit.chatkotlin.Model.Chat
 import com.ute.tinit.chatkotlin.R
-import kotlinx.android.synthetic.main.layout_fragment_chat.view.*
 import java.util.ArrayList
 
 class fragment_chat : Fragment(), ChatAdapter.ViewHolder.ClickListener {

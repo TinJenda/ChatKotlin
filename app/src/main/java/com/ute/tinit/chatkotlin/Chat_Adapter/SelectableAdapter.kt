@@ -1,4 +1,4 @@
-package com.ute.tinit.chatkotlin.Chat_Activity
+package com.ute.tinit.chatkotlin.Chat_Adapter
 
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
@@ -7,6 +7,8 @@ import java.util.ArrayList
 /**
  * Created by tin3p on 10/7/2017.
  */
+
+//tam thoi chuan cua xu ly
 abstract class SelectableAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
     companion final object {
         private val TAG = SelectableAdapter::class.java.simpleName
