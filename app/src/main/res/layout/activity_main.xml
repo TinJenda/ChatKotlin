@@ -71,6 +71,7 @@
         <LinearLayout
             android:id="@+id/liner_viewPage"
             android:layout_width="match_parent"
+            android:paddingBottom="45dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/search_bar">
 
