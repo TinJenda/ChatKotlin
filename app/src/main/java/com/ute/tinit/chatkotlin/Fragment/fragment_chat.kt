@@ -20,12 +20,6 @@ class fragment_chat : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.layout_fragment_chat, container, false)
 
-        view.tvchat.setOnClickListener {
-            var intent= Intent(activity,activity_chat::class.java)
-            startActivity(intent)
-        }
-
-
         return view
     }
 
