@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.layout_flash_screen.*
 
 class Activity_flash_screen : AppCompatActivity() {
 
+    var logined:Boolean=false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_flash_screen)
@@ -19,9 +20,19 @@ class Activity_flash_screen : AppCompatActivity() {
         logoNameAnimation()
         val handler: Handler = Handler()
         handler.postDelayed(Runnable {
-            var intent: Intent = Intent(this@Activity_flash_screen, MainActivity::class.java);
-            startActivity(intent)
-            finish()
+            if(logined==false)
+            {
+                var intent: Intent = Intent(this@Activity_flash_screen, activity_login::class.java);
+                startActivity(intent)
+                finish()
+            }
+            else
+            {
+                var intent: Intent = Intent(this@Activity_flash_screen, MainActivity::class.java);
+                startActivity(intent)
+                finish()
+            }
+
         }, 4600)
     }
 

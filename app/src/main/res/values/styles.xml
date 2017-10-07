@@ -10,4 +10,10 @@
     <style name="Theme.BackWhile" parent="android:Theme.Holo">
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
     </style>
+
+    <style name="EditText.Login" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="colorControlNormal">@color/colorBlack</item>
+        <item name="colorControlActivated">@color/mainColor</item>
+    </style>
 </resources>

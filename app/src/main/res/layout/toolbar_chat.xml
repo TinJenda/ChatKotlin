@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_chat"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="@dimen/size_toolbar"
-    android:contentInsetLeft="0dp"
-    android:contentInsetStart="0dp"
     app:contentInsetLeft="0dp"
     android:background="@color/mainColor"
     app:contentInsetStart="0dp"
     android:contentInsetRight="0dp"
     android:contentInsetEnd="0dp"
+    android:theme="@style/Theme.BackWhile"
     app:contentInsetRight="0dp"
     app:contentInsetEnd="0dp">
     <TextView

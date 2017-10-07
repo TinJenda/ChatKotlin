@@ -23,7 +23,6 @@ class activity_profile : AppCompatActivity() {
         setSupportActionBar(toolbar)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-
         blurImage()
         nhatky_hinhanh()
         floatClick()

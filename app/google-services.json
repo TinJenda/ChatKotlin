@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1040917976162",
+    "firebase_url": "https://chatkotlin-tinjenda.firebaseio.com",
+    "project_id": "chatkotlin-tinjenda",
+    "storage_bucket": "chatkotlin-tinjenda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040917976162:android:20ae705ba8f43766",
+        "android_client_info": {
+          "package_name": "com.ute.tinit.chatkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040917976162-vs2a95jmvsc8ro1n7abk46vtsv2sktrh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ute.tinit.chatkotlin",
+            "certificate_hash": "0ecba6a99e657d472456ea15ee1d1ce7cb001613"
+          }
+        },
+        {
+          "client_id": "1040917976162-j9i3gkn819glmmccc1dkp0f4mad59s1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_IGgIdFKEE6hsAH_DQ93UfanYxk1gphc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040917976162-j9i3gkn819glmmccc1dkp0f4mad59s1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
