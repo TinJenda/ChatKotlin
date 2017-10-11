@@ -3,7 +3,8 @@
     package="com.ute.tinit.chatkotlin">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-feature android:name="android.hardware.location.gps" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_foreground"
@@ -18,8 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Activity_flash_screen">
-        </activity>
+        <activity android:name=".Activity.Activity_flash_screen"></activity>
         <activity android:name=".Activity.activity_profile" />
         <activity android:name=".Activity.activity_profile_more" />
         <activity android:name=".Activity.activity_profile_more_myprofile" />
@@ -27,9 +27,8 @@
         <activity android:name=".Activity.activity_setting" />
         <activity android:name=".Activity.activity_login" />
         <activity android:name=".Activity.activity_new_account" />
-        <activity android:name=".Activity.activity_chat_active">
-
-        </activity>
+        <activity android:name=".Activity.activity_chat_active"></activity>
+        <activity android:name=".Activity.activity_find_friend_location"></activity>
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.ute.tinit.chatkotlin.R
 import android.content.Intent
 import android.widget.Toast
+import com.ute.tinit.chatkotlin.Activity.activity_find_friend_location
 import com.ute.tinit.chatkotlin.Activity.activity_profile
 import kotlinx.android.synthetic.main.layout_fragment_more.*
 import kotlinx.android.synthetic.main.layout_fragment_more.view.*
@@ -17,7 +18,6 @@ class fragment_more : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -28,8 +28,15 @@ class fragment_more : Fragment() {
                            var intent=Intent(activity, activity_profile::class.java)
                            startActivity(intent)
          }
+        btnTimQuanhDay(view)
         return view
     }
-
+    fun btnTimQuanhDay(view:View)
+    {
+        view.ln_timquanhday.setOnClickListener {
+            var intentTQD=Intent(activity, activity_find_friend_location::class.java)
+            startActivity(intentTQD)
+        }
+    }
 }
 

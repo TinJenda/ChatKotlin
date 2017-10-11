@@ -7,6 +7,7 @@ import android.view.MenuItem
 import com.ute.tinit.chatkotlin.R
 import com.ute.tinit.chatkotlin.R.id.toolbar
 import kotlinx.android.synthetic.main.layout_activity_profile_more.*
+import kotlinx.android.synthetic.main.layout_fragment_more.*
 
 class activity_profile_more : AppCompatActivity() {
 
@@ -17,7 +18,6 @@ class activity_profile_more : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
         btnThongTin()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -44,4 +44,5 @@ class activity_profile_more : AppCompatActivity() {
         }
 
     }
+
 }
