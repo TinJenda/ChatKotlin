@@ -14,6 +14,9 @@ import android.util.Log
 import com.google.android.gms.location.LocationServices
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 class activity_find_friend_location : PermissionsActivity() {
     var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -60,11 +63,14 @@ class activity_find_friend_location : PermissionsActivity() {
 //            locationB!!.latitude= 10.8730123
 //            locationB!!.longitude=106.7981348
             var locationC=Location("")
-            locationC!!.longitude=108.4258715
-            locationC.latitude=15.5803557
-           // txtKetQua.setText(locationA!!.distanceTo(locationB).toString())
+            locationC!!.longitude=106.7959461
+            locationC.latitude=10.8730176
+            var formatNumber=DecimalFormat()
+            formatNumber.minimumFractionDigits=0
+            formatNumber.maximumFractionDigits=0
+            // txtKetQua.setText(locationA!!.distanceTo(locationB).toString())
             Toast.makeText(this@activity_find_friend_location,"Khoảng cách đường chim bay",Toast.LENGTH_SHORT).show()
-           txtKetQua.text=((locationA!!.distanceTo(locationC))/1000).toString()
+           txtKetQua.text=(formatNumber.format(locationA!!.distanceTo(locationC))).toString() +" meter"
             //txtKetQua.text=distance_between(locationC,locationA!!).toString()
         }
 
