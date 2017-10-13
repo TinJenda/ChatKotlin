@@ -17,13 +17,140 @@ import io.vrinda.kotlinpermissions.PermissionsActivity
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationRequest
+import com.ute.tinit.chatkotlin.R.string.disconnect
+import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.location.LocationListener
+import com.ute.tinit.chatkotlin.R.string.disconnect
+import android.widget.TextView
+import java.text.DateFormat
 
-class activity_find_friend_location : PermissionsActivity() {
+
+class activity_find_friend_location : PermissionsActivity(), LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     var mFusedLocationClient: FusedLocationProviderClient? = null
-    var locationA:Location?=null
+    var locationA= Location("")
+    var mLocationRequest: LocationRequest? = null
+    var mGoogleApiClient: GoogleApiClient? = null
+    var mCurrentLocation: Location? = null
+    var mLastUpdateTime: String? = null
+    private val INTERVAL = (1000 * 10).toLong()
+    private val FASTEST_INTERVAL = (1000 * 5).toLong()
+
+    protected fun createLocationRequest() {
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.setInterval(INTERVAL)
+        mLocationRequest!!.setFastestInterval(FASTEST_INTERVAL)
+        mLocationRequest!!.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+    }
+    public override fun onStart() {
+        super.onStart()
+        Log.d("BBB", "onStart fired ..............")
+        if(this@activity_find_friend_location.mGoogleApiClient != null){
+            mGoogleApiClient!!.connect()
+        }
+
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        Log.d("BBB", "onStop fired ..............")
+        mGoogleApiClient!!.disconnect()
+        Log.d("BBB", "isConnected ...............: " + mGoogleApiClient!!.isConnected())
+    }
+
+    private fun isGooglePlayServicesAvailable(): Boolean {
+        val status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)
+        if (ConnectionResult.SUCCESS == status) {
+            return true
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show()
+            return false
+        }
+    }
+
+    override fun onConnected(bundle: Bundle?) {
+        Log.d("BBB", "onConnected - isConnected ...............: " + mGoogleApiClient!!.isConnected())
+        startLocationUpdates()
+    }
+
+    @SuppressLint("MissingPermission")
+    protected fun startLocationUpdates() {
+        val pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this@activity_find_friend_location)
+        Log.d("BBB", "Location update started ..............: ")
+    }
+
+    override fun onConnectionSuspended(i: Int) {
+
+    }
+
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
+        Log.d("BBB", "Connection failed: " + connectionResult.toString())
+    }
+
+    override fun onLocationChanged(location: Location) {
+        Log.d("BBB", "Firing onLocationChanged..............................................")
+        mCurrentLocation = location
+        mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
+        updateUI()
+    }
+
+    private fun updateUI() {
+        Log.d("BBB", "UI update initiated .............")
+        if (null != mCurrentLocation) {
+            val lat = (mCurrentLocation!!.getLatitude()).toString()
+            val lng = (mCurrentLocation!!.getLongitude()).toString()
+            tvToaDoX_VT1.setText(lat)
+            tvToaDoY_VT1.setText(lng)
+            locationA.latitude=mCurrentLocation!!.getLatitude()
+            locationA.longitude=mCurrentLocation!!.getLongitude()
+            Log.d("BBB","At Time: " + mLastUpdateTime + "\n" +
+                    "Latitude: " + lat + "\n" +
+                    "Longitude: " + lng + "\n" +
+                    "Accuracy: " + mCurrentLocation!!.getAccuracy() + "\n" +
+                    "Provider: " + mCurrentLocation!!.getProvider())
+        } else {
+            Log.d("BBB", "location is null ...............")
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    protected fun stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this)
+        Log.d("BBB", "Location update stopped .......................")
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        if (mGoogleApiClient!!.isConnected()) {
+            startLocationUpdates()
+            Log.d("BBB", "Location update resumed .....................")
+        }
+    }
+
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("BBB", "onCreate ...............................")
+        //show error dialog if GoolglePlayServices not available
+        if (!isGooglePlayServicesAvailable()) {
+            finish()
+        }
+        createLocationRequest()
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build()
         setContentView(R.layout.layout_activity_find_friend_location)
         toolbar_more.title = ""
         setSupportActionBar(toolbar_more)
@@ -32,22 +159,12 @@ class activity_find_friend_location : PermissionsActivity() {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this@activity_find_friend_location);
         btnGetViTri.setOnClickListener {
+
             requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION, object : PermissionCallBack {
                 @SuppressLint("MissingPermission")
                 override fun permissionGranted() {
                     super.permissionGranted()
-               //     Toast.makeText(this@activity_find_friend_location, "Call thanh cong", Toast.LENGTH_SHORT).show()
-                    mFusedLocationClient!!.lastLocation
-                            .addOnSuccessListener(this@activity_find_friend_location) { location ->
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    Toast.makeText(this@activity_find_friend_location,"Vao Funsed...",Toast.LENGTH_SHORT).show()
-                                    tvToaDoX_VT1.setText((location.latitude).toString())
-                                    tvToaDoY_VT1.setText((location.longitude).toString())
-                                    locationA=location
-                                }
-                            }
+                    updateUI()
                 }
 
                 override fun permissionDenied() {

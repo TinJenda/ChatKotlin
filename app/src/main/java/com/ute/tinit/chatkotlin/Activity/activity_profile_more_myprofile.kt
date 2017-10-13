@@ -1,18 +1,18 @@
 package com.ute.tinit.chatkotlin.Activity
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.google.firebase.storage.FirebaseStorage
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -24,12 +24,15 @@ import com.mvc.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
+import io.vrinda.kotlinpermissions.PermissionCallBack
+import io.vrinda.kotlinpermissions.PermissionsActivity
+import kotlinx.android.synthetic.main.layout_activity_find_friend_location.*
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.net.URL
 
-class activity_profile_more_myprofile : AppCompatActivity() {
+class activity_profile_more_myprofile : PermissionsActivity() {
+
     private val BLUR_PRECENTAGE = 50
     private val IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta%2Favarta.jpg?alt=media&token=84d76d2f-6d6c-4929-b8db-63e8c00d35f7"
     private var DATA_UPDATE:ByteArray?=null
@@ -103,8 +106,23 @@ class activity_profile_more_myprofile : AppCompatActivity() {
 
     //test upload image to storage firebase and get link that image
     fun btnDoiAnhDaiDien() {
+
         myprofile_anh_dai_dien.setOnClickListener {
-            showFileChooser()
+            requestPermissions(Manifest.permission.CAMERA, object : PermissionCallBack {
+                @SuppressLint("MissingPermission")
+                override fun permissionGranted() {
+                    super.permissionGranted()
+                    showFileChooser()
+                }
+
+                override fun permissionDenied() {
+                    super.permissionDenied()
+                    Log.v("Call permissions", "Denied")
+                    Toast.makeText(this@activity_profile_more_myprofile, "Vui lòng bật/chấp nhận quyền máy ảnh để thực hiện tính năng này", Toast.LENGTH_SHORT).show()
+
+                }
+            })
+
         }
     }
 
