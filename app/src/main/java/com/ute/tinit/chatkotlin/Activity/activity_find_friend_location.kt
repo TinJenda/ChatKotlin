@@ -19,12 +19,9 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
-import com.ute.tinit.chatkotlin.R.string.disconnect
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.location.LocationListener
-import com.ute.tinit.chatkotlin.R.string.disconnect
-import android.widget.TextView
 import java.text.DateFormat
 
 

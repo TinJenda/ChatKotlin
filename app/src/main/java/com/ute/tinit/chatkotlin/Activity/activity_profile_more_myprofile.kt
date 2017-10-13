@@ -2,6 +2,7 @@ package com.ute.tinit.chatkotlin.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.content.Intent
@@ -13,6 +14,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -23,6 +25,7 @@ import com.google.firebase.storage.UploadTask
 import com.mvc.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.theartofdev.edmodo.cropper.CropImage
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
@@ -36,7 +39,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
     private val BLUR_PRECENTAGE = 50
     private val IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta%2Favarta.jpg?alt=media&token=84d76d2f-6d6c-4929-b8db-63e8c00d35f7"
     private var DATA_UPDATE:ByteArray?=null
-
+    private var mCropImageUri:Uri?=null
     private var mStorageRef: StorageReference? = null
     var imgUri: Uri? = null
 
@@ -158,6 +161,24 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                 {
                     e.printStackTrace()
                 }
+                  // handle result of pick image chooser
+
+//                  if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//                    var imageUri:Uri  = CropImage.getPickImageResultUri(this@activity_profile_more_myprofile, data);
+//
+//                    // For API >= 23 we need to check specifically that we have permissions to read external storage.
+//                    if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+//                      // request permissions and handle the result in onRequestPermissionsResult()
+//                      mCropImageUri = imageUri
+//                        var listPermission= arrayOf("Manifest.permission.READ_EXTERNAL_STORAGE")
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                            requestPermissions(listPermission,   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE)
+//                        };
+//                    } else {
+//                      // no permissions required or already grunted, can start crop image activity
+//                      startCropImageActivity(imageUri);
+//                    }
+//                  }
             }
         }
         else{
@@ -165,17 +186,9 @@ class activity_profile_more_myprofile : PermissionsActivity() {
         }
     }
     //
+
     fun  showFileChooser() {
-//        val getIntent = Intent(Intent.ACTION_GET_CONTENT)
-//        getIntent.type = "image/*"
-//
-//        val pickIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//        pickIntent.type = "image/*"
-//
-//        val chooserIntent = Intent.createChooser(getIntent, "Select Image")
-//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
-//        startActivityForResult(chooserIntent, REQUEST_CODE)
-          onPickImage()
+        onPickImage()
 }
     fun getImageExt(uri:Uri): String? {
         var contentResolver:ContentResolver=contentResolver
@@ -228,5 +241,19 @@ class activity_profile_more_myprofile : PermissionsActivity() {
       fun onPickImage(  ) {
         // Click on image button
         ImagePicker.pickImage(this, "Select your image:");
+    }
+
+    private fun startCropImageActivity() {
+        CropImage.activity()
+    .start(this@activity_profile_more_myprofile);
+    }
+
+    fun onSelectImageClick() {
+        CropImage.startPickImageActivity(this@activity_profile_more_myprofile)
+    }
+
+    private fun startCropImageActivity(imageUri: Uri) {
+        CropImage.activity(imageUri)
+                .start(this@activity_profile_more_myprofile)
     }
 }

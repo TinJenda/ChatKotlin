@@ -37,6 +37,8 @@
         <activity android:name=".Activity.activity_new_account" />
         <activity android:name=".Activity.activity_chat_active"></activity>
         <activity android:name=".Activity.activity_find_friend_location"></activity>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

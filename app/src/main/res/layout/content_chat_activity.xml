@@ -16,14 +16,14 @@
         android:layout_alignParentBottom="true"
         android:focusable="true"
         android:focusableInTouchMode="true">
-        <Button
-            android:id="@+id/bt_send"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:text="Send"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/h3"
+            android:src="@drawable/ic_send"
+            android:textColor="@color/mainColor"
             android:background="@drawable/btn_grey"
             android:layout_alignParentRight="true"
             android:stateListAnimator="@null"
@@ -31,7 +31,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/bt_send"
+            android:layout_toLeftOf="@id/btn_send"
             android:background="@drawable/bg_white_rounded"
             android:layout_centerVertical="true">
             <ImageButton
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/bt_attachment"
                 android:padding="@dimen/space15"
-                android:hint="Enter your message"
+                android:hint="@string/string_nhap_tin_nhan"
                 android:maxLines="3"
                 android:textSize="@dimen/h3"
                 android:textColor="@color/colorBlack"
