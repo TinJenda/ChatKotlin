@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -15,7 +14,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.view.animation.Animation
@@ -37,7 +35,7 @@ import java.io.IOException
 
 class activity_profile_more_myprofile : PermissionsActivity() {
 
-    private val BLUR_PRECENTAGE = 50
+    private val BLUR_PRECENTAGE = 40
     private var IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta%2F1508246074211.JPEG?alt=media&token=24d2a77e-471f-482a-b375-c621eafd5809"
     private var DATA_UPDATE: ByteArray? = null
     private var mStorageRef: StorageReference? = null
