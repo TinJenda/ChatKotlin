@@ -10,6 +10,7 @@
 <LinearLayout
     android:id="@+id/btn_linear_Profile"
     android:layout_width="match_parent"
+    android:layout_marginTop="5dp"
     android:layout_height="70dp"
     android:background="@color/colorDefaultBackground"
     android:orientation="horizontal">
