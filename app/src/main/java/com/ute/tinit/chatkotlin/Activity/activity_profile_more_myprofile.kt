@@ -2,7 +2,6 @@ package com.ute.tinit.chatkotlin.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
@@ -14,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 import android.net.Uri
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.animation.Animation
@@ -27,6 +27,7 @@ import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
+import com.ute.tinit.chatkotlin.MainActivity
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
 import java.io.ByteArrayOutputStream
@@ -53,7 +54,12 @@ class activity_profile_more_myprofile : PermissionsActivity() {
         setSupportActionBar(toolbar1)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        blurImage()
+
+        val handler: Handler = Handler()
+        handler.postDelayed(Runnable {
+                blurImage()
+        }, 100)
+       // blurImage()
         mStorageRef = FirebaseStorage.getInstance().getReference();
         btnDoiAnhDaiDien()
         logoAnimation()
