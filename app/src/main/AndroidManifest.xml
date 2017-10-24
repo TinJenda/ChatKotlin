@@ -21,6 +21,11 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activity.Activity_flash_screen"></activity>
         <activity android:name=".Activity.activity_profile" />
@@ -29,11 +34,7 @@
         <activity android:name=".Activity.activity_profile_more_myprofile_changeprofile" />
         <activity android:name=".Activity.activity_setting" />
         <activity android:name=".Activity.activity_login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.activity_new_account" />
         <activity android:name=".Activity.activity_chat_active"></activity>
