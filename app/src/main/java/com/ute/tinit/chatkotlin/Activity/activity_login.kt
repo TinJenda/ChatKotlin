@@ -1,4 +1,5 @@
 package com.ute.tinit.chatkotlin.Activity
+
 //tin
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -21,14 +22,14 @@ import com.google.android.gms.common.api.Status
 
 
 class activity_login : AppCompatActivity() {
-     var mAuth: FirebaseAuth?=null
-     var mGoogleApiClient: GoogleApiClient? = null
-     val RC_SIGN_IN = 9001
-     val logout_check="logout"
+    var mAuth: FirebaseAuth? = null
+    var mGoogleApiClient: GoogleApiClient? = null
+    val RC_SIGN_IN = 9001
+    var logout_check = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_login)
-         mAuth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -36,17 +37,13 @@ class activity_login : AppCompatActivity() {
         // [END config_signin]
 
         mGoogleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this@activity_login /* FragmentActivity */, GoogleApiClient.OnConnectionFailedListener(){
-                    Toast.makeText(this@activity_login,"Login fail",Toast.LENGTH_SHORT).show()
+                .enableAutoManage(this@activity_login /* FragmentActivity */, GoogleApiClient.OnConnectionFailedListener() {
+                    Toast.makeText(this@activity_login, "Login fail", Toast.LENGTH_SHORT).show()
                 }/* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
-        btnLogin()
-
-        if(logout_check.equals(""))
-        {
-            signOut()
-        }
+                var intent=intent
+              btnLogin()
     }
 
 
@@ -72,7 +69,7 @@ class activity_login : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         hideProgressDialog()
         if (user != null) {
-            Toast.makeText(this@activity_login,"Welcome...!",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@activity_login, "Welcome...!", Toast.LENGTH_SHORT).show()
             btn_login.setVisibility(View.GONE)
 //            tv_user_email.setText( user.displayName)
 //            tv_user_id.setText(user.uid)
@@ -84,20 +81,22 @@ class activity_login : AppCompatActivity() {
         }
     }
 
-    fun displayNext(user: FirebaseUser?)
-    {
-        var intent=Intent(this@activity_login, activity_profile_firstlogin::class.java)
+    fun displayNext(user: FirebaseUser?) {
+        var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
         intent.putExtra("userid", user!!.uid)
-        intent.putExtra("username",user!!.displayName)
-        intent.putExtra("email",user!!.email)
+        intent.putExtra("username", user!!.displayName)
+        intent.putExtra("email", user!!.email)
         startActivity(intent)
+        finish()
     }
+
     fun onConnectionFailed(connectionResult: ConnectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d("AAA", "onConnectionFailed:" + connectionResult)
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
     }
+
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -110,7 +109,7 @@ class activity_login : AppCompatActivity() {
                 firebaseAuthWithGoogle(account!!)
             } else {
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(this@activity_login,"Failddđ on activity Result",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@activity_login, "Failddđ on activity Result", Toast.LENGTH_SHORT).show()
                 // ...
             }
         }
@@ -123,15 +122,14 @@ class activity_login : AppCompatActivity() {
         updateUI(currentUser)
     }
 
-    fun showProgressDialog()
-    {
-        progressLogin.visibility=View.VISIBLE
+    fun showProgressDialog() {
+        progressLogin.visibility = View.VISIBLE
     }
 
-    fun hideProgressDialog()
-    {
-        progressLogin.visibility=View.GONE
+    fun hideProgressDialog() {
+        progressLogin.visibility = View.GONE
     }
+
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         showProgressDialog()
         Log.d("AAA", "firebaseAuthWithGoogle:" + acct.id!!)
@@ -156,8 +154,7 @@ class activity_login : AppCompatActivity() {
                 }
     }
 
-    fun btnLogin()
-    {
+    fun btnLogin() {
         btn_login.setOnClickListener {
             signIn()
         }

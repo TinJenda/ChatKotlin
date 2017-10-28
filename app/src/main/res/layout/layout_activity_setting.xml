@@ -101,30 +101,6 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineeee" />
-        <LinearLayout
-            android:id="@+id/btn_linear_doimatkhau"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_button_1"
-            android:layout_height="@dimen/size_toolbar">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/password"
-                android:layout_marginRight="10dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:gravity="center|left"
-                android:layout_height="@dimen/size_toolbar"
-                android:textSize="@dimen/text_size_default"
-                android:text="@string/string_doi_mat_khau"/>
-        </LinearLayout>
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
             android:background="@color/colorLine" />
         <LinearLayout
             android:id="@+id/btn_linear_dangxuat"
@@ -145,5 +121,9 @@
                 android:textSize="@dimen/text_size_default"
                 android:text="@string/string_dang_xuat"/>
         </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />
     </LinearLayout>
 </LinearLayout>

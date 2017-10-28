@@ -29,8 +29,10 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
+import com.ute.tinit.chatkotlin.MainActivity
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -40,15 +42,17 @@ class activity_profile_firstlogin : PermissionsActivity() {
     var month: Int = 0
     var day: Int = 0
     private var mDatabase: DatabaseReference? = null
-    private var IMAGE_URL ="https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta.jpg?alt=media&token=d9bfc794-a5bd-47b7-966c-9bee18bfc75c"
+    private var IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta.jpg?alt=media&token=d9bfc794-a5bd-47b7-966c-9bee18bfc75c"
     private var DATA_UPDATE: ByteArray? = null
     private var mStorageRef: StorageReference? = null
-    var imgUploadLink: String=""
+    var imgUploadLink: String = ""
     var imgUri: Uri? = null
+    private var useID=""
     companion object {
         var FB_STORAGE_PATH: String = "avarta/"
         var REQUEST_CODE: Int = 234
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_profile_first_login)
@@ -62,8 +66,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         saveInfo()
     }
 
-    fun updateAvarta()
-    {
+    fun updateAvarta() {
         btn_avarta_update.setOnClickListener {
             requestPermissions(Manifest.permission.CAMERA, object : PermissionCallBack {
                 @SuppressLint("MissingPermission")
@@ -71,6 +74,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                     super.permissionGranted()
                     showFileChooser()
                 }
+
                 override fun permissionDenied() {
                     super.permissionDenied()
                     Log.v("Call permissions", "Denied")
@@ -105,6 +109,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     startActivityForResult(pickPhoto, 2)
                 }
+
                 override fun permissionDenied() {
                     super.permissionDenied()
                     Log.v("Call permissions", "Denied")
@@ -116,13 +121,12 @@ class activity_profile_firstlogin : PermissionsActivity() {
         dialog.show()
     }
 
-    fun editName()
-    {
+    fun editName() {
         btn_edit_name.setOnClickListener {
             user_name_firstlogin.visibility = View.GONE
-            edit_text_name.visibility=View.VISIBLE
-            btn_edit_name.visibility=View.GONE
-            btn_edit_name_save.visibility=View.VISIBLE
+            edit_text_name.visibility = View.VISIBLE
+            btn_edit_name.visibility = View.GONE
+            btn_edit_name_save.visibility = View.VISIBLE
         }
 
         btn_edit_name_save.setOnClickListener {
@@ -130,31 +134,31 @@ class activity_profile_firstlogin : PermissionsActivity() {
             edit_text_name.visibility = View.GONE
             btn_edit_name.visibility = View.VISIBLE
             btn_edit_name_save.visibility = View.GONE
-            user_name_firstlogin.text=edit_text_name.text.toString()
+            user_name_firstlogin.text = edit_text_name.text.toString()
         }
     }
-    fun saveInfo()
-    {
+
+    fun saveInfo() {
         btn_luuthongtin.setOnClickListener {
             saveFirebase()
         }
     }
-    fun saveFirebase()
-    {
-        var intent=intent
-        var userID:String=intent.getStringExtra("userid")
-        var email:String=intent.getStringExtra("email")
-        var phone_number=""+et_phone.text.toString()
-        var sex:String=sex_spinner.getSelectedItem().toString()
-        var tensave=edit_text_name.text.toString()
-        if(!imgUploadLink.equals(""))
-        {
-            IMAGE_URL=imgUploadLink
+
+    fun saveFirebase() {
+        var intent = intent
+        var userID: String = intent.getStringExtra("userid")
+        var email: String = intent.getStringExtra("email")
+        var phone_number = "" + et_phone.text.toString()
+        var sex: String = sex_spinner.getSelectedItem().toString()
+        var tensave = edit_text_name.text.toString()
+        if (!imgUploadLink.equals("")) {
+            IMAGE_URL = imgUploadLink
         }
-        CreateUser(userID,tensave,sex,phone_number,email,"0","0",1,
+        CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
                 IMAGE_URL)
 
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -172,7 +176,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                     val baos = ByteArrayOutputStream()
                     //giam dung luong truoc khi day len firebase :(
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
-                    DATA_UPDATE=baos.toByteArray()
+                    DATA_UPDATE = baos.toByteArray()
                     Toast.makeText(this@activity_profile_firstlogin, "Updating...", Toast.LENGTH_SHORT).show()
                     Upload()
                 } catch (e: FileNotFoundException) {
@@ -192,11 +196,10 @@ class activity_profile_firstlogin : PermissionsActivity() {
                         //giam dung luong truoc khi day len firebase :(
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         DATA_UPDATE = baos.toByteArray()
-                        imgUri=selectedImage
+                        imgUri = selectedImage
                         Toast.makeText(this@activity_profile_firstlogin, "Updating...", Toast.LENGTH_SHORT).show()
                         Upload()
-                    }
-                    catch (e: FileNotFoundException) {
+                    } catch (e: FileNotFoundException) {
                         e.printStackTrace()
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -208,6 +211,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
             Log.d("AAA", "DATA NULL")
         }
     }
+
     fun Upload() {
         if (DATA_UPDATE != null) {
             var dialog = ProgressDialog(this@activity_profile_firstlogin)
@@ -224,7 +228,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                             Toast.makeText(this@activity_profile_firstlogin,
                                     "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
                             //set image test
-                            IMAGE_URL=imgUploadLink
+                            IMAGE_URL = imgUploadLink
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                                     image_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
@@ -271,21 +275,37 @@ class activity_profile_firstlogin : PermissionsActivity() {
     override fun onBackPressed() {
 
     }
-    fun CreateUser(userId:String,name:String,sex:String,phone_number:String,email:String,latitude:String
-                   ,longitude:String,is_online:Int,avarta:String) {
-        var user =UserDC(userId,name,sex,phone_number,email,latitude,longitude,is_online,avarta)
-        mDatabase!!.child("users").child(userId).setValue(user)
+
+    fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
+                   , longitude: String, is_online: Int, avarta: String) {
+        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avarta)
+        mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
+        { databaseError, databaseReference ->
+            if (databaseError == null) {
+                Toast.makeText(this@activity_profile_firstlogin,"Cập nhập thành công",Toast.LENGTH_SHORT).show()
+                var intent=Intent(this@activity_profile_firstlogin,MainActivity::class.java)
+                intent.putExtra("userid",useID)
+                startActivity(intent)
+                finish()
+            }
+            else
+            {
+                Toast.makeText(this@activity_profile_firstlogin,"Lỗi rồi!!!!",Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-    fun loadData()
-    {
-        var intent=intent
-        var ten:String=intent.getStringExtra("username")
-        var email:String=intent.getStringExtra("email")
-        user_name_firstlogin.text=ten
+
+    fun loadData() {
+        var intent = intent
+        var ten: String = intent.getStringExtra("username")
+        var email: String = intent.getStringExtra("email")
+        useID=intent.getStringExtra("userid")
+        user_name_firstlogin.text = ten
         edit_text_name.setText(ten)
-        tv_email.text=email
+        tv_email.text = email
         blurImage()
     }
+
     fun blurImage() {
         val target = object : Target {
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
@@ -308,8 +328,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                 .into(target)
     }
 
-    fun tvdateselect()
-    {
+    fun tvdateselect() {
 
         tv_date_select.setOnClickListener {
             showDialog(999)
@@ -320,8 +339,8 @@ class activity_profile_firstlogin : PermissionsActivity() {
         // arg1 = year
         // arg2 = month
         // arg3 = day
-        var temp=arg2+1
-        tv_date_select.setText(""+arg3+"/"+temp+"/"+arg1)
+        var temp = arg2 + 1
+        tv_date_select.setText("" + arg3 + "/" + temp + "/" + arg1)
     }
 
     override fun onCreateDialog(id: Int): Dialog? {
@@ -331,8 +350,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         } else null
     }
 
-    fun spinner()
-    {
+    fun spinner() {
 // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter.createFromResource(this,
                 R.array.sex, android.R.layout.simple_spinner_item)
