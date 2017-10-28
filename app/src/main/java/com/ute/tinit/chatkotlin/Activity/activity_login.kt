@@ -1,6 +1,5 @@
 package com.ute.tinit.chatkotlin.Activity
 //tin
-import android.app.ProgressDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -87,7 +86,7 @@ class activity_login : AppCompatActivity() {
 
     fun displayNext(user: FirebaseUser?)
     {
-        var intent=Intent(this@activity_login,activity_profile_more_myprofile_changeprofile::class.java)
+        var intent=Intent(this@activity_login, activity_profile_firstlogin::class.java)
         intent.putExtra("userid", user!!.uid)
         intent.putExtra("username",user!!.displayName)
         intent.putExtra("email",user!!.email)

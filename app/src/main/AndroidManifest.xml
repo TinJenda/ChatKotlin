@@ -27,7 +27,7 @@
         <activity android:name=".Activity.activity_profile" />
         <activity android:name=".Activity.activity_profile_more" />
         <activity android:name=".Activity.activity_profile_more_myprofile" />
-        <activity android:name=".Activity.activity_profile_more_myprofile_changeprofile" />
+        <activity android:name=".Activity.activity_profile_firstlogin" />
         <activity android:name=".Activity.activity_setting" />
         <activity android:name=".Activity.activity_login">
             <intent-filter>
