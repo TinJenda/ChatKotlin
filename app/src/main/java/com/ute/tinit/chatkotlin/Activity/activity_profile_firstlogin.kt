@@ -235,7 +235,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    image_timeline.setImageResource(R.drawable.null_image)
+                                    image_timeline.setImageResource(R.drawable.default_avarta)
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
@@ -244,8 +244,8 @@ class activity_profile_firstlogin : PermissionsActivity() {
                             image_timeline.setTag(target)
                             Picasso.with(this@activity_profile_firstlogin)
                                     .load(IMAGE_URL)
-                                    .error(R.drawable.null_image)
-                                    .placeholder(R.drawable.null_image)
+                                    .error(R.drawable.default_avarta)
+                                    .placeholder(R.drawable.default_avarta)
                                     .centerCrop()
                                     .resize(800, 800)
                                     .into(target)
@@ -313,7 +313,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable) {
-                image_timeline.setImageResource(R.drawable.null_image)
+                image_timeline.setImageResource(R.drawable.default_avarta)
             }
 
             override fun onPrepareLoad(placeHolderDrawable: Drawable) {
@@ -322,9 +322,9 @@ class activity_profile_firstlogin : PermissionsActivity() {
         image_timeline.setTag(target)
         Picasso.with(this)
                 .load(IMAGE_URL)
-                .error(R.drawable.null_image)
+                .error(R.drawable.default_avarta)
                 .resize(800, 800)
-                .placeholder(R.drawable.null_image)
+                .placeholder(R.drawable.default_avarta)
                 .into(target)
     }
 

@@ -98,6 +98,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:textStyle="bold"
                         android:text="Tín Jenda"
                         android:visibility="gone"
@@ -202,6 +203,7 @@
 
             <EditText
                 android:id="@+id/et_phone"
+                android:theme="@style/Theme.App.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center|left"
