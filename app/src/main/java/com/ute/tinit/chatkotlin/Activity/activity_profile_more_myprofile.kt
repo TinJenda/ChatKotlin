@@ -52,7 +52,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
         setContentView(R.layout.layout_activity_profile_more_myprofile)
         toolbar1.setTitle("")
         setSupportActionBar(toolbar1)
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
 
         val handler: Handler = Handler()

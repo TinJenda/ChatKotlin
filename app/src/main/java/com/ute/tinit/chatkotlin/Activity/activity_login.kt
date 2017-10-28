@@ -25,7 +25,7 @@ class activity_login : AppCompatActivity() {
      var mAuth: FirebaseAuth?=null
      var mGoogleApiClient: GoogleApiClient? = null
      val RC_SIGN_IN = 9001
-
+     val logout_check="logout"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_login)
@@ -43,7 +43,11 @@ class activity_login : AppCompatActivity() {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
         btnLogin()
-        btnLogout()
+
+        if(logout_check.equals(""))
+        {
+            signOut()
+        }
     }
 
 
@@ -69,17 +73,26 @@ class activity_login : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         hideProgressDialog()
         if (user != null) {
-            login_succes.visibility=View.VISIBLE
+            Toast.makeText(this@activity_login,"Welcome...!",Toast.LENGTH_SHORT).show()
             btn_login.setVisibility(View.GONE)
-            tv_user_email.setText( user.displayName)
-            tv_user_id.setText(user.uid)
+//            tv_user_email.setText( user.displayName)
+//            tv_user_id.setText(user.uid)
+            displayNext(user)
         } else {
-            tv_user_id.setText(null)
-            login_succes.visibility=View.GONE
+//            tv_user_id.setText(null)
+//            login_succes.visibility=View.GONE
             btn_login.setVisibility(View.VISIBLE)
         }
     }
 
+    fun displayNext(user: FirebaseUser?)
+    {
+        var intent=Intent(this@activity_login,activity_profile_more_myprofile_changeprofile::class.java)
+        intent.putExtra("userid", user!!.uid)
+        intent.putExtra("username",user!!.displayName)
+        intent.putExtra("email",user!!.email)
+        startActivity(intent)
+    }
     fun onConnectionFailed(connectionResult: ConnectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -139,10 +152,8 @@ class activity_login : AppCompatActivity() {
                                 Toast.LENGTH_SHORT).show()
                         updateUI(null)
                     }
-
                     // ...
                     hideProgressDialog()
-
                 }
     }
 
@@ -150,13 +161,6 @@ class activity_login : AppCompatActivity() {
     {
         btn_login.setOnClickListener {
             signIn()
-        }
-    }
-
-    fun btnLogout()
-    {
-        btn_logout.setOnClickListener {
-            signOut()
         }
     }
 
