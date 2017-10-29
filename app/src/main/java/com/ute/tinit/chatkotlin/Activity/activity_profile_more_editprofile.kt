@@ -2,10 +2,6 @@ package com.ute.tinit.chatkotlin.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.os.Bundle
-import com.ute.tinit.chatkotlin.R
-import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.layout_activity_profile_first_login.*
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.ProgressDialog
@@ -13,14 +9,19 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
@@ -30,24 +31,28 @@ import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.MainActivity
+import com.ute.tinit.chatkotlin.R
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_profile_more_editprofile.*
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 
-class activity_profile_firstlogin : PermissionsActivity() {
+class activity_profile_more_editprofile : PermissionsActivity() {
     var year: Int = 0
     var month: Int = 0
     var day: Int = 0
+    var userid = ""
     private var mDatabase: DatabaseReference? = null
+    private var mAuth: FirebaseAuth? = null
     private var IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta.jpg?alt=media&token=d9bfc794-a5bd-47b7-966c-9bee18bfc75c"
     private var DATA_UPDATE: ByteArray? = null
     private var mStorageRef: StorageReference? = null
     var imgUploadLink: String = ""
     var imgUri: Uri? = null
-    private var useID=""
+
+
     companion object {
         var FB_STORAGE_PATH: String = "avarta/"
         var REQUEST_CODE: Int = 234
@@ -55,9 +60,16 @@ class activity_profile_firstlogin : PermissionsActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_activity_profile_first_login)
+        setContentView(R.layout.activity_profile_more_editprofile)
+        toolbarxx.setTitle("")
+        setSupportActionBar(toolbarxx)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance()
+        userid= mAuth!!.uid!!
         spinner()
         tvdateselect()
         loadData()
@@ -65,9 +77,24 @@ class activity_profile_firstlogin : PermissionsActivity() {
         updateAvarta()
         saveInfo()
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.getItemId()
+        when (id) {
+        // Respond to the action bar's Up/Home button
+            android.R.id.home -> {
+                //NavUtils.navigateUpFromSameTask(this);
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onBackPressed() {
+        finish()
+    }
 
     fun updateAvarta() {
-        btn_avarta_update.setOnClickListener {
+        btn_avarta_updatex.setOnClickListener {
             requestPermissions(Manifest.permission.CAMERA, object : PermissionCallBack {
                 @SuppressLint("MissingPermission")
                 override fun permissionGranted() {
@@ -78,7 +105,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                 override fun permissionDenied() {
                     super.permissionDenied()
                     Log.v("Call permissions", "Denied")
-                    Toast.makeText(this@activity_profile_firstlogin, "Vui lòng bật/chấp nhận quyền máy ảnh để thực hiện tính năng này", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@activity_profile_more_editprofile, "Vui lòng bật/chấp nhận quyền máy ảnh để thực hiện tính năng này", Toast.LENGTH_SHORT).show()
                 }
             })
 
@@ -86,7 +113,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
     }
 
     fun showFileChooser() {
-        val dialog = Dialog(this@activity_profile_firstlogin)
+        val dialog = Dialog(this@activity_profile_more_editprofile)
         // Include dialog.xml file
         dialog.setContentView(R.layout.dialog_list_select_image)
         // Set dialog title
@@ -113,7 +140,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                 override fun permissionDenied() {
                     super.permissionDenied()
                     Log.v("Call permissions", "Denied")
-                    Toast.makeText(this@activity_profile_firstlogin, "Vui lòng bật/chấp nhận quyền bộ nhớ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@activity_profile_more_editprofile, "Vui lòng bật/chấp nhận quyền bộ nhớ", Toast.LENGTH_SHORT).show()
                 }
             })
             dialog.dismiss()
@@ -122,36 +149,36 @@ class activity_profile_firstlogin : PermissionsActivity() {
     }
 
     fun editName() {
-        btn_edit_name.setOnClickListener {
-            user_name_firstlogin.visibility = View.GONE
-            edit_text_name.visibility = View.VISIBLE
-            btn_edit_name.visibility = View.GONE
-            btn_edit_name_save.visibility = View.VISIBLE
+        btn_edit_name_edit.setOnClickListener {
+            tv_username_edit.visibility = View.GONE
+            edit_username_edit.visibility = View.VISIBLE
+            btn_edit_name_edit.visibility = View.GONE
+            btn_edit_name_save_edit.visibility = View.VISIBLE
         }
 
-        btn_edit_name_save.setOnClickListener {
-            user_name_firstlogin.visibility = View.VISIBLE
-            edit_text_name.visibility = View.GONE
-            btn_edit_name.visibility = View.VISIBLE
-            btn_edit_name_save.visibility = View.GONE
-            user_name_firstlogin.text = edit_text_name.text.toString()
+        btn_edit_name_save_edit.setOnClickListener {
+            tv_username_edit.visibility = View.VISIBLE
+            edit_username_edit.visibility = View.GONE
+            btn_edit_name_edit.visibility = View.VISIBLE
+            btn_edit_name_save_edit.visibility = View.GONE
+            tv_username_edit.text = edit_username_edit.text.toString()
         }
     }
 
     fun saveInfo() {
-        btn_luuthongtin.setOnClickListener {
+        btn_save_info_edit.setOnClickListener {
             saveFirebase()
         }
     }
 
     fun saveFirebase() {
-        var intent = intent
-        var userID: String = intent.getStringExtra("userid")
-        var email: String = intent.getStringExtra("email")
-        var phone_number = "" + et_phone.text.toString()
-        var sex: String = sex_spinner.getSelectedItem().toString()
-        var tensave = edit_text_name.text.toString()
-        var ns=""+tv_date_select.text.toString()
+
+        var userID: String = userid
+        var email: String =tv_email_edit.text.toString()
+        var phone_number = "" + et_sodienthoai.text.toString()
+        var sex: String = select_gioitinh.getSelectedItem().toString()
+        var tensave = tv_username_edit.text.toString()
+        var ns=""+tv_ngaysinh.text.toString()
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
@@ -172,13 +199,13 @@ class activity_profile_firstlogin : PermissionsActivity() {
 
                 try {
                     var bitmap: Bitmap = data.getExtras().get("data") as Bitmap;
-                    image_avarta_firstlogin.setImageBitmap(bitmap);
+                    image_editx.setImageBitmap(bitmap);
                     //
                     val baos = ByteArrayOutputStream()
                     //giam dung luong truoc khi day len firebase :(
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
                     DATA_UPDATE = baos.toByteArray()
-                    Toast.makeText(this@activity_profile_firstlogin, "Updating...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@activity_profile_more_editprofile, "Updating...", Toast.LENGTH_SHORT).show()
                     Upload()
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
@@ -190,15 +217,15 @@ class activity_profile_firstlogin : PermissionsActivity() {
                 if (requestCode == 2 && resultCode == RESULT_OK) {
                     try {
                         val selectedImage = data!!.getData()
-                        image_avarta_firstlogin.setImageURI(selectedImage)
+                        image_editx.setImageURI(selectedImage)
                         val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImage)
-                        image_avarta_firstlogin.setImageBitmap(bitmap);
+                        image_editx.setImageBitmap(bitmap);
                         val baos = ByteArrayOutputStream()
                         //giam dung luong truoc khi day len firebase :(
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         DATA_UPDATE = baos.toByteArray()
                         imgUri = selectedImage
-                        Toast.makeText(this@activity_profile_firstlogin, "Updating...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@activity_profile_more_editprofile, "Updating...", Toast.LENGTH_SHORT).show()
                         Upload()
                     } catch (e: FileNotFoundException) {
                         e.printStackTrace()
@@ -215,7 +242,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
 
     fun Upload() {
         if (DATA_UPDATE != null) {
-            var dialog = ProgressDialog(this@activity_profile_firstlogin)
+            var dialog = ProgressDialog(this@activity_profile_more_editprofile)
             dialog.setTitle("Uploading image")
             dialog.show()
             //resize
@@ -226,24 +253,24 @@ class activity_profile_firstlogin : PermissionsActivity() {
                         override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
                             dialog.dismiss()
                             imgUploadLink = p0!!.getDownloadUrl().toString()
-                            Toast.makeText(this@activity_profile_firstlogin,
+                            Toast.makeText(this@activity_profile_more_editprofile,
                                     "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
                             //set image test
                             IMAGE_URL = imgUploadLink
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                                    image_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                    image_edit_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    image_timeline.setImageResource(R.drawable.default_avarta)
+                                    image_edit_timeline.setImageResource(R.drawable.default_avarta)
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
                                 }
                             }
-                            image_timeline.setTag(target)
-                            Picasso.with(this@activity_profile_firstlogin)
+                            image_edit_timeline.setTag(target)
+                            Picasso.with(this@activity_profile_more_editprofile)
                                     .load(IMAGE_URL)
                                     .error(R.drawable.default_avarta)
                                     .placeholder(R.drawable.default_avarta)
@@ -256,7 +283,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                     })
                     .addOnFailureListener {
                         dialog.dismiss()
-                        Toast.makeText(this@activity_profile_firstlogin,
+                        Toast.makeText(this@activity_profile_more_editprofile,
                                 "Image Error", Toast.LENGTH_SHORT).show()
 
                     }
@@ -268,70 +295,106 @@ class activity_profile_firstlogin : PermissionsActivity() {
 
                     })
         } else {
-            Toast.makeText(this@activity_profile_firstlogin,
+            Toast.makeText(this@activity_profile_more_editprofile,
                     "Select Image Error", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun onBackPressed() {
-
-    }
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
                    , longitude: String, is_online: Int, avarta: String,ns:String) {
         var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avarta,ns)
+        Log.d("BBB",userId)
+        Log.d("BBB",name)
+        Log.d("BBB",sex)
+        Log.d("BBB",phone_number)
+        Log.d("BBB",email)
+        Log.d("BBB",latitude)
+        Log.d("BBB",longitude)
+        Log.d("BBB",""+is_online)
+        Log.d("BBB",avarta)
+        Log.d("BBB",ns)
+
         mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
         { databaseError, databaseReference ->
             if (databaseError == null) {
-                Toast.makeText(this@activity_profile_firstlogin,"Cập nhập thành công",Toast.LENGTH_SHORT).show()
-                var intent=Intent(this@activity_profile_firstlogin,MainActivity::class.java)
-                intent.putExtra("userid",useID)
-                startActivity(intent)
+                Toast.makeText(this@activity_profile_more_editprofile,"Cập nhập thành công", Toast.LENGTH_SHORT).show()
                 finish()
+                Log.d("BBB","Cập nhập thành công")
             }
             else
             {
-                Toast.makeText(this@activity_profile_firstlogin,"Lỗi rồi!!!!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@activity_profile_more_editprofile,"Lỗi rồi!!!!", Toast.LENGTH_SHORT).show()
+                Log.d("BBB","lỗi rồi!!!!")
             }
         })
     }
 
     fun loadData() {
-        var intent = intent
-        var ten: String = intent.getStringExtra("username")
-        var email: String = intent.getStringExtra("email")
-        useID=intent.getStringExtra("userid")
-        user_name_firstlogin.text = ten
-        edit_text_name.setText(ten)
-        tv_email.text = email
-        blurImage()
-    }
+        var getuser: UserDC
+        mDatabase!!.child("users").child(userid)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                        Toast.makeText(this@activity_profile_more_editprofile, "AAA", Toast.LENGTH_SHORT).show()
+                    }
 
-    fun blurImage() {
-        val target = object : Target {
-            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                image_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
-            }
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        getuser = p0!!.getValue(UserDC::class.java)!!
+                        //  name= getuser.name!!
+                        // avartaURL= getuser.avarta!!
+                        tv_username_edit.text = getuser.name!!
+                        //select_gioitinh.text=getuser.sex
+                        if(getuser.sex!!.equals("Nam"))
+                        {
+                            select_gioitinh.setSelection(1)
+                        }
+                        else
+                        {
+                            if(getuser.sex!!.equals("Nữ"))
+                            {
+                                select_gioitinh.setSelection(2)
+                            }
+                            else
+                            {
+                                select_gioitinh.setSelection(0)
+                            }
+                        }
+                        tv_ngaysinh.text=getuser.date
+                        et_sodienthoai.setText(getuser.phone_number)
+                        tv_email_edit.text=getuser.email
+                        Picasso.with(this@activity_profile_more_editprofile)
+                                .load(getuser.avarta!!)
+                                .error(R.drawable.default_avarta)
+                                .into(image_editx)
+                        val handler: Handler = Handler()
+                        handler.postDelayed(Runnable {
+                            val target = object : Target {
+                                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                                    image_edit_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                }
 
-            override fun onBitmapFailed(errorDrawable: Drawable) {
-                image_timeline.setImageResource(R.drawable.default_avarta)
-            }
+                                override fun onBitmapFailed(errorDrawable: Drawable) {
+                                    image_edit_timeline.setImageResource(R.drawable.default_avarta)
+                                }
 
-            override fun onPrepareLoad(placeHolderDrawable: Drawable) {
-            }
-        }
-        image_timeline.setTag(target)
-        Picasso.with(this)
-                .load(IMAGE_URL)
-                .error(R.drawable.default_avarta)
-                .resize(800, 800)
-                .placeholder(R.drawable.default_avarta)
-                .into(target)
+                                override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                }
+                            }
+                            image_edit_timeline.setTag(target)
+                            Picasso.with(this@activity_profile_more_editprofile)
+                                    .load(getuser.avarta!!)
+                                    .error(R.drawable.default_avarta)
+                                    .resize(800, 800)
+                                    .placeholder(R.drawable.default_avarta)
+                                    .into(target)
+                        }, 100)
+                    }
+                })
     }
 
     fun tvdateselect() {
 
-        tv_date_select.setOnClickListener {
+        tv_ngaysinh.setOnClickListener {
             showDialog(999)
         }
     }
@@ -341,7 +404,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         // arg2 = month
         // arg3 = day
         var temp = arg2 + 1
-        tv_date_select.setText("" + arg3 + "/" + temp + "/" + arg1)
+        tv_ngaysinh.setText("" + arg3 + "/" + temp + "/" + arg1)
     }
 
     override fun onCreateDialog(id: Int): Dialog? {
@@ -358,7 +421,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
 // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 // Apply the adapter to the spinner
-        sex_spinner.adapter = adapter
-        sex_spinner.setSelection(0)
+        select_gioitinh.adapter = adapter
+        select_gioitinh.setSelection(0)
     }
 }

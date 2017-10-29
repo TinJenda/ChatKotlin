@@ -1,21 +1,27 @@
 package com.ute.tinit.chatkotlin.Activity
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.ute.tinit.chatkotlin.R
-import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.view.MenuItem
-
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
-import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
-import kotlinx.android.synthetic.main.custom_tab_contact.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import com.ute.tinit.chatkotlin.Adapter.BlurImage
+import com.ute.tinit.chatkotlin.DataClass.UserDC
 import kotlinx.android.synthetic.main.layout_activity_profile.*
 
 class activity_profile : AppCompatActivity() {
-
+    private var mAuth: FirebaseAuth? = null
+    private var mDatabase: DatabaseReference? = null
+    var userid = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_profile)
@@ -23,14 +29,12 @@ class activity_profile : AppCompatActivity() {
         setSupportActionBar(toolbar)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        blurImage()
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
+        userid = mAuth!!.uid!!
         nhatky_hinhanh()
         floatClick()
-    }
-
-    fun blurImage() {
-        val resultBmp = BlurBuilder.blur(this@activity_profile, BitmapFactory.decodeResource(resources, R.drawable.avarta))
-        toolbarImage.setImageBitmap(resultBmp)
+        loadData()
     }
 
     fun nhatky_hinhanh() {
@@ -75,4 +79,50 @@ class activity_profile : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    fun loadData() {
+        var getuser: UserDC
+        mDatabase!!.child("users").child(userid)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                        Toast.makeText(this@activity_profile, "AAA", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        getuser = p0!!.getValue(UserDC::class.java)!!
+                        //  name= getuser.name!!
+                        // avartaURL= getuser.avarta!!
+                        user_name_profile.text = getuser.name!!
+                        Picasso.with(this@activity_profile)
+                                .load(getuser.avarta!!)
+                                .error(R.drawable.default_avarta)
+                                .into(anh_dai_dien)
+                        val handler: Handler = Handler()
+                        handler.postDelayed(Runnable {
+                            val target = object : Target {
+                                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                                    Image_profile_activity.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                }
+
+                                override fun onBitmapFailed(errorDrawable: Drawable) {
+                                    Image_profile_activity.setImageResource(R.drawable.default_avarta)
+                                }
+
+                                override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                }
+                            }
+                            Image_profile_activity.setTag(target)
+                            Picasso.with(this@activity_profile)
+                                    .load(getuser.avarta!!)
+                                    .error(R.drawable.default_avarta)
+                                    .resize(800, 800)
+                                    .placeholder(R.drawable.default_avarta)
+                                    .into(target)
+                        }, 100)
+                    }
+                })
+        //  mDatabase!!.addValueEventListener(addValueEventListener)
+
+    }
+
 }

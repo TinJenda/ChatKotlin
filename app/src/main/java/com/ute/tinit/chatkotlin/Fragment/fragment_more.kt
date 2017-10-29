@@ -62,7 +62,6 @@ class fragment_more : Fragment() {
                     override fun onCancelled(p0: DatabaseError?) {
                         Toast.makeText(context, "AAA", Toast.LENGTH_SHORT).show()
                     }
-
                     override fun onDataChange(p0: DataSnapshot?) {
                         getuser = p0!!.getValue(UserDC::class.java)!!
                         //  name= getuser.name!!
