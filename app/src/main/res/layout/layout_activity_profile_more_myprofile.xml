@@ -133,8 +133,7 @@
                 android:id="@+id/tvGioiTinh"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:text="Nam" />
+                android:gravity="center|left" />
         </LinearLayout>
 
         <View
@@ -160,8 +159,7 @@
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:hint="22/04/1996"/>
+                android:gravity="center|left"/>
         </LinearLayout>
 
         <View
@@ -188,8 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center|left"
-                android:textSize="14dp"
-                android:text="01674251607"/>
+                android:textSize="14dp"/>
         </LinearLayout>
         <View
             android:layout_width="fill_parent"
@@ -215,8 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center|left"
-                android:textColor="@color/colorBlack"
-                android:text="tin@gmail.com" />
+                android:textColor="@color/colorBlack"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -229,7 +225,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/custom_button_doithongtin"
         android:gravity="center"
-        android:text="ĐỖI THÔNG TIN"
-        android:textColor="@color/colorWhile"
+        android:text="ĐỔI THÔNG TIN"
+        android:textColor="@color/colorYellow"
         android:textSize="18dp" />
 </LinearLayout>

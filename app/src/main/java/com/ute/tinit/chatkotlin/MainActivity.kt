@@ -20,17 +20,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Toast
 import com.ute.tinit.chatkotlin.Activity.activity_setting
 import android.widget.AdapterView.AdapterContextMenuInfo
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
-
+    private var mAuth: FirebaseAuth? = null
     var doubleClickExit: Boolean = false
+    var userid = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        var intent=intent
-        var userid=intent.getStringExtra("userid")
+        mAuth = FirebaseAuth.getInstance()
+        userid= mAuth!!.uid!!
+//        var intent=intent
+//        var userid=intent.getStringExtra("userid")
         Log.d("BBB",userid)
 
 

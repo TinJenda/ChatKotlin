@@ -154,6 +154,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
             edit_username_edit.visibility = View.VISIBLE
             btn_edit_name_edit.visibility = View.GONE
             btn_edit_name_save_edit.visibility = View.VISIBLE
+            edit_username_edit.setText(tv_username_edit.text)
         }
 
         btn_edit_name_save_edit.setOnClickListener {
@@ -168,6 +169,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
     fun saveInfo() {
         btn_save_info_edit.setOnClickListener {
             saveFirebase()
+            finish()
         }
     }
 
@@ -182,6 +184,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
+
         CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
                 IMAGE_URL,ns)
 
@@ -319,7 +322,6 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         { databaseError, databaseReference ->
             if (databaseError == null) {
                 Toast.makeText(this@activity_profile_more_editprofile,"Cập nhập thành công", Toast.LENGTH_SHORT).show()
-                finish()
                 Log.d("BBB","Cập nhập thành công")
             }
             else
@@ -343,6 +345,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         //  name= getuser.name!!
                         // avartaURL= getuser.avarta!!
                         tv_username_edit.text = getuser.name!!
+                        IMAGE_URL=getuser.avarta!!
                         //select_gioitinh.text=getuser.sex
                         if(getuser.sex!!.equals("Nam"))
                         {

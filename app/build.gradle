@@ -48,6 +48,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui:3.0.0'
     implementation 'com.google.firebase:firebase-database:11.4.2'
     implementation 'jp.wasabeef:blurry:2.1.1'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
 }
 apply plugin: 'com.google.gms.google-services'

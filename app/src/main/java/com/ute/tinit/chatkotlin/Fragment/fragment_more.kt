@@ -1,5 +1,6 @@
 package com.ute.tinit.chatkotlin.Fragment
 
+import android.Manifest
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -7,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.ute.tinit.chatkotlin.R
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_find_friend_location
@@ -19,9 +21,8 @@ import kotlinx.android.synthetic.main.layout_fragment_more.*
 import kotlinx.android.synthetic.main.layout_fragment_more.view.*
 import com.google.firebase.auth.FirebaseAuth
 
-
-
 class fragment_more : Fragment() {
+    private val PERMISSIONS_LOCATION= arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
@@ -49,12 +50,42 @@ class fragment_more : Fragment() {
     }
 
     fun btnTimQuanhDay(view: View) {
-        view.ln_timquanhday.setOnClickListener {
-            var intentTQD = Intent(activity, activity_find_friend_location::class.java)
-            startActivity(intentTQD)
-        }
+      view.ln_timquanhday.setOnClickListener {
+          if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                  && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+          {
+              var intentTQD = Intent(activity, activity_find_friend_location::class.java)
+              startActivity(intentTQD)
+          }
+          else
+          {
+              Toast.makeText(activity,"Vui lòng bật quyền vị trí!!!",Toast.LENGTH_SHORT).show()
+              ActivityCompat.requestPermissions( activity, PERMISSIONS_LOCATION,1234)
+          }
+      }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(activity, "Bạn đã không chấp nhận quyền vị trí :( ", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }// other 'case' lines to check for other
+        // permissions this app might request
+    }
     fun loadData(view: View) {
         var getuser: UserDC
         mDatabase!!.child("users").child(userid)
