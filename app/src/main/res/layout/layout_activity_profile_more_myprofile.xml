@@ -64,6 +64,7 @@
                         app:civ_border_color="@color/colorWhile"
                         app:civ_border_width="1dp" />
                     <ImageButton
+                        android:visibility="gone"
                         android:id="@+id/cap_nhap_anh_dd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

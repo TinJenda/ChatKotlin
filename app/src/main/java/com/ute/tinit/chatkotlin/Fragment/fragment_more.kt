@@ -60,7 +60,7 @@ class fragment_more : Fragment() {
           else
           {
               Toast.makeText(activity,"Vui lòng bật quyền vị trí!!!",Toast.LENGTH_SHORT).show()
-              ActivityCompat.requestPermissions( activity, PERMISSIONS_LOCATION,1234)
+              ActivityCompat.requestPermissions( activity, PERMISSIONS_LOCATION,1)
           }
       }
     }
