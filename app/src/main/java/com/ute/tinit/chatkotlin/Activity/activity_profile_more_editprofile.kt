@@ -345,7 +345,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         //  name= getuser.name!!
                         // avartaURL= getuser.avarta!!
                         tv_username_edit.text = getuser.name!!
-                        IMAGE_URL=getuser.avarta!!
+                        IMAGE_URL=getuser.avatar!!
                         //select_gioitinh.text=getuser.sex
                         if(getuser.sex!!.equals("Nam"))
                         {
@@ -366,7 +366,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         et_sodienthoai.setText(getuser.phone_number)
                         tv_email_edit.text=getuser.email
                         Picasso.with(this@activity_profile_more_editprofile)
-                                .load(getuser.avarta!!)
+                                .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
                                 .into(image_editx)
                         val handler: Handler = Handler()
@@ -385,7 +385,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                             }
                             image_edit_timeline.setTag(target)
                             Picasso.with(this@activity_profile_more_editprofile)
-                                    .load(getuser.avarta!!)
+                                    .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)
                                     .resize(800, 800)
                                     .placeholder(R.drawable.default_avarta)

@@ -94,7 +94,7 @@ class activity_profile : AppCompatActivity() {
                         // avartaURL= getuser.avarta!!
                         user_name_profile.text = getuser.name!!
                         Picasso.with(this@activity_profile)
-                                .load(getuser.avarta!!)
+                                .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
                                 .into(anh_dai_dien)
                         val handler: Handler = Handler()
@@ -113,7 +113,7 @@ class activity_profile : AppCompatActivity() {
                             }
                             Image_profile_activity.setTag(target)
                             Picasso.with(this@activity_profile)
-                                    .load(getuser.avarta!!)
+                                    .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)
                                     .resize(800, 800)
                                     .placeholder(R.drawable.default_avarta)

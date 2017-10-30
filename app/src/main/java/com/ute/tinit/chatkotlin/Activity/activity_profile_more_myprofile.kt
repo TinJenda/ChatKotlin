@@ -359,7 +359,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                         tv_sdt.text=getuser.phone_number
                         tv_email.text=getuser.email
                         Picasso.with(this@activity_profile_more_myprofile)
-                                .load(getuser.avarta!!)
+                                .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
                                 .into(image_myprofilex)
                         val handler: Handler = Handler()
@@ -378,7 +378,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                             }
                             image_timelinex.setTag(target)
                             Picasso.with(this@activity_profile_more_myprofile)
-                                    .load(getuser.avarta!!)
+                                    .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)
                                     .resize(800, 800)
                                     .placeholder(R.drawable.default_avarta)

@@ -24,12 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Laura Owens"
+            android:textSize="18dp"
+            android:text="Tin Truong"
             android:textColor="@color/colorBlack"
             android:layout_gravity="center_vertical"/>
         <View
             android:id="@+id/online_indicator"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:layout_marginLeft="@dimen/space5"
             android:layout_width="10dp"
             android:layout_height="10dp"

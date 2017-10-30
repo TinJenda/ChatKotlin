@@ -34,8 +34,9 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: List
     override fun onBindViewHolder(viewHolder: ContactAdapter.ViewHolder, position: Int) {
 
         viewHolder.tvName.setText(mArrayList[position].mName)
-        Picasso.with(mContext).load("http://taihinhanhdep.xyz/wp-content/uploads/2015/11/anh-dep-cho-dien-thoai-2.jpg")
-                .into(viewHolder.userPhoto);
+        Picasso.with(mContext).load(mArrayList[position].mImage)
+                .error(R.drawable.default_avarta)
+                .into(viewHolder.userPhoto)
         if (mArrayList[position].online) {
             viewHolder.onlineView.setBackgroundResource(R.drawable.bg_online)
         } else
@@ -52,7 +53,6 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: List
         var tvName: TextView
         var userPhoto: ImageView
         val onlineView: View
-        var online = false
         init {
 
             tvName = row.findViewById(R.id.tv_user_name)

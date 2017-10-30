@@ -99,7 +99,7 @@ class fragment_more : Fragment() {
                         // avartaURL= getuser.avarta!!
                         tv_user_name_more.text = getuser.name!!
                         Picasso.with(context)
-                                .load(getuser.avarta!!)
+                                .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
                                 .into(view.image_avarta)
                     }
