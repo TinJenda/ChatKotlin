@@ -72,9 +72,9 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         userid= mAuth!!.uid!!
         spinner()
         tvdateselect()
+        updateAvarta()
         loadData()
         editName()
-        updateAvarta()
         saveInfo()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -189,6 +189,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
                 IMAGE_URL,ns,friend)
 
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -226,7 +227,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         image_editx.setImageBitmap(bitmap);
                         val baos = ByteArrayOutputStream()
                         //giam dung luong truoc khi day len firebase :(
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos)
                         DATA_UPDATE = baos.toByteArray()
                         imgUri = selectedImage
                         Toast.makeText(this@activity_profile_more_editprofile, "Updating...", Toast.LENGTH_SHORT).show()
@@ -306,8 +307,8 @@ class activity_profile_more_editprofile : PermissionsActivity() {
 
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
-                   , longitude: String, is_online: Int, avarta: String,ns:String,friend:List<String>) {
-        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avarta,ns)
+                   , longitude: String, is_online: Int, avatar: String,ns:String,friend:List<String>) {
+        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns,friend)
         Log.d("BBB",userId)
         Log.d("BBB",name)
         Log.d("BBB",sex)
@@ -316,9 +317,8 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         Log.d("BBB",latitude)
         Log.d("BBB",longitude)
         Log.d("BBB",""+is_online)
-        Log.d("BBB",avarta)
+        Log.d("BBB",avatar)
         Log.d("BBB",ns)
-
         mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
         { databaseError, databaseReference ->
             if (databaseError == null) {
@@ -334,6 +334,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
     }
 
     fun loadData() {
+        try {
         var getuser: UserDC
         mDatabase!!.child("users").child(userid)
                 .addValueEventListener(object : ValueEventListener {
@@ -394,6 +395,11 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         }, 100)
                     }
                 })
+    }
+        catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
     }
 
     fun tvdateselect() {

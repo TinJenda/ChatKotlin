@@ -151,7 +151,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         var sex: String = sex_spinner.getSelectedItem().toString()
         var tensave = edit_text_name.text.toString()
         var ns=""+tv_date_select.text.toString()
-        var friend= listOf<String>("VqQahB7aoxMLvcXUNY0uke4yloz2")
+        var friend= listOf<String>("E0A8P9YEmUXS9NCUK6EqaZR1kk32")
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
