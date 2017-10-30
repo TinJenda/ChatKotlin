@@ -14,7 +14,9 @@ import com.squareup.picasso.Picasso
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ContactAdapter(private val mContext: Context, private val mArrayList: List<ContactDC>, private val clickListener: ContactAdapter.ViewHolder.ClickListener) : SelectableAdapter<ContactAdapter.ViewHolder>() {
+class ContactAdapter(private val mContext: Context, private val mArrayList: List<ContactDC>
+                     , private val clickListener: ContactAdapter.ViewHolder.ClickListener) : SelectableAdapter<ContactAdapter.ViewHolder>()
+{
     override fun getItemCount(): Int {
         return mArrayList.size
     }

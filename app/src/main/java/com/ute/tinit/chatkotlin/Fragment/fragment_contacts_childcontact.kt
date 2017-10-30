@@ -29,7 +29,7 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
-
+    val data = ArrayList<ContactDC>()
     init {
         setHasOptionsMenu(true)
     }
@@ -46,30 +46,35 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
         mAuth = FirebaseAuth.getInstance()
         userid = mAuth!!.uid!!
         Log.d("userid", " " + userid)
+
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
-        mAdapter = ContactAdapter(context, setData(), this)
+        mAdapter = ContactAdapter(context, data, this)
         mRecyclerView!!.adapter = mAdapter
+        setData()
         // loadData(view)
         return view
     }
 
-
-    fun setData(): List<ContactDC> {
-        val data = ArrayList<ContactDC>()
+    fun setData()
+    {
         mDatabase!!.child("users").child(userid).child("friend")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
-                        Toast.makeText(context, "AAA", Toast.LENGTH_SHORT).show()
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
+
                     override fun onDataChange(p0: DataSnapshot?) {
+
                         for (postSnapshot in p0!!.getChildren()) {
                             Log.d("test", "Key: " + postSnapshot.key + " = " + postSnapshot.getValue().toString())
                             var idFriend = postSnapshot.getValue().toString() //kiem tra
                             mDatabase!!.child("users").child(idFriend)
                                     .addValueEventListener(object : ValueEventListener {
                                         override fun onDataChange(p0: DataSnapshot?) {
+                                            Log.d("AAA","Update tai day")
+                                            data.clear()
                                             var getFriend: UserDC = p0!!.getValue(UserDC::class.java)!!
                                             var tempOnline = getFriend.online
                                             var isonline: Boolean = true
@@ -83,16 +88,19 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
                                             Log.d("AAA"," "+getFriend.avatar!!)
                                             Log.d("AAA"," "+tempOnline)
                                             data.add(contact)
-                                            mAdapter!!.notifyDataSetChanged();
+                                            mAdapter!!.notifyDataSetChanged()
                                         }
 
                                         override fun onCancelled(p0: DatabaseError?) {
+                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                         }
+
                                     })
                         }
                     }
+
+
                 })
-        return data
     }
 
     override fun onItemClicked(position: Int) {

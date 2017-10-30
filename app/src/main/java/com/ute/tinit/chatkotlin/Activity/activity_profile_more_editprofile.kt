@@ -181,12 +181,13 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         var sex: String = select_gioitinh.getSelectedItem().toString()
         var tensave = tv_username_edit.text.toString()
         var ns=""+tv_ngaysinh.text.toString()
+        var friend= listOf<String>("VqQahB7aoxMLvcXUNY0uke4yloz2") //lay xuong sau
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
 
         CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
-                IMAGE_URL,ns)
+                IMAGE_URL,ns,friend)
 
     }
 
@@ -305,7 +306,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
 
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
-                   , longitude: String, is_online: Int, avarta: String,ns:String) {
+                   , longitude: String, is_online: Int, avarta: String,ns:String,friend:List<String>) {
         var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avarta,ns)
         Log.d("BBB",userId)
         Log.d("BBB",name)
