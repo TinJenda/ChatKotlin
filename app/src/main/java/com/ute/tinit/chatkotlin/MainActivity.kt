@@ -21,6 +21,7 @@ import android.widget.Toast
 import com.ute.tinit.chatkotlin.Activity.activity_setting
 import android.widget.AdapterView.AdapterContextMenuInfo
 import com.google.firebase.auth.FirebaseAuth
+import com.ute.tinit.chatkotlin.Activity.activity_addfriend
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +46,15 @@ class MainActivity : AppCompatActivity() {
         tabViewPage()
         btnSetting()
         btnInsertMore()
+        btnInsertFriend()
+
+    }
+    fun btnInsertFriend()
+    {
+        btnInsertFriend.setOnClickListener {
+            var intent=Intent(this@MainActivity,activity_addfriend::class.java)
+            startActivity(intent)
+        }
     }
 
     fun tabViewPage() {

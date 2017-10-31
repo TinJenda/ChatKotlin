@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_toolbar"
+        app:elevation="0dp">
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar_addfr"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_toolbar"
+            app:contentInsetLeft="0dp"
+            android:background="@color/mainColor"
+            app:contentInsetStart="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetEnd="0dp"
+            android:theme="@style/Theme.BackWhile"
+            app:contentInsetRight="0dp"
+            app:contentInsetEnd="0dp">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:text="Thêm bạn"
+                android:textSize="@dimen/h1"
+                android:textColor="@android:color/white"/>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="3dp"
+        android:layout_height="@dimen/size_toolbar">
+        <EditText
+            android:layout_width="280dp"
+
+            android:layout_height="@dimen/size_toolbar"
+            android:background="@color/colorDefaultBackground"
+            android:hint="  Search..."/>
+        <Spinner
+            android:id="@+id/id_select_search"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="3dp"
+            android:background="@color/colorDefaultBackground"
+            android:gravity="left|center"
+            android:textSize="15sp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnsearch"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="@dimen/size_toolbar"
+        android:text="Tìm"
+        android:background="@drawable/bg_button_1"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_find_friend"
+        android:background="@color/colorDefaultBackground"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
+
+
+

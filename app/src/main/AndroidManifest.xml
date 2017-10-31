@@ -27,7 +27,7 @@
         android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".Activity.Activity_flash_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,14 +40,12 @@
         <activity android:name=".Activity.activity_profile_more_myprofile" />
         <activity android:name=".Activity.activity_profile_firstlogin" />
         <activity android:name=".Activity.activity_setting" />
-        <activity android:name=".Activity.activity_login"></activity>
+        <activity android:name=".Activity.activity_login" />
         <activity android:name=".Activity.activity_new_account" />
         <activity android:name=".Activity.activity_chat_active" />
         <activity android:name=".Activity.activity_find_friend_location" />
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Activity.activity_profile_more_editprofile"></activity>
+        <activity android:name=".Activity.activity_profile_more_editprofile" />
+        <activity android:name=".Activity.activity_addfriend"></activity>
     </application>
 
 </manifest>
