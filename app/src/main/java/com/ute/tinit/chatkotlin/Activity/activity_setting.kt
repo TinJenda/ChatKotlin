@@ -36,7 +36,7 @@ class activity_setting : AppCompatActivity() {
             alertDialogBuilder.setMessage("Bạn có muốn đăng xuất không?")
             // thiết lập nội dung cho dialog
             alertDialogBuilder.setPositiveButton("Có") { arg0, arg1 ->
-                mDatabase!!.child("users").child(userid).child("online").setValue(0);
+                mDatabase!!.child("users").child(userid).child("online").setValue(0)
                 AuthUI.getInstance().signOut(this@activity_setting).addOnCompleteListener {
                     // do something here
                     var intent = Intent(this@activity_setting, activity_login::class.java)

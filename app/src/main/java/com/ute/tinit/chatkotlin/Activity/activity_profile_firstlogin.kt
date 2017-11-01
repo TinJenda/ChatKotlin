@@ -151,7 +151,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         var sex: String = sex_spinner.getSelectedItem().toString()
         var tensave = edit_text_name.text.toString()
         var ns=""+tv_date_select.text.toString()
-        var friend= listOf<String>("E0A8P9YEmUXS9NCUK6EqaZR1kk32")
+        var friend= arrayListOf<String>("E0A8P9YEmUXS9NCUK6EqaZR1kk32")
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
@@ -277,7 +277,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
     }
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
-                   , longitude: String, is_online: Int, avatar: String,ns:String,friend:List<String>) {
+                   , longitude: String, is_online: Int, avatar: String,ns:String,friend:ArrayList<String>) {
         var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns,friend)
         mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
         { databaseError, databaseReference ->

@@ -21,6 +21,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.GenericTypeIndicator
+import android.support.v7.widget.DividerItemDecoration
+import com.ute.tinit.chatkotlin.R.id.recyclerView
+
+
 
 
 class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.ClickListener {
@@ -29,7 +33,9 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
-    val data = ArrayList<ContactDC>()
+    var x=5
+    var data= arrayListOf<ContactAdapter.AdapterContact>()
+
     init {
         setHasOptionsMenu(true)
     }
@@ -50,15 +56,18 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
-        mAdapter = ContactAdapter(context, data, this)
-        mRecyclerView!!.adapter = mAdapter
+
         setData()
+//
+        mAdapter = ContactAdapter(context,  data, this)
+        mRecyclerView!!.adapter = mAdapter
+
         // loadData(view)
         return view
     }
 
-    fun setData()
-    {
+    fun setData(){
+
         mDatabase!!.child("users").child(userid).child("friend")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
@@ -67,14 +76,23 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
 
                     override fun onDataChange(p0: DataSnapshot?) {
 
+                        Log.d("test", "DATA CLEAR")
+
+                        // danh sach ban
                         for (postSnapshot in p0!!.getChildren()) {
                             Log.d("test", "Key: " + postSnapshot.key + " = " + postSnapshot.getValue().toString())
-                            var idFriend = postSnapshot.getValue().toString() //kiem tra
+                            var idFriend = postSnapshot.getValue().toString() // id ban
+
+                            //
+
+                            // liva datta
                             mDatabase!!.child("users").child(idFriend)
                                     .addValueEventListener(object : ValueEventListener {
+                                        override fun onCancelled(p0: DatabaseError?) {
+                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                        }
                                         override fun onDataChange(p0: DataSnapshot?) {
-                                            Log.d("AAA","Update tai day")
-                                            data.clear()
+                                            Log.d("AAA", "Update tai day")
                                             var getFriend: UserDC = p0!!.getValue(UserDC::class.java)!!
                                             var tempOnline = getFriend.online
                                             var isonline: Boolean = true
@@ -83,23 +101,22 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
                                             } else {
                                                 isonline = false
                                             }
-                                            val contact: ContactDC = ContactDC(getFriend.name!!, getFriend.avatar!!, isonline)
-                                            Log.d("AAA"," "+getFriend.name!!)
-                                            Log.d("AAA"," "+getFriend.avatar!!)
-                                            Log.d("AAA"," "+tempOnline)
-                                            data.add(contact)
-                                            mAdapter!!.notifyDataSetChanged()
-                                        }
+                                            val contact = ContactAdapter.AdapterContact(getFriend.userID!!, getFriend.name!!, getFriend.avatar!!, isonline)
+                                            Log.d("AAA", " " + getFriend.name!!)
+                                            Log.d("AAA", " " + getFriend.avatar!!)
+                                            Log.d("AAA", " " + tempOnline)
 
-                                        override fun onCancelled(p0: DatabaseError?) {
-                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                            // kiem tra contact da co trong list
+                                            if ((mRecyclerView!!.adapter as ContactAdapter).isContactAdded(contact))
+                                                (mRecyclerView!!.adapter as ContactAdapter).notifyFriendStatusChange(contact)
+                                            else
+                                                (mRecyclerView!!.adapter as ContactAdapter).addFriend(contact)
+//
                                         }
 
                                     })
                         }
                     }
-
-
                 })
     }
 

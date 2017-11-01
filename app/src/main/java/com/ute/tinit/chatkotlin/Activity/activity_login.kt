@@ -106,6 +106,8 @@ class activity_login : AppCompatActivity() {
             if (result.isSuccess) {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = result.signInAccount
+                // thay doi trang thai online cua uer
+                // users/{id}/status = "online"
                 firebaseAuthWithGoogle(account!!)
             } else {
                 // Google Sign In failed, update UI appropriately

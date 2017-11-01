@@ -6,9 +6,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ChatAdapter
 import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ContactAdapter
 import com.ute.tinit.chatkotlin.Chat_contact_Adapter.FindFriendsAdapter
@@ -20,7 +23,11 @@ import kotlinx.android.synthetic.main.activity_profile_more_editprofile.*
 import kotlinx.android.synthetic.main.layout_activity_addfriend.*
 import kotlinx.android.synthetic.main.layout_activity_profile_first_login.*
 import kotlinx.android.synthetic.main.layout_activity_setting.*
+import kotlinx.android.synthetic.main.layout_fragment_more.*
+import kotlinx.android.synthetic.main.layout_fragment_more.view.*
 import java.util.ArrayList
+import com.google.firebase.database.DataSnapshot
+
 
 class activity_addfriend : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
@@ -37,7 +44,7 @@ class activity_addfriend : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
-        userid= mAuth!!.uid!!
+        userid = mAuth!!.uid!!
         spinner()
         mRecyclerView = findViewById(R.id.rv_find_friend)
         mRecyclerView!!.setHasFixedSize(true)
@@ -45,13 +52,17 @@ class activity_addfriend : AppCompatActivity() {
         mAdapter = FindFriendsAdapter(this@activity_addfriend, data)
         mRecyclerView!!.adapter = mAdapter
         setData()
+        btnsearch.setOnClickListener {
+            loadData()
+        }
+
     }
-    fun setData()
-    {
-        var test=FindFriendDC("1","Tin","0","http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
-        var test1=FindFriendDC("2","Tin 1","1","http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
-        var test2=FindFriendDC("3","Tin 2","2","http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
-        var test3=FindFriendDC("4","Tin 3","2","http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
+
+    fun setData() {
+        var test = FindFriendDC("1", "Tin", "0", "http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
+        var test1 = FindFriendDC("2", "Tin 1", "1", "http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
+        var test2 = FindFriendDC("3", "Tin 2", "2", "http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
+        var test3 = FindFriendDC("4", "Tin 3", "2", "http://hinhnendepnhat.net/wp-content/uploads/2017/07/nhung-hinh-anh-dep-danh-cho-facebook-ve-chu-meo-dang-yeu.jpg")
         data.add(test)
         data.add(test1)
         data.add(test2)
@@ -126,4 +137,50 @@ class activity_addfriend : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun loadData() {
+
+        var getuser: UserDC
+        mDatabase!!.child("users")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                        Toast.makeText(this@activity_addfriend, "AAA", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        Log.d("BBB", "Vao dayddd")
+                        if (id_select_search.getSelectedItem().toString().equals("Email")) {
+                            Log.d("BBB", "Da chon email")
+                            mDatabase!!.child("users").orderByChild("email").equalTo(ed_find_friend.text.toString())
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(p0: DatabaseError?) {
+                                            Toast.makeText(this@activity_addfriend, "AAA", Toast.LENGTH_SHORT).show()
+                                        }
+
+                                        override fun onDataChange(p0: DataSnapshot?) {
+                                            if (p0!!.getValue() != null) {
+                                                Log.d("BBB", "Data change email")
+                                                for (childSnapshot in p0!!.getChildren()) {
+                                                    var getUser: UserDC = p0!!.getValue(UserDC::class.java)!!
+//                                                    Log.d("BBB", " " + getUser.name!!)
+//                                                    Log.d("BBB", " " + getUser.avatar!!)
+//                                                    Log.d("BBB", " " + getUser.email)
+                                                    Log.d("BBB", "key = "+childSnapshot.key)
+                                                }
+                                            } else {
+                                                Toast.makeText(this@activity_addfriend, "Không tìm thấy Email bạn vừa nhập"
+                                                        , Toast.LENGTH_SHORT).show()
+                                            }
+
+
+                                        }
+
+
+                                    })
+
+                        }
+                    }
+
+                })
+        //  mDatabase!!.addValueEventListener(addValueEventListener)
+    }
 }

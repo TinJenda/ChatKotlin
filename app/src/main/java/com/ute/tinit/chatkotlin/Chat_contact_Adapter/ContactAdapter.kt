@@ -11,14 +11,40 @@ import android.widget.TextView
 import com.ute.tinit.chatkotlin.DataClass.ContactDC
 import com.ute.tinit.chatkotlin.R
 import com.squareup.picasso.Picasso
+
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ContactAdapter(private val mContext: Context, private val mArrayList: List<ContactDC>
+class ContactAdapter(private val mContext: Context, private val mArrayList: ArrayList<AdapterContact>
                      , private val clickListener: ContactAdapter.ViewHolder.ClickListener) : SelectableAdapter<ContactAdapter.ViewHolder>()
 {
+
+    class AdapterContact (var id:String, var mName:String, var mImage:String, var online:Boolean)
+
     override fun getItemCount(): Int {
         return mArrayList.size
+    }
+
+    fun isContactAdded(contact: AdapterContact): Boolean {
+        for (c: AdapterContact in mArrayList)
+            if (contact.id == c.id)
+                return true
+        return false;
+    }
+
+    fun notifyFriendStatusChange(contact: AdapterContact) {
+        for (i in 0..mArrayList.size-1) {
+            if (mArrayList[i].id == contact.id) {
+                mArrayList[i] = contact
+                notifyItemChanged(i)
+                break
+            }
+        }
+    }
+
+    fun addFriend(contact: AdapterContact) {
+        mArrayList.add(contact)
+        notifyItemInserted(mArrayList.size)
     }
 
     // Create new views

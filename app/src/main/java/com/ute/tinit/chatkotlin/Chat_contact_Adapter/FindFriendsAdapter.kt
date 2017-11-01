@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.DataClass.FindFriendDC
 import com.ute.tinit.chatkotlin.R
@@ -78,11 +79,11 @@ class FindFriendsAdapter(private val mContext: Context, private val mArrayList: 
 
     (row: View) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
         override fun onClick(v: View?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            Toast.makeText(v!!.context,"Ajojo",Toast.LENGTH_SHORT).show()
         }
 
         override fun onLongClick(v: View?): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return true
         }
 
         var tvName: TextView
@@ -104,13 +105,5 @@ class FindFriendsAdapter(private val mContext: Context, private val mArrayList: 
             row.setOnLongClickListener(this)
         }
 
-
-        interface ClickListener {
-            fun onItemClicked(position: Int)
-
-            fun onItemLongClicked(position: Int): Boolean
-
-            fun onCreateOptionsMenu(menu: Menu): Boolean
-        }
     }
 }
