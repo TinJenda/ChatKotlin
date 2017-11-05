@@ -1,0 +1,254 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/mainColor"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/Image_profile_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_avarta"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:theme="@style/Theme.BackWhile"
+                app:layout_collapseMode="pin">
+
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="50dp"
+                android:gravity="left|center_horizontal"
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/anh_dai_dien"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center|left"
+                    android:src="@drawable/avarta"
+                    app:civ_border_color="@color/colorWhile"
+                    app:civ_border_width="1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="left|center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_name_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:text="Tín Jenda"
+                        android:textColor="@color/colorWhile"
+                        android:textSize="25dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:id="@+id/relative_anh_bia"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/liner_nhatky_anh"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_toolbar"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/btnNhatKy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_size_default">
+
+                    <TextView
+                        android:id="@+id/txtNhatKy"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Nhật ký"
+                        android:textColor="@color/mainColor"
+                        android:textSize="@dimen/text_size_default" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnAnh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_size_default">
+
+                    <TextView
+                        android:id="@+id/txtAnh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Ảnh"
+                        android:textColor="@color/colorDefaultText"
+                        android:textSize="@dimen/text_size_default" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/liner_nhatky"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/liner_nhatky_anh"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/ln_request_friends"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:text="Hãy gửi lời kết bạn và \n chém gió...kk"
+                        android:textSize="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnKetBan"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/custom_button_doithongtin"
+                            android:text="Kết bạn"
+                            android:textColor="@color/colorWhile"/>
+
+                        <Button
+                            android:id="@+id/btnHuyKetBan"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/custom_button_doithongtin"
+                            android:text="Hủy kết bạn"
+                            android:textColor="@color/colorWhile"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/btnNhanTin"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/custom_button_doithongtin"
+                            android:text="Nhắn tin"
+                            android:textColor="@color/colorWhile" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ln_dongy_tuchoi"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp">
+                        <Button
+                            android:id="@+id/btnDongYYC"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/custom_button_doithongtin"
+                            android:text="Đồng ý"
+                            android:textColor="@color/colorWhile" />
+
+                        <Button
+                            android:id="@+id/btnTuChoiYC"
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/custom_button_doithongtin"
+                            android:text="Từ chối"
+                            android:textColor="@color/colorWhile" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/liner_hinhanh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/liner_nhatky_anh"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:src="@drawable/avarta" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnFloatProfile"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/mainColor"
+        android:scaleType="center"
+        android:src="@drawable/ic_pluss"
+        app:layout_anchor="@id/appBar"
+        app:layout_anchorGravity="bottom|end" />
+
+</android.support.design.widget.CoordinatorLayout>

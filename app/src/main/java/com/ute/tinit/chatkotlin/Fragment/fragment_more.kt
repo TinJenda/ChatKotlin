@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.layout_fragment_more.view.*
 import com.google.firebase.auth.FirebaseAuth
 
 class fragment_more : Fragment() {
-    private val PERMISSIONS_LOCATION= arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    private val PERMISSIONS_LOCATION=arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
@@ -94,14 +94,17 @@ class fragment_more : Fragment() {
                         Toast.makeText(context, "AAA", Toast.LENGTH_SHORT).show()
                     }
                     override fun onDataChange(p0: DataSnapshot?) {
-                        getuser = p0!!.getValue(UserDC::class.java)!!
-                        //  name= getuser.name!!
-                        // avartaURL= getuser.avarta!!
-                        tv_user_name_more.text = getuser.name!!
-                        Picasso.with(context)
-                                .load(getuser.avatar!!)
-                                .error(R.drawable.default_avarta)
-                                .into(view.image_avarta)
+                        if(p0!!.getValue()!=null)
+                        {
+                            getuser = p0!!.getValue(UserDC::class.java)!!
+                            //  name= getuser.name!!
+                            // avartaURL= getuser.avarta!!
+                            tv_user_name_more.text = ""+getuser.name!!
+                            Picasso.with(context)
+                                    .load(getuser.avatar!!)
+                                    .error(R.drawable.default_avarta)
+                                    .into(view.image_avarta)
+                        }
                     }
                 })
         //  mDatabase!!.addValueEventListener(addValueEventListener)

@@ -10,7 +10,6 @@ import android.support.v7.widget.PopupMenu
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import com.ute.tinit.chatkotlin.Fragment.fragment_chat
 import com.ute.tinit.chatkotlin.Fragment.fragment_contacts
 import com.ute.tinit.chatkotlin.Fragment.fragment_more
@@ -19,9 +18,8 @@ import com.ute.tinit.chatkotlin.Adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Toast
 import com.ute.tinit.chatkotlin.Activity.activity_setting
-import android.widget.AdapterView.AdapterContextMenuInfo
 import com.google.firebase.auth.FirebaseAuth
-import com.ute.tinit.chatkotlin.Activity.activity_addfriend
+import com.ute.tinit.chatkotlin.Activity.activity_find_friend
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     fun btnInsertFriend()
     {
         btnInsertFriend.setOnClickListener {
-            var intent=Intent(this@MainActivity,activity_addfriend::class.java)
+            var intent=Intent(this@MainActivity, activity_find_friend::class.java)
             startActivity(intent)
         }
     }

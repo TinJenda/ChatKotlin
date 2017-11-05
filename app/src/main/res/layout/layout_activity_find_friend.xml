@@ -46,6 +46,8 @@
             android:id="@+id/ed_find_friend"
             android:layout_width="280dp"
             android:layout_height="@dimen/size_toolbar"
+            android:singleLine="true"
+            android:maxLines="1"
             android:background="@color/colorDefaultBackground"
             android:hint="  Search..."/>
         <Spinner
@@ -64,7 +66,16 @@
         android:layout_height="@dimen/size_toolbar"
         android:text="Tìm"
         android:background="@drawable/bg_button_1"/>
-
+<TextView
+    android:id="@+id/tv_noti_findfriends"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/colorDefaultBackground"
+    android:visibility="gone"
+    android:gravity="center"
+    android:textSize="16dp"
+    android:textColor="@color/colorRed"
+    android:text="Không tìm thấy dữ liệu"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_find_friend"
         android:background="@color/colorDefaultBackground"

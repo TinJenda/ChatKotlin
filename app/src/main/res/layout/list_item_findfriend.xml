@@ -30,54 +30,6 @@
             android:text="Tin Truong"
             android:textColor="@color/colorBlack"
             android:layout_gravity="center_vertical"/>
-        <Button
-            android:id="@+id/id_sendrequest_add_friend"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="50dp"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="Kết bạn"
-            android:textColor="@color/colorWhile"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/custom_button_doithongtin"/>
-        <Button
-            android:id="@+id/idDongY"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="30dp"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="Đồng ý"
-            android:textColor="@color/colorWhile"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/custom_button_doithongtin"/>
-        <Button
-            android:id="@+id/idKhongDongY"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="Từ chối"
-            android:textColor="@color/colorWhile"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/custom_button_doithongtin"/>
-        <Button
-            android:id="@+id/idhuyYeuCau"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="50dp"
-            android:layout_width="120dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="Hủy yêu cầu"
-            android:textColor="@color/colorWhile"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/custom_button_doithongtin"/>
     </LinearLayout>
     <View
         android:layout_below="@+id/ln_contact"

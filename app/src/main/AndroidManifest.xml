@@ -45,7 +45,8 @@
         <activity android:name=".Activity.activity_chat_active" />
         <activity android:name=".Activity.activity_find_friend_location" />
         <activity android:name=".Activity.activity_profile_more_editprofile" />
-        <activity android:name=".Activity.activity_addfriend"></activity>
+        <activity android:name=".Activity.activity_find_friend" />
+        <activity android:name=".Activity.activity_friend_profile"></activity>
     </application>
 
 </manifest>

@@ -33,7 +33,6 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
-    var x=5
     var data= arrayListOf<ContactAdapter.AdapterContact>()
 
     init {
@@ -75,8 +74,6 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
                     }
 
                     override fun onDataChange(p0: DataSnapshot?) {
-
-                        Log.d("test", "DATA CLEAR")
 
                         // danh sach ban
                         for (postSnapshot in p0!!.getChildren()) {
