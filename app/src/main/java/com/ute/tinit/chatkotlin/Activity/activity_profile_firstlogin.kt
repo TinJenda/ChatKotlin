@@ -63,6 +63,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         editName()
         updateAvarta()
         saveInfo()
+        Toast.makeText(this@activity_profile_firstlogin,"Đăng nhập lần đầu",Toast.LENGTH_SHORT).show()
     }
 
     fun updateAvarta() {

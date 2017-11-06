@@ -19,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.common.api.Status
+import com.google.firebase.database.*
+import com.ute.tinit.chatkotlin.MainActivity
 
 
 class activity_login : AppCompatActivity() {
@@ -82,12 +84,32 @@ class activity_login : AppCompatActivity() {
     }
 
     fun displayNext(user: FirebaseUser?) {
-        var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
-        intent.putExtra("userid", user!!.uid)
-        intent.putExtra("username", user!!.displayName)
-        intent.putExtra("email", user!!.email)
-        startActivity(intent)
-        finish()
+         var mDatabase: DatabaseReference? = null
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mDatabase!!.child("users")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+
+                    }
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        if (p0!!.hasChild(user!!.uid)) {
+                            var intent = Intent(this@activity_login, MainActivity::class.java)
+                            intent.putExtra("userid", user!!.uid)
+                            intent.putExtra("username", user!!.displayName)
+                            intent.putExtra("email", user!!.email)
+                            startActivity(intent)
+                        }
+                        else
+                        {
+                            var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
+                            intent.putExtra("userid", user!!.uid)
+                            intent.putExtra("username", user!!.displayName)
+                            intent.putExtra("email", user!!.email)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                })
     }
 
     fun onConnectionFailed(connectionResult: ConnectionResult) {
