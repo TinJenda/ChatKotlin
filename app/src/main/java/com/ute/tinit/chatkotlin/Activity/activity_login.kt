@@ -86,32 +86,30 @@ class activity_login : AppCompatActivity() {
     fun displayNext(user: FirebaseUser?) {
         var mDatabase: DatabaseReference? = null
         mDatabase = FirebaseDatabase.getInstance().getReference()
-
-        mDatabase!!.child("users")
+         mDatabase!!.child("users").child(user!!.uid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
 
                     }
-
                     override fun onDataChange(p0: DataSnapshot?) {
-                        if (p0!!.hasChild(user!!.uid)) {
-                            mDatabase!!.child("users").child(user!!.uid).child("online").setValue(1)
+                        if (p0!!.getValue()!=null) {
                             var intent = Intent(this@activity_login, MainActivity::class.java)
                             intent.putExtra("userid", user!!.uid)
                             intent.putExtra("username", user!!.displayName)
                             intent.putExtra("email", user!!.email)
                             startActivity(intent)
-                            finish()
+                            mDatabase!!.child("users").child(user!!.uid).removeEventListener(this)
                         } else {
                             var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
                             intent.putExtra("userid", user!!.uid)
                             intent.putExtra("username", user!!.displayName)
                             intent.putExtra("email", user!!.email)
                             startActivity(intent)
-                            finish()
                         }
                     }
                 })
+
+        finish()
     }
 
     fun onConnectionFailed(connectionResult: ConnectionResult) {

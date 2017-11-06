@@ -37,6 +37,7 @@ class activity_chat_active : AppCompatActivity() {
 
     fun textEmply() {
         btn_send.isEnabled = false
+        btn_send.setImageResource(R.drawable.ic_send_disable)
         et_message.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 Log.d("AAA","afterTextChagne "+et_message.text)

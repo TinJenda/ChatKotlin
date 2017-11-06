@@ -40,7 +40,7 @@ class activity_setting : AppCompatActivity() {
                 AuthUI.getInstance().signOut(this@activity_setting).addOnCompleteListener {
                     // do something here
                     var intent = Intent(this@activity_setting, activity_login::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     intent.putExtra("logout", "logout")
                     startActivity(intent)
                 }

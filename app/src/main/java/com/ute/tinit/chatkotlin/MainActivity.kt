@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Toast
 import com.ute.tinit.chatkotlin.Activity.activity_setting
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.ute.tinit.chatkotlin.Activity.activity_find_friend
 
 
@@ -26,20 +28,25 @@ class MainActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     var doubleClickExit: Boolean = false
     var userid = ""
+    private var mDatabase: DatabaseReference? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
+        userid= mAuth!!.uid!!
 //        mAuth = FirebaseAuth.getInstance()
 //        userid= mAuth!!.uid!!
 ////        var intent=intent
 ////        var userid=intent.getStringExtra("userid")
 //        Log.d("BBB",userid)
 
-        val bundle = Bundle()
-        bundle.putString("edttext", "From Activity")
-        val fragobj = fragment_more()
-        fragobj.setArguments(bundle)
-
+//        val bundle = Bundle()
+//        bundle.putString("edttext", "From Activity")
+//        val fragobj = fragment_more()
+//        fragobj.setArguments(bundle)
+        mDatabase!!.child("users").child(userid).child("online").setValue(1)
         tabViewPage()
         btnSetting()
         btnInsertMore()

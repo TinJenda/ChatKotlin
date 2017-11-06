@@ -87,7 +87,6 @@ class fragment_more : Fragment() {
         // permissions this app might request
     }
     fun loadData(view: View) {
-        var getuser: UserDC
         mDatabase!!.child("users").child(userid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
@@ -95,10 +94,10 @@ class fragment_more : Fragment() {
                     override fun onDataChange(p0: DataSnapshot?) {
                         if(p0!!.getValue()!=null)
                         {
-                            getuser = p0!!.getValue(UserDC::class.java)!!
+                            var getuser:UserDC = p0!!.getValue(UserDC::class.java)!!
                             //  name= getuser.name!!
                             // avartaURL= getuser.avarta!!
-                            tv_user_name_more.text = ""+getuser.name!!.toString()
+                            tv_username_tab_more.setText(""+getuser.name!!)
                             Picasso.with(context)
                                     .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)
