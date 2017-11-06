@@ -91,7 +91,6 @@ class fragment_more : Fragment() {
         mDatabase!!.child("users").child(userid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
-                        Toast.makeText(context, "AAA", Toast.LENGTH_SHORT).show()
                     }
                     override fun onDataChange(p0: DataSnapshot?) {
                         if(p0!!.getValue()!=null)
@@ -99,7 +98,7 @@ class fragment_more : Fragment() {
                             getuser = p0!!.getValue(UserDC::class.java)!!
                             //  name= getuser.name!!
                             // avartaURL= getuser.avarta!!
-                            tv_user_name_more.text = ""+getuser.name!!
+                            tv_user_name_more.text = ""+getuser.name!!.toString()
                             Picasso.with(context)
                                     .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)

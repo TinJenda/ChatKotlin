@@ -31,11 +31,12 @@ class activity_chat_active : AppCompatActivity() {
         setSupportActionBar(toolbar_chat)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        init()
+        loadDATA()
         textEmply()
     }
 
     fun textEmply() {
+        btn_send.isEnabled = false
         et_message.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 Log.d("AAA","afterTextChagne "+et_message.text)
@@ -68,17 +69,17 @@ class activity_chat_active : AppCompatActivity() {
         })
     }
 
-    fun init() {
+    fun loadDATA() {
 
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
         mAdapter = ChatDataAdapter(this@activity_chat_active, setData() as MutableList<ChatDataDC>)
         mRecyclerView!!.adapter = mAdapter
-        mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 1000)
+        mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 500)
 
         text = findViewById(R.id.et_message)
-        text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 500) }
+        text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
         btn_send.setOnClickListener {
             if (!text!!.text.equals("")) {
                 val data = ArrayList<ChatDataDC>()
@@ -90,9 +91,12 @@ class activity_chat_active : AppCompatActivity() {
             }
         }
         tv_title.setText("Tin Truong")
-
     }
 
+    fun getName()
+    {
+
+    }
     fun setData(): List<ChatDataDC> {
         val data = ArrayList<ChatDataDC>()
 

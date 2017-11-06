@@ -44,8 +44,8 @@ class activity_login : AppCompatActivity() {
                 }/* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
-                var intent=intent
-              btnLogin()
+        var intent=intent
+        btnLogin()
     }
 
 
@@ -84,7 +84,7 @@ class activity_login : AppCompatActivity() {
     }
 
     fun displayNext(user: FirebaseUser?) {
-         var mDatabase: DatabaseReference? = null
+        var mDatabase: DatabaseReference? = null
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mDatabase!!.child("users")
                 .addValueEventListener(object : ValueEventListener {
@@ -98,6 +98,7 @@ class activity_login : AppCompatActivity() {
                             intent.putExtra("username", user!!.displayName)
                             intent.putExtra("email", user!!.email)
                             startActivity(intent)
+                            finish()
                         }
                         else
                         {

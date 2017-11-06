@@ -29,12 +29,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mAuth = FirebaseAuth.getInstance()
-        userid= mAuth!!.uid!!
-//        var intent=intent
-//        var userid=intent.getStringExtra("userid")
-        Log.d("BBB",userid)
-
+//        mAuth = FirebaseAuth.getInstance()
+//        userid= mAuth!!.uid!!
+////        var intent=intent
+////        var userid=intent.getStringExtra("userid")
+//        Log.d("BBB",userid)
 
         val bundle = Bundle()
         bundle.putString("edttext", "From Activity")

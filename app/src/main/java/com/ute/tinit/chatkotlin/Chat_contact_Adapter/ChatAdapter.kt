@@ -21,7 +21,7 @@ import android.widget.TextView
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ChatAdapter(private val mContext: Context, private val mArrayList: List<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ChatAdapter.ViewHolder>() {
+class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ChatAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return mArrayList.size

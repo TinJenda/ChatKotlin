@@ -35,14 +35,14 @@ class fragment_chat : Fragment(), ChatAdapter.ViewHolder.ClickListener {
         return view
     }
 
-    fun setData(): List<ChatDC> {
+    fun setData(): ArrayList<ChatDC> {
         val data = ArrayList<ChatDC>()
-        val name = arrayOf("Laura Owens", "Angela Price", "Donald Turner", "Kelly", "Julia Harris", "Laura Owens", "Angela Price", "Donald Turner", "Kelly", "Julia Harris")
-        val lastchat = arrayOf("Hi Laura Owens", "Hi there how are you", "Can we meet?", "Ow this awesome", "How are you?", "Ow this awesome", "How are you?", "Ow this awesome", "How are you?", "How are you?")
+        val name = arrayListOf("Laura Owens", "Angela Price", "Donald Turner", "Kelly", "Julia Harris", "Laura Owens", "Angela Price", "Donald Turner", "Kelly", "Julia Harris")
+        val lastchat = arrayListOf("Hi Laura Owens", "Hi there how are you", "Can we meet?", "Ow this awesome", "How are you?", "Ow this awesome", "How are you?", "Ow this awesome", "How are you?", "How are you?")
         val online = booleanArrayOf(true, false, true, false, true, true, true, false, false, true)
 
         for (i in 0..9) {
-            var chat=ChatDC(name[i],lastchat[i],"5:42","",online[i])
+            var chat=ChatDC("",name[i],lastchat[i],"5:42","",online[i])
             data.add(chat)
         }
         return data
