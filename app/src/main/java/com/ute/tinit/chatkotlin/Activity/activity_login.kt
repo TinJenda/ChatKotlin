@@ -99,17 +99,17 @@ class activity_login : AppCompatActivity() {
                             intent.putExtra("email", user!!.email)
                             startActivity(intent)
                             mDatabase!!.child("users").child(user!!.uid).removeEventListener(this)
+                            finish()
                         } else {
                             var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
                             intent.putExtra("userid", user!!.uid)
                             intent.putExtra("username", user!!.displayName)
                             intent.putExtra("email", user!!.email)
                             startActivity(intent)
+                            finish()
                         }
                     }
                 })
-
-        finish()
     }
 
     fun onConnectionFailed(connectionResult: ConnectionResult) {

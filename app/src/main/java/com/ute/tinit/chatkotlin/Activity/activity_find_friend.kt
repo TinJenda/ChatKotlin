@@ -166,6 +166,7 @@ class activity_find_friend : AppCompatActivity() {
 
                         } else {
                             //search theo ten
+                            data.clear()
                             mDatabase!!.child("users").orderByChild("name")
                                     .startAt(ed_find_friend.text.toString())
                                     .endAt(ed_find_friend.text.toString() + "\uf8ff")
@@ -199,10 +200,16 @@ class activity_find_friend : AppCompatActivity() {
                                                                Log.d("BBB", " " + temp.email)
                                                                var dataTemp = FindFriendDC(temp.userID, temp.name, temp.avatar)
 
-                                                               if ((mRecyclerView!!.adapter as FindFriendsAdapter).isAdded(dataTemp))
-                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).notifyChange(dataTemp)
-                                                               else
-                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).addItem(dataTemp)
+//                                                               if ((mRecyclerView!!.adapter as FindFriendsAdapter).isAdded(dataTemp))
+//                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).notifyChange(dataTemp)
+//                                                               else
+//                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).addItem(dataTemp)
+                                                               data.add(dataTemp)
+                                                               (mRecyclerView!!.adapter as FindFriendsAdapter).notifyDataSetChanged()
+                                                               mDatabase!!.child("users").child(keyChild).removeEventListener(this)
+                                                               mDatabase!!.child("users").orderByChild("name")
+                                                                       .startAt(ed_find_friend.text.toString())
+                                                                       .endAt(ed_find_friend.text.toString() + "\uf8ff").removeEventListener(this)
                                                                tv_noti_findfriends.visibility = View.GONE
                                                            }
                                                         }
