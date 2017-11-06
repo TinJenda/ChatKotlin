@@ -17,7 +17,6 @@ import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_new_account.*
 
 class activity_new_account : AppCompatActivity() {
-
     private val TAG = "PhoneLogin"
     private var mVerificationInProgress = false
     private var mVerificationId: String? = null

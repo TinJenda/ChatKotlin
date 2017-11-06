@@ -23,20 +23,12 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
-import com.ute.tinit.chatkotlin.MainActivity
-import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
-import kotlinx.android.synthetic.main.layout_activity_profile.*
-import java.io.ByteArrayOutputStream
-import java.io.FileNotFoundException
-import java.io.IOException
 
 class activity_profile_more_myprofile : PermissionsActivity() {
 

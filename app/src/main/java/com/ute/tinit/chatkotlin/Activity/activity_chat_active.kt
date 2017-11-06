@@ -92,11 +92,7 @@ class activity_chat_active : AppCompatActivity() {
         }
         tv_title.setText("Tin Truong")
     }
-
-    fun getName()
-    {
-
-    }
+    
     fun setData(): List<ChatDataDC> {
         val data = ArrayList<ChatDataDC>()
 

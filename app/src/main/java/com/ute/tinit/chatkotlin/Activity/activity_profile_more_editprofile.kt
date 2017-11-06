@@ -30,7 +30,6 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
-import com.ute.tinit.chatkotlin.MainActivity
 import com.ute.tinit.chatkotlin.R
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity

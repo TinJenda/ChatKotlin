@@ -13,7 +13,6 @@ class fragment_contacts : Fragment () {
      var mTabHost: FragmentTabHost? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
