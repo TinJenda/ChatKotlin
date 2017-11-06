@@ -29,7 +29,7 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
         for (c: AdapterContact in mArrayList)
             if (contact.id == c.id)
                 return true
-        return false;
+        return false
     }
 
     fun notifyFriendStatusChange(contact: AdapterContact) {
@@ -42,6 +42,16 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
         }
     }
 
+    fun updateArrayList(contact: AdapterContact)
+    {
+        for (i in 0..mArrayList.size-1) {
+            if (mArrayList[i].id != contact.id) {
+                mArrayList.remove(mArrayList[i])
+                notifyDataSetChanged()
+                break
+            }
+        }
+    }
     fun addFriend(contact: AdapterContact) {
         mArrayList.add(contact)
         notifyItemInserted(mArrayList.size)

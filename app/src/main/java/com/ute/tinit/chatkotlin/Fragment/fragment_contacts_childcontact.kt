@@ -67,52 +67,54 @@ class fragment_contacts_childcontact : Fragment(), ContactAdapter.ViewHolder.Cli
 
     fun setData(){
 
-        mDatabase!!.child("users").child(userid).child("friend")
+       mDatabase!!.child("friends").child(userid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
-
                     override fun onDataChange(p0: DataSnapshot?) {
-
                         // danh sach ban
-                        for (postSnapshot in p0!!.getChildren()) {
-                            Log.d("test", "Key: " + postSnapshot.key + " = " + postSnapshot.getValue().toString())
-                            var idFriend = postSnapshot.getValue().toString() // id ban
+                     if(p0!!.getValue()!=null)
+                     {
+                         for (childSnapshot in p0!!.getChildren())
+                         {
+                             var getFR=childSnapshot.getValue().toString()
+                             Log.d("friendxxx",getFR)
+                                     //get dua len list
+                             mDatabase!!.child("users").child(getFR)
+                                     .addValueEventListener(object : ValueEventListener {
+                                         override fun onCancelled(p0: DatabaseError?) {
+                                             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                         }
+                                         override fun onDataChange(p0: DataSnapshot?) {
+                                             Log.d("AAA", "Update tai day")
+                                             var getFriend: UserDC = p0!!.getValue(UserDC::class.java)!!
+                                             var tempOnline = getFriend.online
+                                             var isonline: Boolean = true
+                                             if (tempOnline == 1) {
+                                                 isonline = true
+                                             } else {
+                                                 isonline = false
+                                             }
+                                             val contact = ContactAdapter.AdapterContact(getFriend.userID!!, getFriend.name!!, getFriend.avatar!!, isonline)
+                                             Log.d("AAA", " " + getFriend.name!!)
+                                             Log.d("AAA", " " + getFriend.avatar!!)
+                                             Log.d("AAA", " " + tempOnline)
 
-                            //
-
-                            // liva datta
-                            mDatabase!!.child("users").child(idFriend)
-                                    .addValueEventListener(object : ValueEventListener {
-                                        override fun onCancelled(p0: DatabaseError?) {
-                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                        }
-                                        override fun onDataChange(p0: DataSnapshot?) {
-                                            Log.d("AAA", "Update tai day")
-                                            var getFriend: UserDC = p0!!.getValue(UserDC::class.java)!!
-                                            var tempOnline = getFriend.online
-                                            var isonline: Boolean = true
-                                            if (tempOnline == 1) {
-                                                isonline = true
-                                            } else {
-                                                isonline = false
-                                            }
-                                            val contact = ContactAdapter.AdapterContact(getFriend.userID!!, getFriend.name!!, getFriend.avatar!!, isonline)
-                                            Log.d("AAA", " " + getFriend.name!!)
-                                            Log.d("AAA", " " + getFriend.avatar!!)
-                                            Log.d("AAA", " " + tempOnline)
-
-                                            // kiem tra contact da co trong list
-                                            if ((mRecyclerView!!.adapter as ContactAdapter).isContactAdded(contact))
-                                                (mRecyclerView!!.adapter as ContactAdapter).notifyFriendStatusChange(contact)
-                                            else
-                                                (mRecyclerView!!.adapter as ContactAdapter).addFriend(contact)
+                                             // kiem tra contact da co trong list
+                                             if ((mRecyclerView!!.adapter as ContactAdapter).isContactAdded(contact))
+                                                 (mRecyclerView!!.adapter as ContactAdapter).notifyFriendStatusChange(contact)
+                                             else
+                                                 (mRecyclerView!!.adapter as ContactAdapter).addFriend(contact)
+                                             (mRecyclerView!!.adapter as ContactAdapter).updateArrayList(contact)
 //
-                                        }
+                                         }
 
-                                    })
-                        }
+                                     })
+                         }
+                     }else
+                     {
+                         Log.d("friendx","DATA NULL")
+                     }
                     }
                 })
     }

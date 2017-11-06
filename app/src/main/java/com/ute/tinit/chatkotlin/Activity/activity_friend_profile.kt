@@ -55,41 +55,7 @@ class activity_friend_profile : AppCompatActivity() {
     }
 
     fun ketBan() {
-        var count_userid: Int = -1
-        var count_userFR: Int = -1
-        mDatabase!!.child("users").child(userid).child("friend")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError?) {
-                    }
 
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        if (p0!!.getValue() != null) {
-                            count_userid = p0.childrenCount.toInt()
-
-                        }
-                        else
-                        {
-                            count_userid =0
-                        }
-                    }
-                })
-        //tinh so friendhien tai de them <list> loi chua xu ly dc
-        mDatabase!!.child("users").child(userFR).child("friend")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError?) {
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        if (p0!!.getValue() != null) {
-                            count_userFR = p0.childrenCount.toInt()
-                        }
-                        else
-                        {
-                            count_userFR =0
-                        }
-                    }
-
-                })
         btnKetBan.setOnClickListener {
             var setRF = RequestFriendDC(userid, userFR, userid, "0")
             mDatabase!!.child("request_friend").push().setValue(setRF)
@@ -102,10 +68,16 @@ class activity_friend_profile : AppCompatActivity() {
             mDatabase!!.child("request_friend").child(keytemp).setValue(setRFDY1)
             //tinh so friendhien tai de them <list> loi chua xu ly dc
             // them 2 friend vao ds cua nhau
-            mDatabase!!.child("users").child(userid).child("friend").child("" + count_userid).setValue(userFR)
-            mDatabase!!.child("users").child(userFR).child("friend").child("" + count_userFR).setValue(userid)
+            mDatabase!!.child("friends").child(userid).push().setValue(userFR)
+            mDatabase!!.child("friends").child(userFR).push().setValue(userid)
             Toast.makeText(this@activity_friend_profile,"Kết bạn thành công",Toast.LENGTH_SHORT).show()
 
+        }
+        btnTuChoiYC.setOnClickListener {
+            mDatabase!!.child("request_friend").child(keytemp).removeValue()
+            btnHuyKetBan.visibility = View.GONE
+            btnKetBan.visibility = View.VISIBLE
+            ln_dongy_tuchoi.visibility = View.GONE
         }
         btnHuyKetBan.setOnClickListener {
             Log.d("statusx", "status btn huy kb" + status_rf)

@@ -308,7 +308,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
                    , longitude: String, is_online: Int, avatar: String,ns:String,friend:ArrayList<String>) {
-        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns,friend)
+        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns)
         Log.d("BBB",userId)
         Log.d("BBB",name)
         Log.d("BBB",sex)
