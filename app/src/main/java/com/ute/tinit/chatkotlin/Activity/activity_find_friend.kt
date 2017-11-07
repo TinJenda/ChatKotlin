@@ -163,7 +163,6 @@ class activity_find_friend : AppCompatActivity() {
                                             }
                                         }
                                     })
-
                         } else {
                             //search theo ten
                             data.clear()
