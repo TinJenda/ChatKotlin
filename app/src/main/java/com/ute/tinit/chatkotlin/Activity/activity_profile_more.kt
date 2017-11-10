@@ -4,19 +4,22 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.ute.tinit.chatkotlin.R
 import com.ute.tinit.chatkotlin.R.id.toolbar
 import kotlinx.android.synthetic.main.layout_activity_profile_more.*
 import kotlinx.android.synthetic.main.layout_fragment_more.*
 
 class activity_profile_more : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_profile_more)
         setSupportActionBar(toolbar)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+
         btnThongTin()
     }
 

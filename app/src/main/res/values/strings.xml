@@ -24,4 +24,11 @@
         <item>Email</item>
         <item>Tên</item>
     </string-array>
+
+    <string-array name="emails">
+        <item>outlook.com</item>
+        <item>gmail.com</item>
+        <item>yahoo.com</item>
+    </string-array>
+
 </resources>

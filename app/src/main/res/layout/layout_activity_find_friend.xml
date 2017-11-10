@@ -42,14 +42,25 @@
         android:orientation="horizontal"
         android:layout_marginTop="3dp"
         android:layout_height="@dimen/size_toolbar">
-        <EditText
+        <!--<EditText-->
+            <!--android:id="@+id/ed_find_friend"-->
+            <!--android:layout_width="280dp"-->
+            <!--android:layout_height="@dimen/size_toolbar"-->
+            <!--android:singleLine="true"-->
+            <!--android:maxLines="1"-->
+            <!--android:background="@color/colorDefaultBackground"-->
+            <!--android:hint="  Search..."-->
+            <!--/>-->
+        <com.tuyenmonkey.AutoFillEditText
             android:id="@+id/ed_find_friend"
             android:layout_width="280dp"
             android:layout_height="@dimen/size_toolbar"
-            android:singleLine="true"
             android:maxLines="1"
             android:background="@color/colorDefaultBackground"
-            android:hint="  Search..."/>
+            android:hint="  Search..."
+            app:mode="email"
+            app:suggestions="@array/emails"
+            />
         <Spinner
             android:id="@+id/id_select_search"
             android:layout_width="match_parent"

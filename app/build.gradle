@@ -48,5 +48,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui:3.0.0'
     implementation 'com.google.firebase:firebase-database:11.4.2'
     implementation 'jp.wasabeef:blurry:2.1.1'
+    implementation 'com.tuyenmonkey:mkloader:1.4.0'
+    implementation 'com.tuyenmonkey:auto-fill-edit-text:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

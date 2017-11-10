@@ -38,14 +38,13 @@ class fragment_more : Fragment() {
         userid= mAuth!!.uid!!
 
         Log.d("AAA", "userid " + userid)
-
+        loadData(view)
         view.btn_linear_Profile.setOnClickListener {
             Toast.makeText(activity, "Open profile", Toast.LENGTH_SHORT).show()
             var intent = Intent(activity, activity_profile::class.java)
             startActivity(intent)
         }
         btnTimQuanhDay(view)
-        loadData(view)
         return view
     }
 
@@ -97,7 +96,7 @@ class fragment_more : Fragment() {
                             var getuser:UserDC = p0!!.getValue(UserDC::class.java)!!
                             //  name= getuser.name!!
                             // avartaURL= getuser.avarta!!
-                            tv_username_tab_more.setText(""+getuser.name!!)
+                            view.tv_username.text=""+getuser.name!!
                             Picasso.with(context)
                                     .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)

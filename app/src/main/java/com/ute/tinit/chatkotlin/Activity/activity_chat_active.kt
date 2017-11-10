@@ -11,8 +11,11 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.ute.tinit.chatkotlin.ChatAction.ChatDataAdapter
 import com.ute.tinit.chatkotlin.DataClass.ChatDataDC
+import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.content_chat_activity.*
 import kotlinx.android.synthetic.main.toolbar_chat.*
@@ -23,7 +26,11 @@ class activity_chat_active : AppCompatActivity() {
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: ChatDataAdapter? = null
     private var text: EditText? = null
-
+    private var mDatabase: DatabaseReference? = null
+    private var mAuth: FirebaseAuth? = null
+    var userid = ""
+    var userFR=""
+    var nameUser:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat_active)
@@ -31,10 +38,35 @@ class activity_chat_active : AppCompatActivity() {
         setSupportActionBar(toolbar_chat)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
+        userid= mAuth!!.uid!!
+        var intent=intent
+        userFR=intent.getStringExtra("userfriend")
         loadDATA()
         textEmply()
     }
 
+    fun getNameById(idUser:String):String
+    {
+        var temp=""
+        mDatabase!!.child("users").child(idUser).addValueEventListener(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError?) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+                if(p0!!.getValue()!=null)
+                {
+                    var getFriend:UserDC=p0.getValue(UserDC::class.java)!!
+                    temp=getFriend.name!!
+                    Log.d("userFR",temp)
+                    Log.d("userFR",getFriend.userID)
+                }
+            }
+
+        })
+        return temp
+    }
     fun textEmply() {
         btn_send.isEnabled = false
         btn_send.setImageResource(R.drawable.ic_send_disable)
@@ -61,17 +93,13 @@ class activity_chat_active : AppCompatActivity() {
                     btn_send.setImageResource(R.drawable.ic_send)
                 }
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
             }
-
-
         })
     }
 
     fun loadDATA() {
-
+        Log.d("userFR","user "+userFR)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
@@ -81,8 +109,26 @@ class activity_chat_active : AppCompatActivity() {
 
         text = findViewById(R.id.et_message)
         text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
+
+        mDatabase!!.child("users").child(userFR)
+                .addValueEventListener(object :ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError?) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        if(p0!!.getValue()!=null)
+                        {
+                            var getFriend:UserDC=p0.getValue(UserDC::class.java)!!
+                            tv_title.setText(getFriend.name!!)
+                            Log.d("userFR",getFriend.userID)
+                        }
+                    }
+
+                })
+
         btn_send.setOnClickListener {
-            if (!text!!.text.equals("")) {
+            if (!text!!.text.equals("")||!text!!.text.equals(null)) {
+                mDatabase!!.child("")
                 val data = ArrayList<ChatDataDC>()
                 val item = ChatDataDC("2", text!!.text.toString(), "6:00")
                 data.add(item)
@@ -91,12 +137,11 @@ class activity_chat_active : AppCompatActivity() {
                 text!!.setText("")
             }
         }
-        tv_title.setText("Tin Truong")
     }
-    
+
+
     fun setData(): List<ChatDataDC> {
         val data = ArrayList<ChatDataDC>()
-
         val text = arrayOf("15 September", "Hi, Julia! How are you?", "Hi, Joe, looks great! :) ", "I'm fine. Wanna go out somewhere?", "Yes! Coffe maybe?",
                 "Great idea! You can come 9:00 pm? :)))", "Ok!", "Ow my good, this Kit is totally awesome", "Can you provide other kit?", "I don't have much time, " +
                 ":`(", "16 September", "Yes! Coffe maybe?")
