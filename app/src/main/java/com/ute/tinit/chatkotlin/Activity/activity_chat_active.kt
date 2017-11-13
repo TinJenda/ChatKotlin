@@ -11,10 +11,13 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ute.tinit.chatkotlin.ChatAction.ChatDataAdapter
 import com.ute.tinit.chatkotlin.DataClass.ChatDataDC
+import com.ute.tinit.chatkotlin.DataClass.ConversationDC
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.content_chat_activity.*
@@ -29,8 +32,8 @@ class activity_chat_active : AppCompatActivity() {
     private var mDatabase: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
     var userid = ""
-    var userFR=""
-    var nameUser:String=""
+    var userFR = ""
+    var nameUser: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat_active)
@@ -40,39 +43,38 @@ class activity_chat_active : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
-        userid= mAuth!!.uid!!
-        var intent=intent
-        userFR=intent.getStringExtra("userfriend")
+        userid = mAuth!!.uid!!
+        var intent = intent
+        userFR = intent.getStringExtra("userfriend")
         loadDATA()
         textEmply()
     }
 
-    fun getNameById(idUser:String):String
-    {
-        var temp=""
-        mDatabase!!.child("users").child(idUser).addValueEventListener(object :ValueEventListener{
+    fun getNameById(idUser: String): String {
+        var temp = ""
+        mDatabase!!.child("users").child(idUser).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                if(p0!!.getValue()!=null)
-                {
-                    var getFriend:UserDC=p0.getValue(UserDC::class.java)!!
-                    temp=getFriend.name!!
-                    Log.d("userFR",temp)
-                    Log.d("userFR",getFriend.userID)
+                if (p0!!.getValue() != null) {
+                    var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
+                    temp = getFriend.name!!
+                    Log.d("userFR", temp)
+                    Log.d("userFR", getFriend.userID)
                 }
             }
 
         })
         return temp
     }
+
     fun textEmply() {
         btn_send.isEnabled = false
         btn_send.setImageResource(R.drawable.ic_send_disable)
         et_message.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                Log.d("AAA","afterTextChagne "+et_message.text)
+                Log.d("AAA", "afterTextChagne " + et_message.text)
                 if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
                     btn_send.isEnabled = false
                     btn_send.setImageResource(R.drawable.ic_send_disable)
@@ -83,7 +85,7 @@ class activity_chat_active : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d("AAA","beforeTextChanged "+et_message.text)
+                Log.d("AAA", "beforeTextChanged " + et_message.text)
                 if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
                     btn_send.isEnabled = false
                     btn_send.setImageResource(R.drawable.ic_send_disable)
@@ -93,13 +95,14 @@ class activity_chat_active : AppCompatActivity() {
                     btn_send.setImageResource(R.drawable.ic_send)
                 }
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
     }
 
     fun loadDATA() {
-        Log.d("userFR","user "+userFR)
+        Log.d("userFR", "user " + userFR)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
@@ -111,30 +114,92 @@ class activity_chat_active : AppCompatActivity() {
         text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
 
         mDatabase!!.child("users").child(userFR)
-                .addValueEventListener(object :ValueEventListener{
+                .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
                     }
 
                     override fun onDataChange(p0: DataSnapshot?) {
-                        if(p0!!.getValue()!=null)
-                        {
-                            var getFriend:UserDC=p0.getValue(UserDC::class.java)!!
-                            tv_title.setText(getFriend.name!!)
-                            Log.d("userFR",getFriend.userID)
+                        if (p0!!.getValue() != null) {
+                            var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
+                            tv_nameuser.setText("" + getFriend.name!!)
                         }
                     }
 
                 })
 
         btn_send.setOnClickListener {
-            if (!text!!.text.equals("")||!text!!.text.equals(null)) {
-                mDatabase!!.child("")
-                val data = ArrayList<ChatDataDC>()
-                val item = ChatDataDC("2", text!!.text.toString(), "6:00")
-                data.add(item)
-                mAdapter!!.addItem(data)
-                mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
-                text!!.setText("")
+            if (!text!!.text.equals("") || !text!!.text.equals(null)) {
+                mDatabase!!.child("user_listconver").child(userid)
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError?) {
+                            }
+                            override fun onDataChange(p0: DataSnapshot?) {
+                                if (p0!!.getValue() != null) {
+                                    var checkExitsConver: Boolean = false
+                                    for (snap in p0!!.children) {
+                                        //vao id cua conversation ma user do chat
+                                        mDatabase!!.child("conversation").child("" + snap!!.value)
+                                                .addValueEventListener(object : ValueEventListener {
+                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                    }
+                                                    override fun onDataChange(p0: DataSnapshot?) {
+                                                        if (p0!!.value != null) {
+                                                            var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                                            if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
+                                                                    (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
+                                                                //xu ly them chat trong nay
+                                                                checkExitsConver = true
+                                                                //them chat
+                                                                Log.d("TTT","THEM CHAT")
+                                                            }
+                                                        }
+                                                    }
+
+                                                })
+                                        if (checkExitsConver == true) {
+                                            break
+                                        }
+                                    }
+
+                                    if(checkExitsConver==false)
+                                    {
+                                        //tao cuoc tro chuyen moi tai day
+                                        var tempListUser= arrayListOf<String>(userid,userFR)
+                                        var conver=ConversationDC("",tempListUser,false)
+                                        var myRef = mDatabase!!.child("conversation").push()
+                                        myRef.setValue(conver).addOnCompleteListener {
+                                            mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                            mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                                            mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
+                                            myRef.removeEventListener(this)
+                                        }
+                                                //them chat
+                                        Log.d("TTT","THEM CHAT checkExitsConver==false")
+                                    }
+                                } else {
+                                    Log.d("TTT", "DATA NULL")
+                                    //ko ton tai cai nao cung tao moi tai day
+                                    //tao cuoc tro chuyen moi tai day
+                                    var tempListUser= arrayListOf<String>(userid,userFR)
+                                    var conver=ConversationDC("",tempListUser,false)
+                                    var myRef = mDatabase!!.child("conversation").push()
+                                    myRef.setValue(conver).addOnCompleteListener {
+                                        mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                        mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                                        mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
+                                    }
+                                    //them chat
+                                    Log.d("TTT","THEM CHAT DATA BAN DAU NULL")
+                                }
+                            }
+
+                        })
+//                val data = ArrayList<ChatDataDC>()
+//                val item = ChatDataDC("2", text!!.text.toString(), "6:00")
+//                data.add(item)
+//                mAdapter!!.addItem(data)
+//                mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
+//                text!!.setText("")
             }
         }
     }
