@@ -156,7 +156,8 @@ class activity_chat_active : AppCompatActivity() {
                                                     }
 
                                                 })
-                                        if (checkExitsConver == true) {
+                                        if (checkExitsConver == true)
+                                        {
                                             break
                                         }
                                     }
