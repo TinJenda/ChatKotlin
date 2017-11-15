@@ -134,4 +134,8 @@ class activity_profile_more_myprofile : PermissionsActivity() {
         //  mDatabase!!.addValueEventListener(addValueEventListener)
 
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+    }
 }

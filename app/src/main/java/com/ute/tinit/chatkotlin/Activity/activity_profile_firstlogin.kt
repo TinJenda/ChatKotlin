@@ -360,4 +360,8 @@ class activity_profile_firstlogin : PermissionsActivity() {
         sex_spinner.adapter = adapter
         sex_spinner.setSelection(0)
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(useID).child("online").setValue(0)
+    }
 }

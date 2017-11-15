@@ -106,4 +106,5 @@ class activity_new_account : AppCompatActivity() {
                     }
                 }
     }
+
 }

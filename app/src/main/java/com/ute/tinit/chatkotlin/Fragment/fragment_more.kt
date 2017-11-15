@@ -106,5 +106,9 @@ class fragment_more : Fragment() {
                 })
         //  mDatabase!!.addValueEventListener(addValueEventListener)
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+    }
 }
 

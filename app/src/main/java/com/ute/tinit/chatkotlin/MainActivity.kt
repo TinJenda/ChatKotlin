@@ -248,6 +248,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+    }
 }
 

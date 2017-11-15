@@ -73,4 +73,8 @@ class activity_setting : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+    }
 }

@@ -433,4 +433,8 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         select_gioitinh.adapter = adapter
         select_gioitinh.setSelection(0)
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+    }
 }

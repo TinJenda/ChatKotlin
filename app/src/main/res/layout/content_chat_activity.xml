@@ -50,12 +50,12 @@
                 android:layout_toLeftOf="@id/bt_attachment"
                 android:padding="@dimen/space15"
                 android:hint="@string/string_nhap_tin_nhan"
-                android:maxLines="3"
                 android:textSize="@dimen/h3"
+                android:maxLines="3"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorDefaultText"
                 android:background="@android:color/transparent"
-                android:inputType="textCapSentences"/>
+                android:inputType="textMultiLine" />
         </RelativeLayout>
     </RelativeLayout>
 
