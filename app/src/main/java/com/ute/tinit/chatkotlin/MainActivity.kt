@@ -10,7 +10,7 @@ import android.support.v7.widget.PopupMenu
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import com.ute.tinit.chatkotlin.Fragment.fragment_chat
+import com.ute.tinit.chatkotlin.Fragment.fragment_conversation
 import com.ute.tinit.chatkotlin.Fragment.fragment_contacts
 import com.ute.tinit.chatkotlin.Fragment.fragment_more
 import com.ute.tinit.chatkotlin.Fragment.fragment_time
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     fun tabViewPage() {
         var viewPageAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewPageAdapter.addFragment(fragment_chat(), "Chat")
+        viewPageAdapter.addFragment(fragment_conversation(), "Chat")
         viewPageAdapter.addFragment(fragment_contacts(), "Contacts")
         viewPageAdapter.addFragment(fragment_time(), "TimeLine")
         viewPageAdapter.addFragment(fragment_more(), "More")

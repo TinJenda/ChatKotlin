@@ -21,18 +21,49 @@ import android.widget.TextView
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ChatAdapter.ViewHolder>() {
+class ConversationAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ConversationAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return mArrayList.size
     }
 
+    fun notifyItemDataChange(chat: ChatDC) {
+        for (i in 0..mArrayList.size-1) {
+            if (mArrayList[i].idConversation == chat.idConversation) {
+                mArrayList[i] = chat
+                notifyItemChanged(i)
+                break
+            }
+        }
+    }
+
+    fun isContactAdded(chat: ChatDC): Boolean {
+        for (c: ChatDC in mArrayList)
+            if (chat.idConversation == c.idConversation)
+                return true
+        return false
+    }
+
+    fun addItem(chat: ChatDC) {
+        mArrayList.add(chat)
+        notifyItemInserted(mArrayList.size)
+    }
+
+//    fun removeItem(contactId: String) {
+//        for(i in 0..mArrayList.size-1) {
+//            if (mArrayList[i].id == contactId) {
+//                mArrayList.removeAt(i)
+//                notifyItemRemoved(i)
+//            }
+//        }
+//    }
+
     // Create new views
     override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): ChatAdapter.ViewHolder {
+                                    viewType: Int): ConversationAdapter.ViewHolder {
 
         val itemLayoutView = LayoutInflater.from(parent.context).inflate(
-                R.layout.list_item_chat, null)
+                R.layout.list_item_conversation, null)
 
         val viewHolder = ViewHolder(itemLayoutView, clickListener)
 
@@ -45,9 +76,9 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayLi
 
         viewHolder.tvTime.setText(mArrayList[position].mTime)
 //        viewHolder.userPhoto.setImageResource(mArrayList.get(position).mImage)
-        Picasso.with(mContext).load("http://taihinhanhdep.xyz/wp-content/uploads/2015/11/anh-dep-cho-dien-thoai-2.jpg")
+        Picasso.with(mContext).load(mArrayList[position].mImage)
                 .into(viewHolder.userPhoto);
-        if (mArrayList[position].online) {
+        if (mArrayList[position].online!!) {
             viewHolder.onlineView.visibility = View.VISIBLE
         } else
             viewHolder.onlineView.visibility = View.GONE
@@ -64,6 +95,7 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayLi
         var userPhoto: ImageView
         var online = false
         val onlineView: View
+        var newMess:TextView
 
         init {
             tvName = row.findViewById(R.id.tv_user_name)
@@ -72,7 +104,7 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayLi
             tvLastChat = row.findViewById(R.id.tv_last_chat)
             userPhoto = row.findViewById(R.id.iv_user_photo)
             onlineView = row.findViewById(R.id.online_indicator)
-
+            newMess=row.findViewById(R.id.newMessage)
             row.setOnClickListener {
                 Toast.makeText(row.context, tvName.text, Toast.LENGTH_SHORT).show()
                 var intent = Intent(row.context, activity_chat_active::class.java)
@@ -85,7 +117,6 @@ class ChatAdapter(private val mContext: Context, private val mArrayList: ArrayLi
                     dialog.setContentView(R.layout.dialog_list_chat)
                     // Set dialog title
                     dialog.setTitle("")
-
                     // set values for custom dialog components - text, image and button
                     val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
                     val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
