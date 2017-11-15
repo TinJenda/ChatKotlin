@@ -1,13 +1,19 @@
 package com.ute.tinit.chatkotlin.Fragment
 
+import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.ute.tinit.chatkotlin.Activity.activity_chat_active
 import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ConversationAdapter
 import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.DataClass.ConversationDC
@@ -22,7 +28,7 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
-
+    var userFR=""
     init {
         setHasOptionsMenu(true)
     }
@@ -47,7 +53,7 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
     }
 
     fun setData(): ArrayList<ChatDC> {
-       val data = ArrayList<ChatDC>()
+        val data = ArrayList<ChatDC>()
 
         mDatabase!!.child("user_listconver").child(userid)
                 .addValueEventListener(object : ValueEventListener {
@@ -67,72 +73,61 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                             override fun onDataChange(p0: DataSnapshot?) {
                                                 if (p0!!.value != null) {
 
-                                                        var tempConver: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                                        if (tempConver!!.isGroup == false && (tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
-                                                            //truong hop userid o vi tri 1 ta lay then o vi tri 2
-                                                            var userFr=""
-                                                            if(tempConver!!.listUsers!!.get(0) == userid )
-                                                            {
-                                                                userFr=tempConver!!.listUsers!!.get(1)
-                                                            }
-                                                            else
-                                                            {
-                                                                userFr=tempConver!!.listUsers!!.get(0)
-                                                            }
-                                                            mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
-                                                                    .addValueEventListener(object :ValueEventListener{
-                                                                        override fun onCancelled(p0: DatabaseError?) {
-                                                                        }
-
-                                                                        override fun onDataChange(p0: DataSnapshot?) {
-                                                                            if(p0!!.value!=null)
-                                                                            {
-                                                                                for(snapMess in p0!!.children)
-                                                                                {
-                                                                                    var tempContent=""
-                                                                                    var tempMess:MessageDC=snapMess!!.getValue(MessageDC::class.java)!!
-                                                                                    tempContent=tempMess.content!!
-
-                                                                                    mDatabase!!.child("users").child(userFr)
-                                                                                            .addValueEventListener(object :ValueEventListener{
-                                                                                                override fun onCancelled(p0: DatabaseError?) {
-                                                                                                }
-
-                                                                                                override fun onDataChange(p0: DataSnapshot?) {
-                                                                                                    if(p0!!.value!=null)
-                                                                                                    {
-                                                                                                        var tempUser:UserDC=p0!!.getValue(UserDC::class.java)!!
-                                                                                                        var isonline:Boolean=false
-                                                                                                        if (tempUser.online == 1) {
-                                                                                                            isonline = true
-                                                                                                        } else {
-                                                                                                            isonline = false
-                                                                                                        }
-                                                                                                        Log.d("RRR",""+tempUser.name+"\n "+tempContent+"\n "+tempMess.date+"\n "+tempUser.avatar+"\n "+isonline)
-                                                                                                        var chat:ChatDC = ChatDC(snap!!.value.toString(),tempUser.name,tempMess.content,tempMess.date,tempUser.avatar,isonline)
-                                                                                                        // kiem tra contact da co trong list
-                                                                                                        if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
-                                                                                                            (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
-                                                                                                        else
-                                                                                                            (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Log.d("RRR","USER KO TON TAI")
-                                                                                                    }
-                                                                                                }
-
-                                                                                            })
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                Log.d("RRR","NULL MESSAGE LAST")
-                                                                            }
-                                                                        }
-
-                                                                    })
+                                                    var tempConver: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                                    if (tempConver!!.isGroup == false && (tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
+                                                        //truong hop userid o vi tri 1 ta lay then o vi tri 2
+                                                        if (tempConver!!.listUsers!!.get(0) == userid) {
+                                                            userFR = tempConver!!.listUsers!!.get(1)
+                                                        } else {
+                                                            userFR = tempConver!!.listUsers!!.get(0)
                                                         }
+                                                        mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
+                                                                .addValueEventListener(object : ValueEventListener {
+                                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                                    }
+
+                                                                    override fun onDataChange(p0: DataSnapshot?) {
+                                                                        if (p0!!.value != null) {
+                                                                            for (snapMess in p0!!.children) {
+                                                                                var tempContent = ""
+                                                                                var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                                tempContent = tempMess.content!!
+
+                                                                                mDatabase!!.child("users").child(userFR)
+                                                                                        .addValueEventListener(object : ValueEventListener {
+                                                                                            override fun onCancelled(p0: DatabaseError?) {
+                                                                                            }
+
+                                                                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                                                                if (p0!!.value != null) {
+                                                                                                    var tempUser: UserDC = p0!!.getValue(UserDC::class.java)!!
+                                                                                                    var isonline: Boolean = false
+                                                                                                    if (tempUser.online == 1) {
+                                                                                                        isonline = true
+                                                                                                    } else {
+                                                                                                        isonline = false
+                                                                                                    }
+                                                                                                    Log.d("RRR", "" + tempUser.name + "\n " + tempContent + "\n " + tempMess.date + "\n " + tempUser.avatar + "\n " + isonline)
+                                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline)
+                                                                                                    // kiem tra contact da co trong list
+                                                                                                    if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
+                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
+                                                                                                    else
+                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                } else {
+                                                                                                    Log.d("RRR", "USER KO TON TAI")
+                                                                                                }
+                                                                                            }
+
+                                                                                        })
+                                                                            }
+                                                                        } else {
+                                                                            Log.d("RRR", "NULL MESSAGE LAST")
+                                                                        }
+                                                                    }
+
+                                                                })
+                                                    }
 
 
                                                 } else {
@@ -152,10 +147,33 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
     }
 
     override fun onItemClicked(position: Int) {
-//        startActivity(Intent(activity, Conversation::class.java))
+        var intent = Intent(context, activity_chat_active::class.java)
+        intent.putExtra("userfriend",userFR)
+        startActivity(intent)
+//        Toast.makeText(context, "Hello...item " + position, Toast.LENGTH_LONG).show()
     }
 
     override fun onItemLongClicked(position: Int): Boolean {
+        val dialog = Dialog(context)
+        // Include dialog.xml file
+        dialog.setContentView(R.layout.dialog_list_chat)
+        // Set dialog title
+        dialog.setTitle("")
+
+        // set values for custom dialog components - text, image and button
+        val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
+        val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
+        val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
+        tv_user_name_chat.setText("SETTEXTTAIDAY")
+        btnXoaTinNhan.setOnClickListener {
+            Toast.makeText(context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+        btnThongTin.setOnClickListener {
+            Toast.makeText(context, "Hello thong tin ", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+        dialog.show()
         return true
     }
 

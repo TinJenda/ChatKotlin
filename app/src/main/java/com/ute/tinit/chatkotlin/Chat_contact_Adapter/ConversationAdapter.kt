@@ -16,19 +16,25 @@ import com.ute.tinit.chatkotlin.DataClass.ChatDC
 import com.ute.tinit.chatkotlin.R
 import android.widget.*
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.ute.tinit.chatkotlin.DataClass.MessageDC
 
 
 /**
  * Created by tin3p on 10/7/2017.
  */
 class ConversationAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ConversationAdapter.ViewHolder>() {
-
+    private var mAuth: FirebaseAuth? = null
+    private var mDatabase: DatabaseReference? = null
+    var userid = ""
     override fun getItemCount(): Int {
         return mArrayList.size
     }
 
+
     fun notifyItemDataChange(chat: ChatDC) {
-        for (i in 0..mArrayList.size-1) {
+        for (i in 0..mArrayList.size - 1) {
             if (mArrayList[i].idConversation == chat.idConversation) {
                 mArrayList[i] = chat
                 notifyItemChanged(i)
@@ -84,6 +90,28 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
             viewHolder.onlineView.visibility = View.GONE
 
         viewHolder.tvLastChat.setText(mArrayList[position].mLastChat)
+
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
+        userid= mAuth!!.uid!!
+
+        mDatabase!!.child("conversation").child(mArrayList[position].idConversation).child("messages").limitToLast(1)
+                .addValueEventListener(object :ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError?) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        if(p0!!.value!=null)
+                        {
+                            for(snap in p0.children)
+                            {
+                                var tempMess:MessageDC=snap.getValue(MessageDC::class.java)!!
+
+                            }
+                        }
+                    }
+
+                })
     }
 
 
@@ -95,7 +123,7 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
         var userPhoto: ImageView
         var online = false
         val onlineView: View
-        var newMess:TextView
+        var newMess: TextView
 
         init {
             tvName = row.findViewById(R.id.tv_user_name)
@@ -104,37 +132,9 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
             tvLastChat = row.findViewById(R.id.tv_last_chat)
             userPhoto = row.findViewById(R.id.iv_user_photo)
             onlineView = row.findViewById(R.id.online_indicator)
-            newMess=row.findViewById(R.id.newMessage)
-            row.setOnClickListener {
-                Toast.makeText(row.context, tvName.text, Toast.LENGTH_SHORT).show()
-                var intent = Intent(row.context, activity_chat_active::class.java)
-                startActivity(row.context, intent, Bundle())
-            }
-            row.setOnLongClickListener(object : View.OnLongClickListener {
-                override fun onLongClick(v: View?): Boolean {
-                    val dialog = Dialog(row.context)
-                    // Include dialog.xml file
-                    dialog.setContentView(R.layout.dialog_list_chat)
-                    // Set dialog title
-                    dialog.setTitle("")
-                    // set values for custom dialog components - text, image and button
-                    val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
-                    val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
-                    val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
-                    tv_user_name_chat.setText(tvName.text)
-                    btnXoaTinNhan.setOnClickListener {
-                        Toast.makeText(row.context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }
-                    btnThongTin.setOnClickListener {
-                        Toast.makeText(row.context, "Hello thong tin " + tvName.text, Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }
-                    dialog.show()
-                    return true
-                }
-
-            })
+            newMess = row.findViewById(R.id.newMessage)
+            row.setOnLongClickListener(this)
+            row.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
