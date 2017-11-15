@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -29,7 +31,8 @@ import com.ute.tinit.chatkotlin.DataClass.MessageDC
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.firebase.database.ValueEventListener
-
+import kotlinx.android.synthetic.main.layout_flash_screen.*
+import kotlin.collections.ArrayList
 
 
 class activity_chat_active : AppCompatActivity() {
@@ -72,39 +75,72 @@ class activity_chat_active : AppCompatActivity() {
                     Log.d("userFR", getFriend.userID)
                 }
             }
-
         })
         return temp
     }
 
+    fun aniBtnSendMore_activesendmore() {
+        var animationLogoName: Animation = AnimationUtils.loadAnimation(this@activity_chat_active, R.anim.zoomandrotate)
+        btnSendMore.startAnimation(animationLogoName)
+    }
+
+    fun animation_BtnSend_actives() {
+        var animationLogoName: Animation = AnimationUtils.loadAnimation(this@activity_chat_active, R.anim.zoomandrotate)
+        btnSend.startAnimation(animationLogoName)
+    }
+
+    fun removeAnimotionbtnSendmore() {
+        btnSendMore.animate().cancel()
+        btnSendMore.clearAnimation()
+    }
+
+    fun removeAnimotionbtnSend() {
+        btnSend.animate().cancel()
+        btnSend.clearAnimation()
+    }
+
     fun textEmply() {
-        btn_send.isEnabled = false
-        btn_send.setImageResource(R.drawable.ic_send_disable)
+        btnSend.visibility = View.GONE
+        btnSendMore.visibility = View.VISIBLE
         et_message.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                Log.d("AAA", "afterTextChagne " + et_message.text)
-                if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
-                    btn_send.isEnabled = false
-                    btn_send.setImageResource(R.drawable.ic_send_disable)
-                } else {
-                    btn_send.isEnabled = true
-                    btn_send.setImageResource(R.drawable.ic_send)
-                }
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d("AAA", "beforeTextChanged " + et_message.text)
+//                Log.d("AAA", "beforeTextChanged " + et_message.text)
+//                if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
+//                    Log.d("AAA","NULL TEXT")
+//                    btn_send.visibility = View.GONE
+//                    btnSendMore.visibility=View.VISIBLE
+//                    aniBtnSend_btnSendMore_activesendmore()
+//                } else {
+//                    Log.d("AAA","NOT NULL TEXT")
+//                    btn_send.visibility = View.VISIBLE
+//                    btnSendMore.visibility=View.GONE
+//                }
+
                 if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
-                    btn_send.isEnabled = false
-                    btn_send.setImageResource(R.drawable.ic_send_disable)
-                } else {
-                    btn_send.isEnabled = true
-                    //btn_send.visibility=View.VISIBLE
-                    btn_send.setImageResource(R.drawable.ic_send)
+                    animation_BtnSend_actives()
                 }
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d("AAA", "onTextChanged " + et_message.text)
+                var checkAni:Boolean=true
+                if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
+                    Log.d("AAA", "NULL TEXT")
+                    btnSend.visibility = View.GONE
+                    btnSendMore.visibility = View.VISIBLE
+                    aniBtnSendMore_activesendmore()
+                    removeAnimotionbtnSend()
+                    var checkAni=false
+                } else {
+                    removeAnimotionbtnSendmore()
+                    Log.d("AAA", "NOT NULL TEXT")
+                    btnSend.visibility = View.VISIBLE
+                    btnSendMore.visibility = View.GONE
+                }
             }
         })
     }
@@ -134,12 +170,13 @@ class activity_chat_active : AppCompatActivity() {
 
                 })
 
-        btn_send.setOnClickListener {
+        btnSend.setOnClickListener {
             if (!text!!.text.equals("") || !text!!.text.equals(null)) {
-               var temp= mDatabase!!.child("user_listconver").child(userid)
+                var temp = mDatabase!!.child("user_listconver").child(userid)
                         .addValueEventListener(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError?) {
                             }
+
                             override fun onDataChange(p0: DataSnapshot?) {
                                 if (p0!!.getValue() != null) {
                                     var checkExitsConver: Boolean = false
@@ -149,6 +186,7 @@ class activity_chat_active : AppCompatActivity() {
                                                 .addValueEventListener(object : ValueEventListener {
                                                     override fun onCancelled(p0: DatabaseError?) {
                                                     }
+
                                                     override fun onDataChange(p0: DataSnapshot?) {
                                                         if (p0!!.value != null) {
                                                             var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
@@ -157,11 +195,11 @@ class activity_chat_active : AppCompatActivity() {
                                                                 //xu ly them chat trong nay
                                                                 checkExitsConver = true
                                                                 //them chat
-                                                                var myRefMess =  mDatabase!!.child("conversation").child("" + snap!!.value).child("messages").push()
+                                                                var myRefMess = mDatabase!!.child("conversation").child("" + snap!!.value).child("messages").push()
                                                                 Log.d("TTT", "THEM CHAT")
                                                                 val df = SimpleDateFormat("HH:mm")
                                                                 val currentTime = df.format(Calendar.getInstance().time)
-                                                                var mess = MessageDC(myRefMess.key,""+snap!!.value, userid, et_message.text.toString(), "2", currentTime)
+                                                                var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime)
                                                                 myRefMess.setValue(mess)
                                                                 text!!.setText("")
                                                                 mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
@@ -181,9 +219,9 @@ class activity_chat_active : AppCompatActivity() {
                                         if (checkExitsConver == false) {
                                             //tao cuoc tro chuyen moi tai day
                                             var tempListUser = arrayListOf<String>(userid, userFR)
-                                            var listMessage= arrayListOf<MessageDC>()
+                                            var listMessage = arrayListOf<String>()
                                             var myRef = mDatabase!!.child("conversation").push()
-                                            var conver = ConversationDC(myRef.key, "", tempListUser, false,listMessage)
+                                            var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
                                             myRef.setValue(conver).addOnCompleteListener {
                                                 mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
                                                 mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
@@ -196,7 +234,7 @@ class activity_chat_active : AppCompatActivity() {
                                             val df = SimpleDateFormat("HH:mm")
                                             val currentTime = df.format(Calendar.getInstance().time)
                                             var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                            var mess = MessageDC(myRefMess.key,""+myRef.key, userid, et_message.text.toString(), "2", currentTime)
+                                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime)
                                             myRefMess.setValue(mess)
                                             text!!.setText("")
                                         }
@@ -207,9 +245,9 @@ class activity_chat_active : AppCompatActivity() {
                                     //ko ton tai cai nao cung tao moi tai day
                                     //tao cuoc tro chuyen moi tai day
                                     var tempListUser = arrayListOf<String>(userid, userFR)
-                                    var listMessage= arrayListOf<MessageDC>()
+                                    var listMessage = arrayListOf<String>()
                                     var myRef = mDatabase!!.child("conversation").push()
-                                    var conver = ConversationDC(myRef.key, "", tempListUser, false,listMessage)
+                                    var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
                                     myRef.setValue(conver).addOnCompleteListener {
                                         mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
                                         mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
@@ -222,7 +260,7 @@ class activity_chat_active : AppCompatActivity() {
                                     val df = SimpleDateFormat("HH:mm")
                                     val currentTime = df.format(Calendar.getInstance().time)
                                     var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                    var mess = MessageDC(myRefMess.key,""+myRef.key, userid, et_message.text.toString(), "2", currentTime)
+                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime)
                                     myRefMess.setValue(mess)
                                     text!!.setText("")
                                     mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
@@ -258,6 +296,7 @@ class activity_chat_active : AppCompatActivity() {
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
                     }
+
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.getValue() != null) {
                             for (snap in p0!!.children) {
@@ -270,60 +309,53 @@ class activity_chat_active : AppCompatActivity() {
                                             override fun onDataChange(p0: DataSnapshot?) {
                                                 if (p0!!.value != null) {
                                                     var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                                    Log.d("TTT",temp.idConver)
+                                                    Log.d("TTT", temp.idConver)
                                                     if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
                                                             (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
                                                         mDatabase!!.child("conversation").child(temp.idConver).child("messages")
-                                                                .addValueEventListener(object :ValueEventListener{
+                                                                .addValueEventListener(object : ValueEventListener {
                                                                     override fun onCancelled(p0: DatabaseError?) {
                                                                     }
 
                                                                     override fun onDataChange(p0: DataSnapshot?) {
-                                                                        if(p0!!.value!=null)
-                                                                        {
-                                                                            for(snap in p0.children)
-                                                                            {
-                                                                                var checkType=""
-                                                                                var getMessage:MessageDC=snap!!.getValue(MessageDC::class.java)!!
-                                                                                if(getMessage.idSender==userid)
-                                                                                {
-                                                                                    checkType="2"
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    checkType="1"
+                                                                        if (p0!!.value != null) {
+                                                                            for (snap in p0.children) {
+
+                                                                                var getMessage: MessageDC = snap!!.getValue(MessageDC::class.java)!!
+                                                                                var checkType =getMessage.type
+                                                                                        if (getMessage.idSender == userid) {
+                                                                                    checkType = "2"
+                                                                                } else {
+                                                                                    checkType = "1"
                                                                                 }
                                                                                 mDatabase!!.child("users").child(getMessage.idSender).child("avatar")
-                                                                                        .addValueEventListener(object :ValueEventListener{
+                                                                                        .addValueEventListener(object : ValueEventListener {
                                                                                             override fun onCancelled(p0: DatabaseError?) {
                                                                                                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                                                                                             }
 
                                                                                             override fun onDataChange(p0: DataSnapshot?) {
-                                                                                                if(p0!!.value!=null)
-                                                                                                {
-                                                                                                    var itemx:ChatDataDC = ChatDataDC(getMessage.id,p0!!.value.toString(),checkType,getMessage.content,getMessage.date)
+                                                                                                if (p0!!.value != null) {
+                                                                                                    var itemx: ChatDataDC = ChatDataDC(getMessage.id, p0!!.value.toString(), checkType, getMessage.content, getMessage.date)
                                                                                                     if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
                                                                                                         (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
                                                                                                     else
                                                                                                         (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
                                                                                                     mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
-                                                                                                    Log.d("TTT","Type "+checkType)
-                                                                                                    Log.d("TTT","Content "+getMessage.content)
-                                                                                                    Log.d("TTT","DATE "+getMessage.date)
+                                                                                                    Log.d("TTT", "Type " + checkType)
+                                                                                                    Log.d("TTT", "Content " + getMessage.content)
+                                                                                                    Log.d("TTT", "DATE " + getMessage.date)
                                                                                                     mDatabase!!.child("users").child(getMessage.idSender).child("avatar").removeEventListener(this)
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    var itemx:ChatDataDC = ChatDataDC(getMessage.id,"http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g",checkType,getMessage.content,getMessage.date)
+                                                                                                } else {
+                                                                                                    var itemx: ChatDataDC = ChatDataDC(getMessage.id, "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g", checkType, getMessage.content, getMessage.date)
                                                                                                     if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
                                                                                                         (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
                                                                                                     else
                                                                                                         (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
                                                                                                     mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
-                                                                                                    Log.d("TTT","Type "+checkType)
-                                                                                                    Log.d("TTT","Content "+getMessage.content)
-                                                                                                    Log.d("TTT","DATE "+getMessage.date)
+                                                                                                    Log.d("TTT", "Type " + checkType)
+                                                                                                    Log.d("TTT", "Content " + getMessage.content)
+                                                                                                    Log.d("TTT", "DATE " + getMessage.date)
                                                                                                     mDatabase!!.child("users").child(getMessage.idSender).child("avatar").removeEventListener(this)
                                                                                                 }
                                                                                             }
@@ -332,27 +364,21 @@ class activity_chat_active : AppCompatActivity() {
 
 
                                                                             }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Log.d("TTT","MESSAGE NULL")
+                                                                        } else {
+                                                                            Log.d("TTT", "MESSAGE NULL")
                                                                         }
                                                                     }
 
                                                                 })
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    Log.d("TTT","ConverNull")
+                                                } else {
+                                                    Log.d("TTT", "ConverNull")
                                                 }
                                             }
                                         })
                             }
-                        }
-                        else
-                        {
-                            Log.d("TTT","user_listconver null")
+                        } else {
+                            Log.d("TTT", "user_listconver null")
                         }
                     }
                 })
@@ -375,6 +401,7 @@ class activity_chat_active : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mDatabase!!.child("users").child(userid).child("online").setValue(0)

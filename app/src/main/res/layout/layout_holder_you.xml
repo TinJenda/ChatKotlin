@@ -30,7 +30,7 @@
             android:background="@drawable/bg_chat_you"/>
         <TextView
             android:id="@+id/tv_time"
-            android:layout_marginLeft="@dimen/space10"
+            android:layout_marginLeft="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/space5"
