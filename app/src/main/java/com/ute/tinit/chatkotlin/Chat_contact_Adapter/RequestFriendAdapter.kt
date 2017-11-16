@@ -12,31 +12,30 @@ import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_chat_active
-import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ContactAdapter.ViewHolder
+import com.ute.tinit.chatkotlin.Activity.activity_friend_profile
+import com.ute.tinit.chatkotlin.DataClass.Contact2DC
 import com.ute.tinit.chatkotlin.R
 
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ContactAdapter(private val mContext: Context, private val mArrayList: ArrayList<AdapterContact>) : SelectableAdapter<ViewHolder>()
+class RequestFriendAdapter(private val mContext: Context, private val mArrayList: ArrayList<Contact2DC>) : SelectableAdapter<RequestFriendAdapter.ViewHolder>()
 {
-
-    class AdapterContact (var id:String, var mName:String, var mImage:String, var online:Boolean)
 
     override fun getItemCount(): Int {
         return mArrayList.size
     }
 
-    fun isContactAdded(contact: AdapterContact): Boolean {
-        for (c: AdapterContact in mArrayList)
-            if (contact.id == c.id)
+    fun isContactAdded(contact: Contact2DC): Boolean {
+        for (c: Contact2DC in mArrayList)
+            if (contact.idUser == c.idUser)
                 return true
         return false
     }
 
-    fun notifyItemDataChange(contact: AdapterContact) {
+    fun notifyItemDataChange(contact: Contact2DC) {
         for (i in 0..mArrayList.size-1) {
-            if (mArrayList[i].id == contact.id) {
+            if (mArrayList[i].idUser == contact.idUser) {
                 mArrayList[i] = contact
                 notifyItemChanged(i)
                 break
@@ -45,14 +44,14 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
     }
 
 
-    fun addItem(contact: AdapterContact) {
+    fun addItem(contact: Contact2DC) {
         mArrayList.add(contact)
         notifyItemInserted(mArrayList.size)
     }
 
     fun removeItem(contactId: String) {
         for(i in 0..mArrayList.size-1) {
-            if (mArrayList[i].id == contactId) {
+            if (mArrayList[i].idUser == contactId) {
                 mArrayList.removeAt(i)
                 notifyItemRemoved(i)
             }
@@ -66,13 +65,12 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
 
     // Create new views
     override fun onCreateViewHolder(parent: ViewGroup,
-                           viewType: Int): ViewHolder {
+                                    viewType: Int): ViewHolder {
 
         val itemLayoutView = LayoutInflater.from(parent.context).inflate(
-                R.layout.list_item_contact, null)
+                R.layout.list_item_friend_request, null)
 
         val viewHolder = ViewHolder(itemLayoutView)
-
         return viewHolder
     }
 
@@ -82,10 +80,6 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
         Picasso.with(mContext).load(mArrayList[position].mImage)
                 .error(R.drawable.default_avarta)
                 .into(viewHolder.userPhoto)
-        if (mArrayList[position].online) {
-            viewHolder.onlineView.setBackgroundResource(R.drawable.bg_online)
-        } else
-            viewHolder.onlineView.setBackgroundResource(R.drawable.bg_offline)
     }
 
 
@@ -94,19 +88,17 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
     (row: View) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
         override fun onClick(v: View?) {
             var possitionItem= getAdapterPosition()
-            Toast.makeText(v!!.context,"hello "+tvName.text.toString() +"id "+mArrayList[possitionItem].id,Toast.LENGTH_SHORT).show()
-            var intent=Intent(v.context,activity_chat_active::class.java)
-            intent.putExtra("userfriend",mArrayList[possitionItem].id)
-            ContextCompat.startActivity(v.context,intent,null)
+            Toast.makeText(v!!.context, "hello " + tvName.text.toString() + "id " + mArrayList[possitionItem].idUser, Toast.LENGTH_SHORT).show()
+            var intent= Intent(v.context, activity_friend_profile::class.java)
+            intent.putExtra("userfriend",mArrayList[possitionItem].idUser)
+            ContextCompat.startActivity(v.context, intent, null)
         }
         var tvName: TextView
         var userPhoto: ImageView
-        val onlineView: View
         init {
 
             tvName = row.findViewById(R.id.tv_user_name)
             userPhoto = row.findViewById(R.id.iv_user_photo)
-            onlineView = row.findViewById(R.id.online_indicator)
             row.setOnLongClickListener(this)
             row.setOnClickListener(this)
         }

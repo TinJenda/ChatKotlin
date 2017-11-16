@@ -28,7 +28,8 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
-    var userFR=""
+    var listUser = arrayListOf<String>()
+
     init {
         setHasOptionsMenu(true)
     }
@@ -62,9 +63,10 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
 
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.value != null) {
+                            listUser.clear()
                             for (snap in p0.children) {
                                 Log.d("RRR", snap.value!!.toString())
-
+                                //tra ve list conver user do tham gia
                                 mDatabase!!.child("conversation").child(snap.value!!.toString())
                                         .addValueEventListener(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError?) {
@@ -76,10 +78,39 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                                     var tempConver: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
                                                     if (tempConver!!.isGroup == false && (tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
                                                         //truong hop userid o vi tri 1 ta lay then o vi tri 2
+                                                        var checkExist = false
+                                                        var userFR = ""
+                                                        //get list userssss
                                                         if (tempConver!!.listUsers!!.get(0) == userid) {
                                                             userFR = tempConver!!.listUsers!!.get(1)
+                                                            if (listUser != null) {
+                                                                for (i in 0..listUser.size - 1) {
+                                                                    if (listUser[i] == userFR) {
+                                                                        checkExist = true
+                                                                        break
+                                                                    }
+                                                                }
+                                                                if (checkExist == false) {
+                                                                    listUser.add(userFR)
+                                                                }
+                                                            } else {
+                                                                listUser.add(userFR)
+                                                            }
                                                         } else {
                                                             userFR = tempConver!!.listUsers!!.get(0)
+                                                            if (listUser != null) {
+                                                                for (i in 0..listUser.size - 1) {
+                                                                    if (listUser[i] == userFR) {
+                                                                        checkExist = true
+                                                                        break
+                                                                    }
+                                                                }
+                                                                if (checkExist == false) {
+                                                                    listUser.add(userFR)
+                                                                }
+                                                            } else {
+                                                                listUser.add(userFR)
+                                                            }
                                                         }
                                                         mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
                                                                 .addValueEventListener(object : ValueEventListener {
@@ -92,7 +123,6 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                                                                 var tempContent = ""
                                                                                 var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
                                                                                 tempContent = tempMess.content!!
-
                                                                                 mDatabase!!.child("users").child(userFR)
                                                                                         .addValueEventListener(object : ValueEventListener {
                                                                                             override fun onCancelled(p0: DatabaseError?) {
@@ -107,13 +137,29 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                                                                                     } else {
                                                                                                         isonline = false
                                                                                                     }
-                                                                                                    Log.d("RRR", "" + tempUser.name + "\n " + tempContent + "\n " + tempMess.date + "\n " + tempUser.avatar + "\n " + isonline)
-                                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline)
+                                                                                                    var seen: Boolean = false
+                                                                                                    //xu ly thong bao tin nhan moi o day
+                                                                                                    for (i in 0..tempMess.userSeen!!.size - 1) {
+                                                                                                        Log.d("RRR", "user = " + tempMess.userSeen!![i])
+                                                                                                        if (tempMess.userSeen!![i] == userid) {
+                                                                                                            seen = true
+                                                                                                            break
+                                                                                                        }
+                                                                                                    }
+
+                                                                                                    if (seen == true) {
+                                                                                                        Log.d("RRR", "Seen = true")
+                                                                                                    } else {
+                                                                                                        Log.d("RRR", "Seen = false")
+                                                                                                    }
+
+                                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
                                                                                                     // kiem tra contact da co trong list
                                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
-                                                                                                    else
+                                                                                                    else {
                                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                    }
                                                                                                 } else {
                                                                                                     Log.d("RRR", "USER KO TON TAI")
                                                                                                 }
@@ -142,13 +188,14 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                     }
 
                 })
-
         return data
     }
 
     override fun onItemClicked(position: Int) {
         var intent = Intent(context, activity_chat_active::class.java)
-        intent.putExtra("userfriend",userFR)
+        intent.putExtra("userfriend", listUser[position])
+        Log.d("RRR", "userfr " + listUser[position])
+        Log.d("RRR", "userfr " + position)
         startActivity(intent)
 //        Toast.makeText(context, "Hello...item " + position, Toast.LENGTH_LONG).show()
     }

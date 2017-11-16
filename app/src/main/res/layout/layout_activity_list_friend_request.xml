@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDefaultBackground"
+    android:orientation="vertical"
+    tools:context="com.ute.tinit.chatkotlin.Activity.activity_list_friend_request">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_toolbar"
+        android:layout_gravity="top"
+        android:background="@color/mainColor"
+        android:gravity="center"
+        android:theme="@style/Theme.BackWhile">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="70dp"
+            android:gravity="center"
+            android:text="@string/string_danh_sach_request"
+            android:textColor="@color/colorWhile"
+            android:textSize="@dimen/text_size_big_20" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tín Trương"
+            android:textColor="@color/mainColor"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLineeee" />
+
+        <LinearLayout
+            android:id="@+id/btn_liner_thongtin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_listFriendRequest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

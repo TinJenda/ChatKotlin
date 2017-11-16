@@ -14,6 +14,7 @@
     <string name="string_login">Đăng nhập với số điện thoại</string>
     <string name="string_new_account"><u>Đăng ký tài khoản mới</u></string>
     <string name="string_nhap_tin_nhan">Enter your message</string>
+    <string name="string_danh_sach_request">Yêu cầu kết bạn</string>
     <string-array name="sex">
         <item>Khác</item>
         <item>Nam</item>

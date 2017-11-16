@@ -170,6 +170,7 @@ class activity_chat_active : AppCompatActivity() {
 
                 })
 
+
         btnSend.setOnClickListener {
             if (!text!!.text.equals("") || !text!!.text.equals(null)) {
                 var temp = mDatabase!!.child("user_listconver").child(userid)
@@ -199,7 +200,8 @@ class activity_chat_active : AppCompatActivity() {
                                                                 Log.d("TTT", "THEM CHAT")
                                                                 val df = SimpleDateFormat("HH:mm")
                                                                 val currentTime = df.format(Calendar.getInstance().time)
-                                                                var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime)
+                                                                var userSeen= arrayListOf<String>(userid)
+                                                                var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime,userSeen)
                                                                 myRefMess.setValue(mess)
                                                                 text!!.setText("")
                                                                 mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
@@ -233,8 +235,9 @@ class activity_chat_active : AppCompatActivity() {
                                             Log.d("TTT", "THEM CHAT checkExitsConver==false")
                                             val df = SimpleDateFormat("HH:mm")
                                             val currentTime = df.format(Calendar.getInstance().time)
+                                            var userSeen= arrayListOf<String>(userid)
                                             var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime)
+                                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime,userSeen)
                                             myRefMess.setValue(mess)
                                             text!!.setText("")
                                         }
@@ -258,9 +261,10 @@ class activity_chat_active : AppCompatActivity() {
                                     //type=2 is me
                                     Log.d("TTT", "THEM CHAT DATANULL")
                                     val df = SimpleDateFormat("HH:mm")
+                                    var userSeen= arrayListOf<String>(userid)
                                     val currentTime = df.format(Calendar.getInstance().time)
                                     var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime)
+                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime,userSeen)
                                     myRefMess.setValue(mess)
                                     text!!.setText("")
                                     mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
@@ -347,7 +351,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                                                     Log.d("TTT", "DATE " + getMessage.date)
                                                                                                     mDatabase!!.child("users").child(getMessage.idSender).child("avatar").removeEventListener(this)
                                                                                                 } else {
-                                                                                                    var itemx: ChatDataDC = ChatDataDC(getMessage.id, "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g", checkType, getMessage.content, getMessage.date)
+                                                                                                    var itemx: ChatDataDC = ChatDataDC(getMessage.id, "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g" /*avarta mat dinh*/, checkType, getMessage.content, getMessage.date)
                                                                                                     if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
                                                                                                         (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
                                                                                                     else
@@ -386,6 +390,7 @@ class activity_chat_active : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        //set su kien da doc tin nhan
         finish()
     }
 

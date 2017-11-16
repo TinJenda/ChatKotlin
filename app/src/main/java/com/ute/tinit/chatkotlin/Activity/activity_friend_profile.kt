@@ -142,7 +142,6 @@ class activity_friend_profile : AppCompatActivity() {
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
                     }
-
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.getValue() != null) {
                             for (postSnapshot in p0!!.getChildren()) {

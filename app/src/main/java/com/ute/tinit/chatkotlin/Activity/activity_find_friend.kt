@@ -190,27 +190,26 @@ class activity_find_friend : AppCompatActivity() {
                                                         }
 
                                                         override fun onDataChange(p0: DataSnapshot?) {
-                                                           if(p0!!.getValue()!=null)
-                                                           {
-                                                               //tim và lấy usẻ theo gmail
-                                                               var temp = p0!!.getValue(UserDC::class.java)!!
-                                                               Log.d("BBB", " " + temp.name!!)
-                                                               Log.d("BBB", " " + temp.avatar!!)
-                                                               Log.d("BBB", " " + temp.email)
-                                                               var dataTemp = FindFriendDC(temp.userID, temp.name, temp.avatar)
+                                                            if (p0!!.getValue() != null) {
+                                                                //tim và lấy usẻ theo gmail
+                                                                var temp = p0!!.getValue(UserDC::class.java)!!
+                                                                Log.d("BBB", " " + temp.name!!)
+                                                                Log.d("BBB", " " + temp.avatar!!)
+                                                                Log.d("BBB", " " + temp.email)
+                                                                var dataTemp = FindFriendDC(temp.userID, temp.name, temp.avatar)
 
 //                                                               if ((mRecyclerView!!.adapter as FindFriendsAdapter).isAdded(dataTemp))
 //                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).notifyChange(dataTemp)
 //                                                               else
 //                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).addItem(dataTemp)
-                                                               data.add(dataTemp)
-                                                               (mRecyclerView!!.adapter as FindFriendsAdapter).notifyDataSetChanged()
-                                                               mDatabase!!.child("users").child(keyChild).removeEventListener(this)
-                                                               mDatabase!!.child("users").orderByChild("name")
-                                                                       .startAt(ed_find_friend.text.toString())
-                                                                       .endAt(ed_find_friend.text.toString() + "\uf8ff").removeEventListener(this)
-                                                               tv_noti_findfriends.visibility = View.GONE
-                                                           }
+                                                                data.add(dataTemp)
+                                                                (mRecyclerView!!.adapter as FindFriendsAdapter).notifyDataSetChanged()
+                                                                mDatabase!!.child("users").child(keyChild).removeEventListener(this)
+                                                                mDatabase!!.child("users").orderByChild("name")
+                                                                        .startAt(ed_find_friend.text.toString())
+                                                                        .endAt(ed_find_friend.text.toString() + "\uf8ff").removeEventListener(this)
+                                                                tv_noti_findfriends.visibility = View.GONE
+                                                            }
                                                         }
                                                     })
                                                 }
@@ -236,10 +235,10 @@ class activity_find_friend : AppCompatActivity() {
                 }
 
             }
-
             //  mDatabase!!.addValueEventListener(addValueEventListener)
         })
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mDatabase!!.child("users").child(userid).child("online").setValue(0)

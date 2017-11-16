@@ -14,6 +14,7 @@
     android:layout_height="@dimen/size_toolbar"
     android:theme="@style/Theme.BackWhile">
     <TextView
+        android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -126,15 +127,24 @@
         android:id="@+id/btn_linear_yeucauketban"
         android:layout_width="match_parent"
         android:layout_gravity="center"
-        android:gravity="center"
+        android:gravity="left"
         android:background="@drawable/bg_button_1"
+        android:orientation="horizontal"
         android:layout_height="@dimen/size_toolbar">
         <TextView
-            android:layout_width="match_parent"
-            android:gravity="center|left"
+            android:layout_width="120dp"
+            android:gravity="center_vertical|left"
             android:layout_height="@dimen/size_toolbar"
             android:textSize="@dimen/text_size_default"
             android:text="@string/string_yeu_cau_ket_ban"/>
+        <TextView
+            android:id="@+id/numRequestMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@color/colorRed"/>
     </LinearLayout>
     <View
         android:layout_width="fill_parent"

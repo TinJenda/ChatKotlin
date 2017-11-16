@@ -90,28 +90,14 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
             viewHolder.onlineView.visibility = View.GONE
 
         viewHolder.tvLastChat.setText(mArrayList[position].mLastChat)
-
-        mDatabase = FirebaseDatabase.getInstance().getReference()
-        mAuth = FirebaseAuth.getInstance()
-        userid= mAuth!!.uid!!
-
-        mDatabase!!.child("conversation").child(mArrayList[position].idConversation).child("messages").limitToLast(1)
-                .addValueEventListener(object :ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError?) {
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        if(p0!!.value!=null)
-                        {
-                            for(snap in p0.children)
-                            {
-                                var tempMess:MessageDC=snap.getValue(MessageDC::class.java)!!
-
-                            }
-                        }
-                    }
-
-                })
+        if(mArrayList[position].seen==true)
+        {
+            viewHolder.newMess.visibility=View.GONE
+        }
+        else
+        {
+            viewHolder.newMess.visibility=View.VISIBLE
+        }
     }
 
 

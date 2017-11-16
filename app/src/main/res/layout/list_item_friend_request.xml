@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@drawable/bg_item_list">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_user_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/space10"
+        android:layout_marginRight="@dimen/space10"
+        android:src="@drawable/avarta"/>
+    <LinearLayout
+        android:id="@+id/ln_contact"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/space10"
+        android:layout_toRightOf="@+id/iv_user_photo"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textSize="18dp"
+            android:text="Tin Truong"
+            android:textColor="@color/colorBlack"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+    <View
+        android:layout_below="@+id/ln_contact"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="60dp"
+        android:background="@color/colorDefaultBackground"/>
+</RelativeLayout>

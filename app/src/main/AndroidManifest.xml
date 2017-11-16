@@ -31,6 +31,7 @@
         <activity android:name=".Activity.Activity_flash_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,6 +46,8 @@
         <activity android:name=".Activity.activity_find_friend_location" />
         <activity android:name=".Activity.activity_profile_more_editprofile" />
         <activity android:name=".Activity.activity_find_friend" />
-        <activity android:name=".Activity.activity_friend_profile"></activity>
+        <activity android:name=".Activity.activity_friend_profile" />
+        <activity android:name=".Activity.activity_list_friend_request"></activity>
     </application>
+
 </manifest>
