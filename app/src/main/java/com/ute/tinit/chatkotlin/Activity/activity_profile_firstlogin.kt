@@ -13,6 +13,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -33,8 +34,11 @@ import com.ute.tinit.chatkotlin.MainActivity
 import io.vrinda.kotlinpermissions.PermissionCallBack
 import io.vrinda.kotlinpermissions.PermissionsActivity
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class activity_profile_firstlogin : PermissionsActivity() {
     var year: Int = 0
@@ -46,7 +50,8 @@ class activity_profile_firstlogin : PermissionsActivity() {
     private var mStorageRef: StorageReference? = null
     var imgUploadLink: String = ""
     var imgUri: Uri? = null
-    private var useID=""
+    private var useID = ""
+
     companion object {
         var FB_STORAGE_PATH: String = "avarta/"
         var REQUEST_CODE: Int = 234
@@ -63,7 +68,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         editName()
         updateAvarta()
         saveInfo()
-        Toast.makeText(this@activity_profile_firstlogin,"Đăng nhập lần đầu",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@activity_profile_firstlogin, "Đăng nhập lần đầu", Toast.LENGTH_SHORT).show()
     }
 
     fun updateAvarta() {
@@ -85,6 +90,24 @@ class activity_profile_firstlogin : PermissionsActivity() {
         }
     }
 
+    private fun getOutputMediaFileUri(): Uri {
+        return Uri.fromFile(getOutputMediaFile())
+    }
+    private fun getOutputMediaFile(): File? {
+        var mediaStorageDir: File = File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MyCameraApp", "failed to create directory");
+                return null
+            }
+        }
+        var timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date());
+        var mediaFile: File =  File (mediaStorageDir.getPath() + File.separator +
+                "IMG_" + timeStamp + ".jpg");
+        return mediaFile
+    }
+
     fun showFileChooser() {
         val dialog = Dialog(this@activity_profile_firstlogin)
         // Include dialog.xml file
@@ -96,9 +119,23 @@ class activity_profile_firstlogin : PermissionsActivity() {
         val btnCamera = dialog.findViewById<Button>(R.id.btnCamera)
         val btnThuVien = dialog.findViewById<Button>(R.id.btnThuVien)
         btnCamera.setOnClickListener {
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(cameraIntent, 1)
-            dialog.dismiss()
+            requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, object : PermissionCallBack {
+                @SuppressLint("MissingPermission")
+                override fun permissionGranted() {
+                    super.permissionGranted()
+                    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    imgUri = getOutputMediaFileUri()
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                    startActivityForResult(cameraIntent, 1)
+                    dialog.dismiss()
+                }
+
+                override fun permissionDenied() {
+                    super.permissionDenied()
+                    Log.v("Call permissions", "Denied")
+                    Toast.makeText(this@activity_profile_firstlogin, "Vui lòng bật/chấp nhận quyền bộ nhớ", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
         btnThuVien.setOnClickListener {
             requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, object : PermissionCallBack {
@@ -151,12 +188,12 @@ class activity_profile_firstlogin : PermissionsActivity() {
         var phone_number = "" + et_phone.text.toString()
         var sex: String = sex_spinner.getSelectedItem().toString()
         var tensave = edit_text_name.text.toString()
-        var ns=""+tv_date_select.text.toString()
+        var ns = "" + tv_date_select.text.toString()
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
         CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
-                IMAGE_URL,ns)
+                IMAGE_URL, ns)
 
     }
 
@@ -195,7 +232,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
                         image_avarta_firstlogin.setImageBitmap(bitmap);
                         val baos = ByteArrayOutputStream()
                         //giam dung luong truoc khi day len firebase :(
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
                         DATA_UPDATE = baos.toByteArray()
                         imgUri = selectedImage
                         Toast.makeText(this@activity_profile_firstlogin, "Updating...", Toast.LENGTH_SHORT).show()
@@ -277,20 +314,18 @@ class activity_profile_firstlogin : PermissionsActivity() {
     }
 
     fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
-                   , longitude: String, is_online: Int, avatar: String,ns:String) {
-        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns)
+                   , longitude: String, is_online: Int, avatar: String, ns: String) {
+        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar, ns)
         mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
         { databaseError, databaseReference ->
             if (databaseError == null) {
-                Toast.makeText(this@activity_profile_firstlogin,"Cập nhập thành công",Toast.LENGTH_SHORT).show()
-                var intent=Intent(this@activity_profile_firstlogin,MainActivity::class.java)
-                intent.putExtra("userid",useID)
+                Toast.makeText(this@activity_profile_firstlogin, "Cập nhập thành công", Toast.LENGTH_SHORT).show()
+                var intent = Intent(this@activity_profile_firstlogin, MainActivity::class.java)
+                intent.putExtra("userid", useID)
                 startActivity(intent)
                 finish()
-            }
-            else
-            {
-                Toast.makeText(this@activity_profile_firstlogin,"Lỗi rồi!!!!",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@activity_profile_firstlogin, "Lỗi rồi!!!!", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -299,7 +334,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         var intent = intent
         var ten: String = intent.getStringExtra("username")
         var email: String = intent.getStringExtra("email")
-        useID=intent.getStringExtra("userid")
+        useID = intent.getStringExtra("userid")
         user_name_firstlogin.text = ten
         edit_text_name.setText(ten)
         tv_email.text = email
@@ -360,6 +395,7 @@ class activity_profile_firstlogin : PermissionsActivity() {
         sex_spinner.adapter = adapter
         sex_spinner.setSelection(0)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mDatabase!!.child("users").child(useID).child("online").setValue(0)

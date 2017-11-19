@@ -122,7 +122,7 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                                                             for (snapMess in p0!!.children) {
                                                                                 var tempContent = ""
                                                                                 var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
-                                                                                tempContent = tempMess.content!!
+                                                                               tempContent = tempMess.content!!
                                                                                 mDatabase!!.child("users").child(userFR)
                                                                                         .addValueEventListener(object : ValueEventListener {
                                                                                             override fun onCancelled(p0: DatabaseError?) {
