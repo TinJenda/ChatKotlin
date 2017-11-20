@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -18,13 +19,14 @@ import android.widget.*
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.ute.tinit.chatkotlin.DataClass.ConversationDC
 import com.ute.tinit.chatkotlin.DataClass.MessageDC
 
 
 /**
  * Created by tin3p on 10/7/2017.
  */
-class ConversationAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>, private val clickListener: ViewHolder.ClickListener) : SelectableAdapter<ConversationAdapter.ViewHolder>() {
+class ConversationAdapter(private val mContext: Context, private val mArrayList: ArrayList<ChatDC>) : SelectableAdapter<ConversationAdapter.ViewHolder>() {
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
@@ -71,7 +73,7 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
         val itemLayoutView = LayoutInflater.from(parent.context).inflate(
                 R.layout.list_item_conversation, null)
 
-        val viewHolder = ViewHolder(itemLayoutView, clickListener)
+        val viewHolder = ViewHolder(itemLayoutView)
 
         return viewHolder
     }
@@ -90,18 +92,38 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
             viewHolder.onlineView.visibility = View.GONE
 
         viewHolder.tvLastChat.setText(mArrayList[position].mLastChat)
-        if(mArrayList[position].seen==true)
-        {
-            viewHolder.newMess.visibility=View.GONE
-        }
-        else
-        {
-            viewHolder.newMess.visibility=View.VISIBLE
+        if (mArrayList[position].seen == true) {
+            viewHolder.newMess.visibility = View.GONE
+        } else {
+            viewHolder.newMess.visibility = View.VISIBLE
         }
     }
 
 
-    class ViewHolder(row: View, private val listener: ClickListener?) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
+    inner class ViewHolder(row: View) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
+        override fun onLongClick(v: View?): Boolean {
+            val dialog = Dialog(v!!.context)
+            // Include dialog.xml file
+            dialog.setContentView(R.layout.dialog_list_chat)
+            // Set dialog title
+            dialog.setTitle("")
+
+            // set values for custom dialog components - text, image and button
+            val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
+            val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
+            val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
+            tv_user_name_chat.setText("SETTEXTTAIDAY")
+            btnXoaTinNhan.setOnClickListener {
+                Toast.makeText(v.context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            btnThongTin.setOnClickListener {
+                Toast.makeText(v.context, "Hello thong tin ", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            dialog.show()
+            return true
+        }
 
         var tvName: TextView
         var tvTime: TextView
@@ -112,6 +134,9 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
         var newMess: TextView
 
         init {
+            mDatabase = FirebaseDatabase.getInstance().getReference()
+            mAuth = FirebaseAuth.getInstance()
+            userid = mAuth!!.uid!!
             tvName = row.findViewById(R.id.tv_user_name)
             //selectedOverlay = (View) itemView.findViewById(R.id.selected_overlay);
             tvTime = row.findViewById(R.id.tv_time)
@@ -124,23 +149,45 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
         }
 
         override fun onClick(v: View) {
-            listener?.onItemClicked(adapterPosition)
-        }
+            //tra ve list conver user do tham gia
 
-        override fun onLongClick(view: View): Boolean {
-            if (listener != null) {
-                return listener.onItemLongClicked(adapterPosition)
-            }
-            return false
-        }
+            //   Toast.makeText(v.context,"id "+mArrayList[position].idConversation!!.toString(),Toast.LENGTH_SHORT).show()
+            mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString())
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
 
-        interface ClickListener {
-            fun onItemClicked(position: Int)
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.value != null) {
 
-            fun onItemLongClicked(position: Int): Boolean
+                                var tempConver: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                if (tempConver!!.isGroup == false && (tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
+                                    //truong hop userid o vi tri 1 ta lay then o vi tri 2
+                                    var userFR = ""
+                                    //get list userssss
+                                    if (tempConver!!.listUsers!!.get(0) == userid) {
+                                        userFR = tempConver!!.listUsers!!.get(1)
+                                    } else {
+                                        userFR = tempConver!!.listUsers!!.get(0)
+                                    }
+                                    var intent = Intent(v.context, activity_chat_active::class.java)
+                                    intent.putExtra("userfriend", userFR)
+                                    Log.d("RRR", "userfr " + userFR)
+                                    Log.d("RRR", "userfr " + position)
+                                    startActivity(v.context, intent, null)
+                                }
+                                mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString()).removeEventListener(this)
 
-            fun onCreateOptionsMenu(menu: Menu): Boolean
+                            } else {
+                                Log.d("RRR", "MESS NULL")
+                                mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString()).removeEventListener(this)
+                            }
+                        }
+                    })
         }
 
     }
+
+
 }
+

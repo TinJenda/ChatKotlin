@@ -109,18 +109,6 @@ class activity_chat_active : AppCompatActivity() {
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//                Log.d("AAA", "beforeTextChanged " + et_message.text)
-//                if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
-//                    Log.d("AAA","NULL TEXT")
-//                    btn_send.visibility = View.GONE
-//                    btnSendMore.visibility=View.VISIBLE
-//                    aniBtnSend_btnSendMore_activesendmore()
-//                } else {
-//                    Log.d("AAA","NOT NULL TEXT")
-//                    btn_send.visibility = View.VISIBLE
-//                    btnSendMore.visibility=View.GONE
-//                }
-
                 if (et_message.text.toString().equals("") || (et_message.text.toString().equals(null))) {
                     animation_BtnSend_actives()
                 }
@@ -316,6 +304,8 @@ class activity_chat_active : AppCompatActivity() {
 //    }
     fun setData(): List<ChatDataDC> {
         val data = ArrayList<ChatDataDC>()
+
+        //vào ds cuộc trò chuyện người mình
         mDatabase!!.child("user_listconver").child(userid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
@@ -325,6 +315,7 @@ class activity_chat_active : AppCompatActivity() {
                         if (p0!!.getValue() != null) {
                             for (snap in p0!!.children) {
                                 //vao id cua conversation ma user do chat
+                                //vào cuộc trò chuyện
                                 mDatabase!!.child("conversation").child("" + snap!!.value)
                                         .addValueEventListener(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError?) {
@@ -334,8 +325,31 @@ class activity_chat_active : AppCompatActivity() {
                                                 if (p0!!.value != null) {
                                                     var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
                                                     Log.d("TTT", temp.idConver)
+                                                    //kiểm tra đâu là cuộc trò chuyện mình
                                                     if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
                                                             (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
+
+                                                        // load danh sach nguoi = mang
+                                                        var userList = ArrayList<String>(temp!!.listUsers)
+                                                        var avatar = ""
+                                                        for (s in userList) {
+                                                            mDatabase!!.child("users").child(s).child("avatar")
+                                                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                                                        override fun onCancelled(p0: DatabaseError?) {
+                                                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                                        }
+
+                                                                        override fun onDataChange(p0: DataSnapshot?) {
+                                                                            if (p0!!.value != null) {
+                                                                                avatar = p0!!.value.toString()
+                                                                            } else {
+                                                                                avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
+                                                                            }
+                                                                        }
+
+                                                                    })
+                                                        }
+                                                        // load tin nhan
                                                         mDatabase!!.child("conversation").child(temp.idConver).child("messages")
                                                                 .addChildEventListener(object : ChildEventListener {
                                                                     override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
@@ -354,51 +368,20 @@ class activity_chat_active : AppCompatActivity() {
                                                                             } else {
                                                                                 checkType = "1"
                                                                             }
-                                                                            mDatabase!!.child("users").child(getMessage.idSender).child("avatar")
-                                                                                    .addValueEventListener(object : ValueEventListener {
-                                                                                        override fun onDataChange(p0: DataSnapshot?) {
-                                                                                            if (p0!!.value != null) {
-                                                                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                                                                                val t = df.parse(getMessage.date)
-                                                                                                df.applyPattern("hh:mm")
-                                                                                                var itemx: ChatDataDC = ChatDataDC(getMessage.id, p0!!.value.toString(), checkType, getMessage.content, df.format(t))
-                                                                                                Log.d("ABCC", "AVARTA " + p0!!.value.toString())
-                                                                                                Log.d("ABCC", "id " + getMessage.id)
-                                                                                                Log.d("ABCC", "iditem " + itemx.id)
-                                                                                                if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
-                                                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
-                                                                                                else {
-                                                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
-                                                                                                }
-                                                                                                mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
-                                                                                                Log.d("TTT", "Type " + checkType)
-                                                                                                Log.d("TTT", "Content " + getMessage.content)
-                                                                                                Log.d("TTT", "DATE " + getMessage.date)
-                                                                                                mDatabase!!.child("users").child(getMessage.idSender).child("avatar").removeEventListener(this)
-                                                                                            } else {
-                                                                                                Log.d("ABCC","VAO ELSE")
-                                                                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                                                                                val t = df.parse(getMessage.date)
-                                                                                                df.applyPattern("hh:mm")
-                                                                                                var itemx: ChatDataDC = ChatDataDC(getMessage.id, "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g" /*avarta mat dinh*/, checkType, getMessage.content, df.format(t))
-                                                                                                if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
-                                                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
-                                                                                                else
-                                                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
-                                                                                                mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
-                                                                                                Log.d("TTT", "Type " + checkType)
-                                                                                                Log.d("TTT", "Content " + getMessage.content)
-                                                                                                Log.d("TTT", "DATE " + getMessage.date)
-                                                                                                mDatabase!!.child("users").child(getMessage.idSender).child("avatar").removeEventListener(this)
-                                                                                            }
-                                                                                        }
+                                                                            Log.d("ABCC", "VAO ELSE")
 
-                                                                                        override fun onCancelled(p0: DatabaseError?) {
-                                                                                        }
-
-
-                                                                                    })
-
+                                                                            //lấy định dạng ngày mặt định
+                                                                            val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                                                            //parse ngày ở firebase sang dụng hh:mm
+                                                                            val t = df.parse(getMessage.date)
+                                                                            df.applyPattern("hh:mm")
+//
+                                                                            var itemx = ChatDataDC(getMessage.id, avatar, checkType, getMessage.content, df.format(t))
+                                                                            if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
+                                                                                (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
+                                                                            else
+                                                                                (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
+                                                                            mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
                                                                         } else {
                                                                             Log.d("TTT", "MESSAGE NULL")
                                                                         }
@@ -409,8 +392,6 @@ class activity_chat_active : AppCompatActivity() {
 
                                                                     override fun onCancelled(p0: DatabaseError?) {
                                                                     }
-
-
                                                                 })
                                                     }
                                                 } else {

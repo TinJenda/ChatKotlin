@@ -22,7 +22,7 @@ import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
 import java.util.ArrayList
 
-class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickListener {
+class fragment_conversation : Fragment() {
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: ConversationAdapter? = null
     private var mAuth: FirebaseAuth? = null
@@ -47,7 +47,7 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
-        mAdapter = ConversationAdapter(context, setData(), this@fragment_conversation)
+        mAdapter = ConversationAdapter(context, setData())
         mRecyclerView!!.adapter = mAdapter
 
         return view
@@ -122,7 +122,7 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
                                                                             for (snapMess in p0!!.children) {
                                                                                 var tempContent = ""
                                                                                 var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
-                                                                               tempContent = tempMess.content!!
+                                                                                tempContent = tempMess.content!!
                                                                                 mDatabase!!.child("users").child(userFR)
                                                                                         .addValueEventListener(object : ValueEventListener {
                                                                                             override fun onCancelled(p0: DatabaseError?) {
@@ -191,41 +191,5 @@ class fragment_conversation : Fragment(), ConversationAdapter.ViewHolder.ClickLi
         return data
     }
 
-    override fun onItemClicked(position: Int) {
-        var intent = Intent(context, activity_chat_active::class.java)
-        intent.putExtra("userfriend", listUser[position])
-        Log.d("RRR", "userfr " + listUser[position])
-        Log.d("RRR", "userfr " + position)
-        startActivity(intent)
-//        Toast.makeText(context, "Hello...item " + position, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onItemLongClicked(position: Int): Boolean {
-        val dialog = Dialog(context)
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.dialog_list_chat)
-        // Set dialog title
-        dialog.setTitle("")
-
-        // set values for custom dialog components - text, image and button
-        val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
-        val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
-        val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
-        tv_user_name_chat.setText("SETTEXTTAIDAY")
-        btnXoaTinNhan.setOnClickListener {
-            Toast.makeText(context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-        }
-        btnThongTin.setOnClickListener {
-            Toast.makeText(context, "Hello thong tin ", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
-        }
-        dialog.show()
-        return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        return false
-    }
 
 }
