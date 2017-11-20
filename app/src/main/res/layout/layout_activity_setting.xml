@@ -91,34 +91,6 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@color/colorLine" />
-        <LinearLayout
-            android:id="@+id/btnYeuCauKetBan"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_button_1"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:layout_height="@dimen/size_toolbar">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ketban"
-                android:layout_marginRight="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:gravity="center_vertical|left"
-                android:layout_height="@dimen/size_toolbar"
-                android:textSize="@dimen/text_size_default"
-                android:text="Yêu cầu kết bạn   "/>
-            <TextView
-                android:id="@+id/numRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17dp"
-                android:text=""
-                android:textStyle="bold"
-                android:textColor="@color/colorRed"/>
-        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

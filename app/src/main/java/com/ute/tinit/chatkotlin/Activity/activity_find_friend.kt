@@ -204,12 +204,9 @@ class activity_find_friend : AppCompatActivity() {
 //                                                                   (mRecyclerView!!.adapter as FindFriendsAdapter).addItem(dataTemp)
                                                                 data.add(dataTemp)
                                                                 (mRecyclerView!!.adapter as FindFriendsAdapter).notifyDataSetChanged()
-                                                                mDatabase!!.child("users").child(keyChild).removeEventListener(this)
-                                                                mDatabase!!.child("users").orderByChild("name")
-                                                                        .startAt(ed_find_friend.text.toString())
-                                                                        .endAt(ed_find_friend.text.toString() + "\uf8ff").removeEventListener(this)
                                                                 tv_noti_findfriends.visibility = View.GONE
                                                             }
+                                                            mDatabase!!.child("users").child(keyChild).removeEventListener(this)
                                                         }
                                                     })
                                                 }
@@ -217,6 +214,9 @@ class activity_find_friend : AppCompatActivity() {
                                                 (mRecyclerView!!.adapter as FindFriendsAdapter).notifyDataSetChanged()
                                                 tv_noti_findfriends.visibility = View.VISIBLE
                                             }
+                                            mDatabase!!.child("users").orderByChild("name")
+                                                    .startAt(ed_find_friend.text.toString())
+                                                    .endAt(ed_find_friend.text.toString() + "\uf8ff").removeEventListener(this)
                                         }
                                     })
                         }
