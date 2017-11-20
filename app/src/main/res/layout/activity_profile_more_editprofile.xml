@@ -236,17 +236,36 @@
                 android:textColor="@color/colorBlack" />
         </LinearLayout>
     </LinearLayout>
+<android.support.constraint.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="20dp">
 
+    <com.tuyenmonkey.mkloader.MKLoader
+        android:id="@+id/loadSaveInfo"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mk_type="ThreePulse"
+        app:mk_color="@color/mainColor"
+        tools:ignore="MissingConstraints" />
     <Button
         android:id="@+id/btn_save_info_edit"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
         android:background="@drawable/custom_button_doithongtin"
         android:gravity="center"
-        android:textAllCaps="false"
         android:text="Lưu thông tin"
+        android:textAllCaps="false"
         android:textColor="@color/colorWhile"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        tools:ignore="MissingConstraints" />
+
+</android.support.constraint.ConstraintLayout>
+
 </LinearLayout>

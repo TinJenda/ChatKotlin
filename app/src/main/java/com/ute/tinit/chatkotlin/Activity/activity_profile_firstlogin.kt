@@ -398,6 +398,6 @@ class activity_profile_firstlogin : PermissionsActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(useID).child("online").setValue(0)
+       // mDatabase!!.child("users").child(useID).child("online").setValue(0)
     }
 }

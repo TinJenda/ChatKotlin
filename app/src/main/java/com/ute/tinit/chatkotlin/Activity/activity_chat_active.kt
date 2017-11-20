@@ -1,8 +1,10 @@
 package com.ute.tinit.chatkotlin.Activity
 
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
@@ -45,6 +47,9 @@ class activity_chat_active : AppCompatActivity() {
     var userid = ""
     var userFR = ""
     var nameUser: String = ""
+    var currentPage:Double = 0.0
+    var TOTAL_ITEM_EACH_LOAD:Int = 20
+    val data = arrayListOf<ChatDataDC>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat_active)
@@ -58,6 +63,7 @@ class activity_chat_active : AppCompatActivity() {
         var intent = intent
         userFR = intent.getStringExtra("userfriend")
         btnSend()
+        setData()
         loadDATA()
         textEmply()
     }
@@ -246,28 +252,29 @@ class activity_chat_active : AppCompatActivity() {
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
-        mAdapter = ChatDataAdapter(this@activity_chat_active, setData() as MutableList<ChatDataDC>)
+        mAdapter = ChatDataAdapter(this@activity_chat_active, data as MutableList<ChatDataDC>)
         mRecyclerView!!.adapter = mAdapter
 
+
         text = findViewById(R.id.et_message)
-        text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
-
+        text!!.setOnClickListener{ mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
         mDatabase!!.child("users").child(userFR)
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError?) {
-                    }
+                .addValueEventListener(
+                        object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError?) {
+                            }
 
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        if (p0!!.getValue() != null) {
-                            var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
-                            tv_nameuser.setText("" + getFriend.name!!)
-                        }
-                    }
+                            override fun onDataChange(p0: DataSnapshot?) {
+                                if (p0!!.getValue() != null) {
+                                    var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
+                                    tv_nameuser.setText("" + getFriend.name!!)
+                                }
+                            }
 
-                })
+                        })
     }
 
-    //  private fun mCheckInforInServer(child: String) {
+//  private fun mCheckInforInServer(child: String) {
 //        FirebaseQuery().mReadDataOnce(child, object : OnGetDataListener {
 //            override fun onStart() {
 //                //DO SOME THING WHEN START GET DATA HERE
@@ -302,9 +309,7 @@ class activity_chat_active : AppCompatActivity() {
 //        super.onStop()
 //
 //    }
-    fun setData(): List<ChatDataDC> {
-        val data = ArrayList<ChatDataDC>()
-
+    fun setData() {
         //vào ds cuộc trò chuyện người mình
         mDatabase!!.child("user_listconver").child(userid)
                 .addValueEventListener(object : ValueEventListener {
@@ -350,6 +355,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                     })
                                                         }
                                                         // load tin nhan
+
                                                         mDatabase!!.child("conversation").child(temp.idConver).child("messages")
                                                                 .addChildEventListener(object : ChildEventListener {
                                                                     override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
@@ -383,6 +389,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                                 (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
                                                                             mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
                                                                         } else {
+                                                                            currentPage--
                                                                             Log.d("TTT", "MESSAGE NULL")
                                                                         }
                                                                     }
@@ -405,7 +412,11 @@ class activity_chat_active : AppCompatActivity() {
                         }
                     }
                 })
-        return data
+    }
+
+    fun loadMoreData() {
+        currentPage++
+        setData()
     }
 
     override fun onBackPressed() {
@@ -506,3 +517,5 @@ class activity_chat_active : AppCompatActivity() {
     }
 
 }
+
+

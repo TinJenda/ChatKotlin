@@ -119,7 +119,7 @@ class fragment_contacts_childcontact : Fragment() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+       // mDatabase!!.child("users").child(userid).child("online").setValue(0)
     }
 
 }

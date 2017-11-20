@@ -40,6 +40,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
     private var mAuth: FirebaseAuth? = null
     private var mDatabase: DatabaseReference? = null
     var userid = ""
+
     companion object {
         var FB_STORAGE_PATH: String = "avarta/"
         var REQUEST_CODE: Int = 234
@@ -56,7 +57,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
         mAuth = FirebaseAuth.getInstance()
         userid = mAuth!!.uid!!
 
-       // blurImage()
+        // blurImage()
         mStorageRef = FirebaseStorage.getInstance().getReference();
         loadData()
         doiThongTin()
@@ -82,11 +83,10 @@ class activity_profile_more_myprofile : PermissionsActivity() {
 
     fun doiThongTin() {
         btn_doithongtin.setOnClickListener {
-            var intent=Intent(this@activity_profile_more_myprofile,activity_profile_more_editprofile::class.java)
+            var intent = Intent(this@activity_profile_more_myprofile, activity_profile_more_editprofile::class.java)
             startActivity(intent)
         }
     }
-
     fun loadData() {
         var getuser: UserDC
         mDatabase!!.child("users").child(userid)
@@ -94,15 +94,16 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                     override fun onCancelled(p0: DatabaseError?) {
                         Toast.makeText(this@activity_profile_more_myprofile, "AAA", Toast.LENGTH_SHORT).show()
                     }
+
                     override fun onDataChange(p0: DataSnapshot?) {
                         getuser = p0!!.getValue(UserDC::class.java)!!
                         //  name= getuser.name!!
                         // avartaURL= getuser.avarta!!
                         tv_user_namex.text = getuser.name!!
-                        tvGioiTinh.text=getuser.sex
-                        tv_date.text=getuser.date
-                        tv_sdt.text=getuser.phone_number
-                        tv_email.text=getuser.email
+                        tvGioiTinh.text = getuser.sex
+                        tv_date.text = getuser.date
+                        tv_sdt.text = getuser.phone_number
+                        tv_email.text = getuser.email
                         Picasso.with(this@activity_profile_more_myprofile)
                                 .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
@@ -129,13 +130,13 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                                     .placeholder(R.drawable.default_avarta)
                                     .into(target)
                         }, 100)
+                        mDatabase!!.child("users").child(userid).removeEventListener(this)
                     }
                 })
-        //  mDatabase!!.addValueEventListener(addValueEventListener)
-
     }
+
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+       // mDatabase!!.child("users").child(userid).child("online").setValue(0)
     }
 }

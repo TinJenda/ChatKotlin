@@ -43,6 +43,8 @@ class activity_profile_more_editprofile : PermissionsActivity() {
     var month: Int = 0
     var day: Int = 0
     var userid = ""
+    var latitude:String="0"
+    var longitude:String="0"
     private var mDatabase: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
     private var IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/avarta.jpg?alt=media&token=d9bfc794-a5bd-47b7-966c-9bee18bfc75c"
@@ -167,8 +169,9 @@ class activity_profile_more_editprofile : PermissionsActivity() {
 
     fun saveInfo() {
         btn_save_info_edit.setOnClickListener {
+            loadSaveInfo.visibility=View.VISIBLE
+            btn_save_info_edit.visibility=View.GONE
             saveFirebase()
-            finish()
         }
     }
 
@@ -179,15 +182,29 @@ class activity_profile_more_editprofile : PermissionsActivity() {
         var phone_number = "" + et_sodienthoai.text.toString()
         var sex: String = select_gioitinh.getSelectedItem().toString()
         var tensave = tv_username_edit.text.toString()
-        var ns=""+tv_ngaysinh.text.toString()
+        var ngaysinh=""+tv_ngaysinh.text.toString()
         var friend= arrayListOf<String>("VqQahB7aoxMLvcXUNY0uke4yloz2") //lay xuong sau
         if (!imgUploadLink.equals("")) {
             IMAGE_URL = imgUploadLink
         }
+        var user = UserDC(userID, tensave, sex, phone_number, email, latitude, longitude, 1, IMAGE_URL,ngaysinh)
 
-        CreateUser(userID, tensave, sex, phone_number, email, "0", "0", 1,
-                IMAGE_URL,ns,friend)
-
+        mDatabase!!.child("users").child(userID).setValue(user, DatabaseReference.CompletionListener
+        { databaseError, databaseReference ->
+            if (databaseError == null) {
+                loadSaveInfo.visibility=View.GONE
+                Toast.makeText(this@activity_profile_more_editprofile,"Cập nhập thành công", Toast.LENGTH_SHORT).show()
+                Log.d("BBB","Cập nhập thành công")
+                finish()
+            }
+            else
+            {
+                loadSaveInfo.visibility=View.GONE
+                Toast.makeText(this@activity_profile_more_editprofile,"Lỗi rồi!!!!", Toast.LENGTH_SHORT).show()
+                Log.d("BBB","lỗi rồi!!!!")
+                finish()
+            }
+        })
 
     }
 
@@ -305,32 +322,6 @@ class activity_profile_more_editprofile : PermissionsActivity() {
     }
 
 
-    fun CreateUser(userId: String, name: String, sex: String, phone_number: String, email: String, latitude: String
-                   , longitude: String, is_online: Int, avatar: String,ns:String,friend:ArrayList<String>) {
-        var user = UserDC(userId, name, sex, phone_number, email, latitude, longitude, is_online, avatar,ns)
-        Log.d("BBB",userId)
-        Log.d("BBB",name)
-        Log.d("BBB",sex)
-        Log.d("BBB",phone_number)
-        Log.d("BBB",email)
-        Log.d("BBB",latitude)
-        Log.d("BBB",longitude)
-        Log.d("BBB",""+is_online)
-        Log.d("BBB",avatar)
-        Log.d("BBB",ns)
-        mDatabase!!.child("users").child(userId).setValue(user, DatabaseReference.CompletionListener
-        { databaseError, databaseReference ->
-            if (databaseError == null) {
-                Toast.makeText(this@activity_profile_more_editprofile,"Cập nhập thành công", Toast.LENGTH_SHORT).show()
-                Log.d("BBB","Cập nhập thành công")
-            }
-            else
-            {
-                Toast.makeText(this@activity_profile_more_editprofile,"Lỗi rồi!!!!", Toast.LENGTH_SHORT).show()
-                Log.d("BBB","lỗi rồi!!!!")
-            }
-        })
-    }
 
     fun loadData() {
         try {
@@ -366,6 +357,8 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         tv_ngaysinh.text=getuser.date
                         et_sodienthoai.setText(getuser.phone_number)
                         tv_email_edit.text=getuser.email
+                        latitude=getuser.latitude!!
+                        longitude=getuser.longitude!!
                         Picasso.with(this@activity_profile_more_editprofile)
                                 .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
@@ -391,8 +384,10 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                                     .resize(800, 800)
                                     .placeholder(R.drawable.default_avarta)
                                     .into(target)
-                        }, 100)
+                        }, 50)
+                        mDatabase!!.child("users").child(userid).removeEventListener(this)
                     }
+
                 })
     }
         catch (e:Exception)
@@ -435,6 +430,6 @@ class activity_profile_more_editprofile : PermissionsActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+       // mDatabase!!.child("users").child(userid).child("online").setValue(0)
     }
 }

@@ -241,6 +241,6 @@ class activity_find_friend : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+      //  mDatabase!!.child("users").child(userid).child("online").setValue(0)
     }
 }

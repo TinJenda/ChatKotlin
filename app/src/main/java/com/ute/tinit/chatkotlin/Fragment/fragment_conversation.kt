@@ -160,6 +160,7 @@ class fragment_conversation : Fragment() {
                                                                                                     else {
                                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
                                                                                                     }
+                                                                                                    (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
                                                                                                 } else {
                                                                                                     Log.d("RRR", "USER KO TON TAI")
                                                                                                 }

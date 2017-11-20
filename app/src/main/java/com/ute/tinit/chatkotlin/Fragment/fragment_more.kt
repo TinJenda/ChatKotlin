@@ -162,7 +162,7 @@ class fragment_more : Fragment() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase!!.child("users").child(userid).child("online").setValue(0)
+       // mDatabase!!.child("users").child(userid).child("online").setValue(0)
     }
 }
 
