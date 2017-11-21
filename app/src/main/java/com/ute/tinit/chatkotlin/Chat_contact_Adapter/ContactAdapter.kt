@@ -55,6 +55,7 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
             if (mArrayList[i].id == contactId) {
                 mArrayList.removeAt(i)
                 notifyItemRemoved(i)
+                break
             }
         }
     }

@@ -232,18 +232,9 @@ class MainActivity : AppCompatActivity() {
                     argTypes = arrayOf<Class<*>>(Boolean::class.java)
                     menuHelper.javaClass.getDeclaredMethod("setForceShowIcon", *argTypes).invoke(menuHelper, true)
                 } catch (e: Exception) {
-                    // Possible exceptions are NoSuchMethodError and NoSuchFieldError
-                    //
-                    // In either case, an exception indicates something is wrong with the reflection code, or the
-                    // structure of the PopupMenu class or its dependencies has changed.
-                    //
-                    // These exceptions should never happen since we're shipping the AppCompat library in our own apk,
-                    // but in the case that they do, we simply can't force icons to display, so log the error and
-                    // show the menu normally.
-                    //  Log.d("AAA",""+e.message)
                 }
 
-                popup.show()//showing popup menu
+                popup.show()
             }
         })
     }

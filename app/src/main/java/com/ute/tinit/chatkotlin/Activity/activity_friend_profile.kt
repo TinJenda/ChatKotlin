@@ -17,6 +17,14 @@ import com.ute.tinit.chatkotlin.DataClass.RequestFriendDC
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_friend_profile.*
+import com.ute.tinit.chatkotlin.MainActivity
+import android.view.Gravity
+import android.widget.LinearLayout
+import android.app.Dialog
+import android.widget.TextView
+import kotlinx.android.synthetic.main.bottom_sheet.*
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
+
 
 class activity_friend_profile : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
@@ -39,8 +47,159 @@ class activity_friend_profile : AppCompatActivity() {
         userid = mAuth!!.uid!!
         loadData()
         ketBan()
+        btnMore()
     }
 
+    private fun eventClick() {
+        val view = layoutInflater.inflate(R.layout.bottom_sheet, null)
+        val mBottomSheetDialog = Dialog(this@activity_friend_profile, R.style.MaterialDialogSheet)
+        mBottomSheetDialog.setContentView(view)
+        mBottomSheetDialog.setCancelable(true)
+        mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM)
+        mBottomSheetDialog.show()
+        view.btnChatt.setOnClickListener {
+            Toast.makeText(this@activity_friend_profile, "Clicked btnChatt", Toast.LENGTH_SHORT).show()
+            mBottomSheetDialog.dismiss()
+        }
+        view.btnUnfriend.setOnClickListener {
+            Toast.makeText(this@activity_friend_profile, "Clicked btnUnfriend", Toast.LENGTH_SHORT).show()
+            //xoa ban trong userid
+            mDatabase!!.child("friends").child(userid)
+                    .addListenerForSingleValueEvent(object :ValueEventListener{
+                        override fun onCancelled(p0: DatabaseError?) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if(p0!!.value!=null)
+                            {
+                                for(snap in p0.children)
+                                {
+                                    if(snap.getValue()==userFR)
+                                    {
+                                        mDatabase!!.child("friends").child(userid).child(snap.key).removeValue()
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Log.d("AAA","Friend null")
+                            }
+                            mDatabase!!.child("friends").child(userid).removeEventListener(this)
+                        }
+
+                    })
+            //xoa ban trong userFR
+            mDatabase!!.child("friends").child(userFR)
+                    .addListenerForSingleValueEvent(object :ValueEventListener{
+                        override fun onCancelled(p0: DatabaseError?) {
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if(p0!!.value!=null)
+                            {
+                                for(snap in p0.children)
+                                {
+                                    if(snap.getValue()==userid)
+                                    {
+                                        mDatabase!!.child("friends").child(userFR).child(snap.key).removeValue()
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Log.d("AAA","Friend null")
+                            }
+                            mDatabase!!.child("friends").child(userFR).removeEventListener(this)
+                        }
+
+                    })
+            //xoa request la ban
+            mDatabase!!.child("request_friend").orderByChild("userid1").equalTo(userid)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.getValue() != null) {
+                                for (postSnapshot in p0!!.getChildren()) {
+                                    Log.d("keyrf", postSnapshot.key)
+                                    mDatabase!!.child("request_friend").child(postSnapshot.key)
+                                            .addValueEventListener(object : ValueEventListener {
+                                                override fun onCancelled(p0: DatabaseError?) {
+                                                }
+
+                                                override fun onDataChange(p0: DataSnapshot?) {
+                                                    if (p0!!.getValue() != null) {
+                                                        var getRF: RequestFriendDC
+                                                        getRF = p0!!.getValue(RequestFriendDC::class.java)!!
+                                                        if (getRF.userid2 == userFR) {
+                                                            Log.d("statusx", "key = "+p0.key)
+                                                            mDatabase!!.child("request_friend").child(p0.key).removeValue()                                                        }
+                                                    }
+                                                    mDatabase!!.child("request_friend").child(postSnapshot.key).removeEventListener(this)
+                                                }
+                                            })
+                                }
+                            } else {
+                                Log.d("statusx", "Du lieu user1 null")
+                            }
+                            mDatabase!!.child("request_friend").orderByChild("userid1").equalTo(userid).removeEventListener(this)
+                        }
+                    })
+            mDatabase!!.child("request_friend").orderByChild("userid2").equalTo(userid)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.getValue() != null) {
+                                for (postSnapshot in p0!!.getChildren()) {
+                                    Log.d("keyrf", postSnapshot.key)
+                                    mDatabase!!.child("request_friend").child(postSnapshot.key)
+                                            .addValueEventListener(object : ValueEventListener {
+                                                override fun onCancelled(p0: DatabaseError?) {
+                                                }
+
+                                                override fun onDataChange(p0: DataSnapshot?) {
+                                                    if (p0!!.getValue() != null) {
+                                                        var getRF: RequestFriendDC
+                                                        getRF = p0!!.getValue(RequestFriendDC::class.java)!!
+                                                        if (getRF.userid1 == userFR) {
+                                                            Log.d("statusx", "key = "+p0.key)
+                                                            mDatabase!!.child("request_friend").child(p0.key).removeValue()
+                                                        }
+                                                    }
+                                                    mDatabase!!.child("request_friend").child(postSnapshot.key).removeEventListener(this)
+                                                }
+                                            })
+                                }
+                            } else {
+                                Log.d("statusxxx", "Du lieu user2 null")
+                            }
+                            mDatabase!!.child("request_friend").orderByChild("userid2").equalTo(userid).removeEventListener(this)                        }
+                    })
+            mBottomSheetDialog.dismiss()
+
+        }
+        view.btnBlock.setOnClickListener {
+            Toast.makeText(this@activity_friend_profile, "Clicked btnBlock", Toast.LENGTH_SHORT).show()
+            mBottomSheetDialog.dismiss()
+        }
+        view.btnInfomation.setOnClickListener {
+            Toast.makeText(this@activity_friend_profile, "Clicked btnInfomation", Toast.LENGTH_SHORT).show()
+            mBottomSheetDialog.dismiss()
+        }
+    }
+
+    fun btnMore()
+    {
+        btnFloatProfile.setOnClickListener {
+            eventClick()
+        }
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.getItemId()
         when (id) {

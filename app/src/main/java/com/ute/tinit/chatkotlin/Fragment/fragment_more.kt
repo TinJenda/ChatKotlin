@@ -143,18 +143,18 @@ class fragment_more : Fragment() {
                             }
                             if(count==0)
                             {
-                                numRequest.visibility= View.GONE
+                                view.numRequest.visibility= View.GONE
                             }
                             else {
-                                numRequest.visibility= View.VISIBLE
-                                numRequest.text = "(" + count + " yêu cầu)"
+                                view.numRequest.visibility= View.VISIBLE
+                                view.numRequest.text = "(" + count + " yêu cầu)"
                                 Log.d("CCC", "(" + count + " yêu cầu kết bạn)")
                             }
                         }
                         else
                         {
                             Log.d("CCC", "DATA NULL")
-                            numRequest.visibility= View.GONE
+                            view.numRequest.visibility= View.GONE
                         }
                     }
 

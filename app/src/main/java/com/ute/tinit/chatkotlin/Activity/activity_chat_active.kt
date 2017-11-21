@@ -1,10 +1,14 @@
 package com.ute.tinit.chatkotlin.Activity
 
+import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
@@ -16,6 +20,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +38,7 @@ import com.ute.tinit.chatkotlin.DataClass.MessageDC
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.layout_activity_chat_active.*
 import kotlinx.android.synthetic.main.layout_flash_screen.*
 import kotlin.collections.ArrayList
 
@@ -47,8 +53,8 @@ class activity_chat_active : AppCompatActivity() {
     var userid = ""
     var userFR = ""
     var nameUser: String = ""
-    var currentPage:Double = 0.0
-    var TOTAL_ITEM_EACH_LOAD:Int = 20
+    var currentPage: Double = 0.0
+    var TOTAL_ITEM_EACH_LOAD: Int = 20
     val data = arrayListOf<ChatDataDC>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +72,19 @@ class activity_chat_active : AppCompatActivity() {
         setData()
         loadDATA()
         textEmply()
+        profileFriend()
+    }
+
+    fun profileFriend() {
+//        tv_nameuser.setOnClickListener {
+//            var intent = Intent(this@activity_chat_active, activity_friend_profile::class.java)
+//            intent.putExtra("userfriend",userFR)
+//            startActivity(intent)
+//        }
+
+        btnMoreChat.setOnClickListener {
+            Toast.makeText(this@activity_chat_active,"Ahih",Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun getNameById(idUser: String): String {
@@ -257,7 +276,7 @@ class activity_chat_active : AppCompatActivity() {
 
 
         text = findViewById(R.id.et_message)
-        text!!.setOnClickListener{ mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
+        text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
         mDatabase!!.child("users").child(userFR)
                 .addValueEventListener(
                         object : ValueEventListener {
@@ -420,7 +439,7 @@ class activity_chat_active : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        //set su kien da doc tin nhan
+
         //seenlistener
         mDatabase!!.child("user_listconver").child(userid)
                 .addListenerForSingleValueEvent(
