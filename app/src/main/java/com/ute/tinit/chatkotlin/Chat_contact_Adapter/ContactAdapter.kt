@@ -1,17 +1,21 @@
 package com.ute.tinit.chatkotlin.Chat_contact_Adapter
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_chat_active
+import com.ute.tinit.chatkotlin.Activity.activity_friend_profile
 import com.ute.tinit.chatkotlin.Chat_contact_Adapter.ContactAdapter.ViewHolder
 import com.ute.tinit.chatkotlin.R
 
@@ -95,9 +99,9 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
     (row: View) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
         override fun onClick(v: View?) {
             var possitionItem= getAdapterPosition()
-            Toast.makeText(v!!.context,"hello "+tvName.text.toString() +"id "+mArrayList[possitionItem].id,Toast.LENGTH_SHORT).show()
-            var intent=Intent(v.context,activity_chat_active::class.java)
+            var intent=Intent(v!!.context,activity_chat_active::class.java)
             intent.putExtra("userfriend",mArrayList[possitionItem].id)
+            intent.putExtra("group_check", false)
             ContextCompat.startActivity(v.context,intent,null)
         }
         var tvName: TextView
@@ -113,6 +117,22 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
         }
 
         override fun onLongClick(view: View): Boolean {
+            val dialog = Dialog(view.context)
+            // Include dialog.xml file
+            dialog.setContentView(R.layout.dialog_list_contact)
+            // Set dialog title
+            dialog.setTitle("")
+
+            // set values for custom dialog components - text, image and button
+            val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
+
+            btnThongTin.setOnClickListener {
+                dialog.dismiss()
+                var intent=Intent(mContext,activity_friend_profile::class.java)
+                intent.putExtra("userfriend",mArrayList[position].id)
+                startActivity(mContext,intent,null)
+            }
+            dialog.show()
             return true
         }
     }

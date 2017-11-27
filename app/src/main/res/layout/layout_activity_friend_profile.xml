@@ -85,6 +85,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/wall_friends"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -156,16 +157,8 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:gravity="center"
-                        android:text="Hãy gửi lời kết bạn và \n chém gió...kk"
-                        android:textSize="16dp" />
-
                     <LinearLayout
+                        android:id="@+id/request_friends"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -179,7 +172,7 @@
                             android:textColor="@color/colorWhile"/>
 
                         <Button
-                            android:id="@+id/btnHuyKetBan"
+                            android:id="@+id/btnHuyYCKetBan"
                             android:layout_width="150dp"
                             android:layout_height="50dp"
                             android:background="@drawable/custom_button_doithongtin"
@@ -250,5 +243,4 @@
         android:src="@drawable/ic_pluss"
         app:layout_anchor="@id/appBar"
         app:layout_anchorGravity="bottom|end" />
-
 </android.support.design.widget.CoordinatorLayout>

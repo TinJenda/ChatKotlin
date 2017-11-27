@@ -52,9 +52,10 @@ class activity_chat_active : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     var userid = ""
     var userFR = ""
-    var nameUser: String = ""
+    var group_check = false
+    var converID: String = ""
     var currentPage: Double = 0.0
-    var TOTAL_ITEM_EACH_LOAD: Int = 20
+    var nameconver = ""
     val data = arrayListOf<ChatDataDC>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +68,23 @@ class activity_chat_active : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         userid = mAuth!!.uid!!
         var intent = intent
-        userFR = intent.getStringExtra("userfriend")
+        group_check = intent.extras.getBoolean("group_check")
+        if (group_check.equals(false)) {
+            userFR = intent.getStringExtra("userfriend")
+            setData()
+        } else {
+            converID = intent.getStringExtra("conversation")
+           // nameconver = intent.getStringExtra("nameconver")
+            setDataChatGroup()
+        }
         btnSend()
-        setData()
         loadDATA()
         textEmply()
         profileFriend()
+    }
+
+    fun loadChatGroup() {
+
     }
 
     fun profileFriend() {
@@ -83,7 +95,7 @@ class activity_chat_active : AppCompatActivity() {
 //        }
 
         btnMoreChat.setOnClickListener {
-            Toast.makeText(this@activity_chat_active,"Ahih",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@activity_chat_active, "Ahih", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -162,112 +174,140 @@ class activity_chat_active : AppCompatActivity() {
     fun btnSend() {
         btnSend.setOnClickListener {
             if (!text!!.text.equals("") || !text!!.text.equals(null)) {
-                var temp = mDatabase!!.child("user_listconver").child(userid)
-                        .addValueEventListener(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError?) {
-                            }
+                if (group_check == false) {
+                    mDatabase!!.child("user_listconver").child(userid)
+                            .addValueEventListener(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError?) {
+                                }
 
-                            override fun onDataChange(p0: DataSnapshot?) {
-                                if (p0!!.getValue() != null) {
+                                override fun onDataChange(p0: DataSnapshot?) {
                                     var checkExitsConver: Boolean = false
-                                    for (snap in p0!!.children) {
-                                        //vao id cua conversation ma user do chat
-                                        mDatabase!!.child("conversation").child("" + snap!!.value)
-                                                .addValueEventListener(object : ValueEventListener {
-                                                    override fun onCancelled(p0: DatabaseError?) {
-                                                    }
+                                    if (p0!!.getValue() != null) {
+                                        for (snap in p0!!.children) {
+                                            //vao id cua conversation ma user do chat
+                                            mDatabase!!.child("conversation").child("" + snap!!.value)
+                                                    .addValueEventListener(object : ValueEventListener {
+                                                        override fun onCancelled(p0: DatabaseError?) {
+                                                        }
 
-                                                    override fun onDataChange(p0: DataSnapshot?) {
-                                                        if (p0!!.value != null) {
-                                                            var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                                            if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
-                                                                    (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
-                                                                //xu ly them chat trong nay
-                                                                checkExitsConver = true
-                                                                //them chat
-                                                                var myRefMess = mDatabase!!.child("conversation").child("" + snap!!.value).child("messages").push()
-                                                                Log.d("TTT", "THEM CHAT")
-                                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                                                val currentTime = df.format(Calendar.getInstance().time)
-                                                                var userSeen = arrayListOf<String>(userid)
-                                                                var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                                                myRefMess.setValue(mess)
-                                                                text!!.setText("")
-                                                                mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
+                                                        override fun onDataChange(p0: DataSnapshot?) {
+                                                            if (p0!!.value != null) {
+                                                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                                                if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
+                                                                        (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
+                                                                    //xu ly them chat trong nay
+                                                                    checkExitsConver = true
+                                                                    //them chat
+                                                                    var myRefMess = mDatabase!!.child("conversation").child("" + snap!!.value).child("messages").push()
+                                                                    Log.d("TTT", "THEM CHAT")
+                                                                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                                                    val currentTime = df.format(Calendar.getInstance().time)
+                                                                    var userSeen = arrayListOf<String>(userid)
+                                                                    var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                                                                    myRefMess.setValue(mess)
+                                                                    text!!.setText("")
+                                                                    mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
 
+                                                                }
                                                             }
                                                         }
-                                                    }
 
-                                                })
-                                        if (checkExitsConver == true) {
-                                            break
-                                        }
-                                    }
-
-                                    val handler: Handler = Handler()
-                                    handler.postDelayed(Runnable {
-                                        if (checkExitsConver == false) {
-                                            //tao cuoc tro chuyen moi tai day
-                                            var tempListUser = arrayListOf<String>(userid, userFR)
-                                            var listMessage = arrayListOf<String>()
-                                            var myRef = mDatabase!!.child("conversation").push()
-                                            var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
-                                            myRef.setValue(conver).addOnCompleteListener {
-                                                mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
-                                                mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
-                                                mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                                myRef.removeEventListener(this)
+                                                    })
+                                            if (checkExitsConver == true) {
+                                                break
                                             }
-                                            //them chat
-                                            //type=2 is me
-                                            Log.d("TTT", "THEM CHAT checkExitsConver==false")
-                                            val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                            val currentTime = df.format(Calendar.getInstance().time)
-                                            var userSeen = arrayListOf<String>(userid)
-                                            var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                            myRefMess.setValue(mess)
-                                            text!!.setText("")
                                         }
-                                    }, 1000)
-                                    mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                } else {
-                                    Log.d("TTT", "DATA NULL")
-                                    //ko ton tai cai nao cung tao moi tai day
-                                    //tao cuoc tro chuyen moi tai day
-                                    var tempListUser = arrayListOf<String>(userid, userFR)
-                                    var listMessage = arrayListOf<String>()
-                                    var myRef = mDatabase!!.child("conversation").push()
-                                    var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
-                                    myRef.setValue(conver).addOnCompleteListener {
-                                        mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
-                                        mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+
+                                        val handler: Handler = Handler()
+                                        handler.postDelayed(Runnable {
+                                            if (checkExitsConver == false) {
+                                                //tao cuoc tro chuyen moi tai day
+                                                var tempListUser = arrayListOf<String>(userid, userFR)
+                                                var listMessage = arrayListOf<String>()
+                                                var myRef = mDatabase!!.child("conversation").push()
+                                                var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
+                                                myRef.setValue(conver).addOnCompleteListener {
+                                                    mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                                    mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                                                    mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
+                                                    myRef.removeEventListener(this)
+                                                }
+                                                //them chat
+                                                //type=2 is me
+                                                Log.d("TTT", "THEM CHAT checkExitsConver==false")
+                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                                val currentTime = df.format(Calendar.getInstance().time)
+                                                var userSeen = arrayListOf<String>(userid)
+                                                var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                                                var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                                                myRefMess.setValue(mess)
+                                                text!!.setText("")
+                                            }
+                                        }, 1000)
                                         mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                        myRef.removeEventListener(this)
+                                    } else {
+                                        Log.d("TTT", "DATA NULL")
+                                        //ko ton tai cai nao cung tao moi tai day
+                                        //tao cuoc tro chuyen moi tai day
+                                        var tempListUser = arrayListOf<String>(userid, userFR)
+                                        var listMessage = arrayListOf<String>()
+                                        var myRef = mDatabase!!.child("conversation").push()
+                                        var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
+                                        myRef.setValue(conver).addOnCompleteListener {
+                                            mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                            mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                                            mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
+                                            myRef.removeEventListener(this)
+                                        }
+                                        //them chat
+                                        //type=2 is me
+                                        Log.d("TTT", "THEM CHAT DATANULL")
+                                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                        var userSeen = arrayListOf<String>(userid)
+                                        val currentTime = df.format(Calendar.getInstance().time)
+                                        var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                                        var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                                        myRefMess.setValue(mess)
+                                        text!!.setText("")
+                                        mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
                                     }
-                                    //them chat
-                                    //type=2 is me
-                                    Log.d("TTT", "THEM CHAT DATANULL")
-                                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                    var userSeen = arrayListOf<String>(userid)
-                                    val currentTime = df.format(Calendar.getInstance().time)
-                                    var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                    myRefMess.setValue(mess)
-                                    text!!.setText("")
-                                    mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
                                 }
-                            }
 
-                        })
+                            })
+                } else {
+                    mDatabase!!.child("conversation").child(converID)
+                            .addValueEventListener(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError?) {
+                                }
 
+                                override fun onDataChange(p0: DataSnapshot?) {
+                                    if (p0!!.value != null) {
+                                        var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+
+                                        //xu ly them chat trong nay
+                                        //them chat
+                                        var myRefMess = mDatabase!!.child("conversation").child(converID).child("messages").push()
+                                        Log.d("TTT", "THEM CHAT")
+                                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                        val currentTime = df.format(Calendar.getInstance().time)
+                                        var userSeen = arrayListOf<String>(userid)
+                                        var mess = MessageDC(myRefMess.key, converID, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                                        myRefMess.setValue(mess)
+                                        text!!.setText("")
+                                        mDatabase!!.child("conversation").child(converID).removeEventListener(this)
+
+                                    }
+                                }
+                            })
+
+                }
             }
+
         }
     }
 
+
     fun loadDATA() {
-        Log.d("userFR", "user " + userFR)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
@@ -277,20 +317,24 @@ class activity_chat_active : AppCompatActivity() {
 
         text = findViewById(R.id.et_message)
         text!!.setOnClickListener { mRecyclerView!!.postDelayed({ mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1) }, 400) }
-        mDatabase!!.child("users").child(userFR)
-                .addValueEventListener(
-                        object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError?) {
-                            }
-
-                            override fun onDataChange(p0: DataSnapshot?) {
-                                if (p0!!.getValue() != null) {
-                                    var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
-                                    tv_nameuser.setText("" + getFriend.name!!)
+        if (group_check == false) {
+            mDatabase!!.child("users").child(userFR)
+                    .addValueEventListener(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError?) {
                                 }
-                            }
 
-                        })
+                                override fun onDataChange(p0: DataSnapshot?) {
+                                    if (p0!!.getValue() != null) {
+                                        var getFriend: UserDC = p0.getValue(UserDC::class.java)!!
+                                        tv_nameuser.setText("" + getFriend.name!!)
+                                    }
+                                }
+
+                            })
+        } else {
+            tv_nameuser.setText("Nhóm")
+        }
     }
 
 //  private fun mCheckInforInServer(child: String) {
@@ -356,23 +400,22 @@ class activity_chat_active : AppCompatActivity() {
                                                         // load danh sach nguoi = mang
                                                         var userList = ArrayList<String>(temp!!.listUsers)
                                                         var avatar = ""
-                                                        for (s in userList) {
-                                                            mDatabase!!.child("users").child(s).child("avatar")
-                                                                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                                                                        override fun onCancelled(p0: DatabaseError?) {
-                                                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                                                        }
+                                                        mDatabase!!.child("users").child(userFR).child("avatar")
+                                                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                                    }
 
-                                                                        override fun onDataChange(p0: DataSnapshot?) {
-                                                                            if (p0!!.value != null) {
-                                                                                avatar = p0!!.value.toString()
-                                                                            } else {
-                                                                                avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
-                                                                            }
+                                                                    override fun onDataChange(p0: DataSnapshot?) {
+                                                                        if (p0!!.value != null) {
+                                                                            avatar = p0!!.value.toString()
+                                                                        } else {
+                                                                            avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
                                                                         }
+                                                                    }
 
-                                                                    })
-                                                        }
+                                                                })
+
                                                         // load tin nhan
 
                                                         mDatabase!!.child("conversation").child(temp.idConver).child("messages")
@@ -388,10 +431,15 @@ class activity_chat_active : AppCompatActivity() {
 
                                                                             var getMessage: MessageDC = p0!!.getValue(MessageDC::class.java)!!
                                                                             var checkType = getMessage.type
-                                                                            if (getMessage.idSender == userid) {
-                                                                                checkType = "2"
+
+                                                                            if (getMessage.type == "0") {
+                                                                                checkType = "0"
                                                                             } else {
-                                                                                checkType = "1"
+                                                                                if (getMessage.idSender == userid) {
+                                                                                    checkType = "2"
+                                                                                } else {
+                                                                                    checkType = "1"
+                                                                                }
                                                                             }
                                                                             Log.d("ABCC", "VAO ELSE")
 
@@ -433,94 +481,222 @@ class activity_chat_active : AppCompatActivity() {
                 })
     }
 
-    fun loadMoreData() {
-        currentPage++
-        setData()
+    fun setDataChatGroup() {
+
+        //vao id cua conversation ma user do chat
+        //vào cuộc trò chuyện
+        mDatabase!!.child("conversation").child(converID)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        if (p0!!.value != null) {
+                            var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                            Log.d("TTT", temp.idConver)
+                            //kiểm tra đâu là cuộc trò chuyện mình
+                            // load danh sach nguoi = mang
+                            var userList = ArrayList<String>(temp!!.listUsers)
+                            var avatar = ""
+                            avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
+                            // load tin nhan
+                            mDatabase!!.child("conversation").child(converID).child("messages")
+                                    .addChildEventListener(object : ChildEventListener {
+                                        override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                                        }
+
+                                        override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                                        }
+
+                                        override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
+                                            if (p0!!.value != null) {
+
+                                                var getMessage: MessageDC = p0!!.getValue(MessageDC::class.java)!!
+                                                mDatabase!!.child("users").child(getMessage.idSender).child("avatar")
+                                                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                                                            override fun onCancelled(p0: DatabaseError?) {
+                                                            }
+
+                                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                                var checkType = getMessage.type
+                                                                if (getMessage.type == "0") {
+                                                                    checkType = "0"
+                                                                } else {
+                                                                    if (getMessage.idSender == userid) {
+                                                                        checkType = "2"
+                                                                    } else {
+                                                                        checkType = "1"
+                                                                    }
+                                                                }
+                                                                Log.d("ABCC", "VAO ELSE")
+
+                                                                //lấy định dạng ngày mặt định
+                                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                                                //parse ngày ở firebase sang dụng hh:mm
+                                                                val t = df.parse(getMessage.date)
+                                                                df.applyPattern("hh:mm")
+                                                                var itemx = ChatDataDC(getMessage.id, p0!!.getValue().toString(), checkType, getMessage.content, df.format(t))
+                                                                if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
+                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
+                                                                else
+                                                                    (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
+                                                                mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
+                                                            }
+
+                                                        })
+
+                                            } else {
+                                                currentPage--
+                                                Log.d("TTT", "MESSAGE NULL")
+                                            }
+                                        }
+
+                                        override fun onChildRemoved(p0: DataSnapshot?) {
+                                        }
+
+                                        override fun onCancelled(p0: DatabaseError?) {
+                                        }
+                                    })
+                        } else {
+                            Log.d("TTT", "ConverNull")
+                        }
+                    }
+                })
     }
 
     override fun onBackPressed() {
-
         //seenlistener
-        mDatabase!!.child("user_listconver").child(userid)
-                .addListenerForSingleValueEvent(
-                        object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError?) {
+        if (group_check == false) {
+            mDatabase!!.child("user_listconver").child(userid)
+                    .addListenerForSingleValueEvent(
+                            object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError?) {
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot?) {
+                                    if (p0!!.getValue() != null) {
+                                        Log.d("ABC", "SU KIEN")
+                                        var checkExitsConver: Boolean = false
+                                        for (snap in p0!!.children) {
+                                            //vao id cua conversation ma user do chat
+                                            mDatabase!!.child("conversation").child("" + snap!!.value)
+                                                    .addValueEventListener(object : ValueEventListener {
+                                                        override fun onCancelled(p0: DatabaseError?) {
+                                                        }
+
+                                                        override fun onDataChange(p0: DataSnapshot?) {
+                                                            if (p0!!.value != null) {
+                                                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                                                if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
+                                                                        (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
+                                                                    //xu ly them chat trong nay
+
+                                                                    //addseen
+                                                                    mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
+                                                                            .addListenerForSingleValueEvent(
+                                                                                    object : ValueEventListener {
+                                                                                        override fun onDataChange(p0: DataSnapshot?) {
+                                                                                            if (p0!!.value != null) {
+                                                                                                for (snapMess in p0!!.children) {
+                                                                                                    var kiemTraTonTai = false
+                                                                                                    var tempContent = ""
+                                                                                                    var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                                                    for (i in 0..tempMess.userSeen!!.size - 1) {
+                                                                                                        Log.d("ABC", "User " + tempMess.userSeen!![i])
+                                                                                                        if (tempMess.userSeen!![i].equals(userid)) {
+                                                                                                            kiemTraTonTai = true
+                                                                                                            Log.d("ABC", "REMOVE USER RIGHT")
+                                                                                                            break
+                                                                                                        }
+                                                                                                    }
+                                                                                                    if (kiemTraTonTai == false) {
+                                                                                                        tempMess.userSeen!!.add(userid)
+                                                                                                        Log.d("ABC", "REmove listener")
+                                                                                                        mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").child(tempMess.id).setValue(tempMess)
+                                                                                                    }
+
+                                                                                                }
+                                                                                                mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1).removeEventListener(this)
+                                                                                            } else {
+                                                                                                mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1).removeEventListener(this)
+                                                                                                Log.d("RRR", "NULL MESSAGE LAST")
+                                                                                            }
+                                                                                        }
+
+                                                                                        override fun onCancelled(p0: DatabaseError?) {
+                                                                                        }
+
+
+                                                                                    })
+                                                                }
+                                                                mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
+                                                            } else {
+                                                                mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
+
+                                                                Log.d("AAA", "DATA Conver NUll")
+                                                            }
+                                                        }
+
+                                                    })
+                                        }
+                                        mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
+                                    }
+                                }
+
                             }
+                    )
+        } else {
+            //vao id cua conversation ma user do chat
+            mDatabase!!.child("conversation").child(converID)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
 
-                            override fun onDataChange(p0: DataSnapshot?) {
-                                if (p0!!.getValue() != null) {
-                                    Log.d("ABC", "SU KIEN")
-                                    var checkExitsConver: Boolean = false
-                                    for (snap in p0!!.children) {
-                                        //vao id cua conversation ma user do chat
-                                        mDatabase!!.child("conversation").child("" + snap!!.value)
-                                                .addValueEventListener(object : ValueEventListener {
-                                                    override fun onCancelled(p0: DatabaseError?) {
-                                                    }
-
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.value != null) {
+                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                //xu ly them chat trong nay
+                                //addseen
+                                mDatabase!!.child("conversation").child(converID).child("messages").limitToLast(1)
+                                        .addListenerForSingleValueEvent(
+                                                object : ValueEventListener {
                                                     override fun onDataChange(p0: DataSnapshot?) {
                                                         if (p0!!.value != null) {
-                                                            var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                                            if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
-                                                                    (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
-                                                                //xu ly them chat trong nay
+                                                            for (snapMess in p0!!.children) {
+                                                                var kiemTraTonTai = false
+                                                                var tempContent = ""
+                                                                var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                for (i in 0..tempMess.userSeen!!.size - 1) {
+                                                                    Log.d("ABC", "User " + tempMess.userSeen!![i])
+                                                                    if (tempMess.userSeen!![i].equals(userid)) {
+                                                                        kiemTraTonTai = true
+                                                                        Log.d("ABC", "REMOVE USER RIGHT")
+                                                                        break
+                                                                    }
+                                                                }
+                                                                if (kiemTraTonTai == false) {
+                                                                    tempMess.userSeen!!.add(userid)
+                                                                    Log.d("ABC", "REmove listener")
+                                                                    mDatabase!!.child("conversation").child(converID).child("messages").child(tempMess.id).setValue(tempMess)
+                                                                }
 
-                                                                //addseen
-                                                                mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
-                                                                        .addListenerForSingleValueEvent(
-                                                                                object : ValueEventListener {
-                                                                                    override fun onDataChange(p0: DataSnapshot?) {
-                                                                                        if (p0!!.value != null) {
-                                                                                            for (snapMess in p0!!.children) {
-                                                                                                var kiemTraTonTai = false
-                                                                                                var tempContent = ""
-                                                                                                var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
-                                                                                                for (i in 0..tempMess.userSeen!!.size - 1) {
-                                                                                                    Log.d("ABC", "User " + tempMess.userSeen!![i])
-                                                                                                    if (tempMess.userSeen!![i].equals(userid)) {
-                                                                                                        kiemTraTonTai = true
-                                                                                                        Log.d("ABC", "REMOVE USER RIGHT")
-                                                                                                        break
-                                                                                                    }
-                                                                                                }
-                                                                                                if (kiemTraTonTai == false) {
-                                                                                                    tempMess.userSeen!!.add(userid)
-                                                                                                    Log.d("ABC", "REmove listener")
-                                                                                                    mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").child(tempMess.id).setValue(tempMess)
-                                                                                                }
-
-                                                                                            }
-                                                                                            mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1).removeEventListener(this)
-                                                                                        } else {
-                                                                                            mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1).removeEventListener(this)
-                                                                                            Log.d("RRR", "NULL MESSAGE LAST")
-                                                                                        }
-                                                                                    }
-
-                                                                                    override fun onCancelled(p0: DatabaseError?) {
-                                                                                    }
-
-
-                                                                                })
                                                             }
-                                                            mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
-                                                        } else {
-                                                            mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
-
-                                                            Log.d("AAA", "DATA Conver NUll")
                                                         }
+                                                        mDatabase!!.child("conversation").child(converID).child("messages").limitToLast(1).removeEventListener(this)
                                                     }
 
+                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                    }
                                                 })
-                                    }
-                                    mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                }
-                            }
+                                mDatabase!!.child("conversation").child(converID).removeEventListener(this)
 
+                            }
                         }
-                )
+                    })
+        }
         finish()
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.getItemId()

@@ -47,13 +47,16 @@
 
             <TextView
                 android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Laura Owens"
+                android:maxWidth="190dp"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/h2" />
+                android:textSize="@dimen/h2"
+                android:layout_width="wrap_content" />
             <View
                 android:id="@+id/online_indicator"
                 android:layout_toRightOf="@id/tv_user_name"
@@ -64,13 +67,24 @@
                 android:layout_height="10dp"
                 android:background="@drawable/bg_online"/>
             <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_count_online"
+                android:layout_toRightOf="@id/online_indicator"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:text="(3)"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/h2" />
+            <TextView
                 android:id="@+id/tv_last_chat"
                 android:layout_below="@id/tv_user_name"
-                android:layout_width="wrap_content"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:text="Hi, Joe, looks great! :)"
                 android:textSize="@dimen/h3"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/colorDefaultText"
                 android:layout_marginTop="3dp"/>
             <TextView
@@ -78,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5:04pm"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/h4"
                 android:layout_alignTop="@id/online_indicator"

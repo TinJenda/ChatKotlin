@@ -53,7 +53,7 @@
             <!--/>-->
         <com.tuyenmonkey.AutoFillEditText
             android:id="@+id/ed_find_friend"
-            android:layout_width="280dp"
+            android:layout_width="250dp"
             android:layout_height="@dimen/size_toolbar"
             android:maxLines="1"
             android:background="@color/colorDefaultBackground"
@@ -63,20 +63,20 @@
             />
         <Spinner
             android:id="@+id/id_select_search"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_marginLeft="3dp"
             android:background="@color/colorDefaultBackground"
             android:gravity="left|center"
             android:textSize="15sp"
             android:layout_height="@dimen/size_toolbar" />
+        <ImageButton
+            android:id="@+id/btnsearch"
+            android:layout_marginLeft="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_toolbar"
+            android:src="@drawable/ic_search_black"
+            android:background="@drawable/bg_button_1"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/btnsearch"
-        android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_height="@dimen/size_toolbar"
-        android:text="Tìm"
-        android:background="@drawable/bg_button_1"/>
 <TextView
     android:id="@+id/tv_noti_findfriends"
     android:layout_width="match_parent"

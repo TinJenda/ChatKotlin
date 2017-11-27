@@ -156,32 +156,39 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError?) {
                         }
-
                         override fun onDataChange(p0: DataSnapshot?) {
                             if (p0!!.value != null) {
-
                                 var tempConver: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                if (tempConver!!.isGroup == false && (tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
-                                    //truong hop userid o vi tri 1 ta lay then o vi tri 2
-                                    var userFR = ""
-                                    //get list userssss
-                                    if (tempConver!!.listUsers!!.get(0) == userid) {
-                                        userFR = tempConver!!.listUsers!!.get(1)
-                                    } else {
-                                        userFR = tempConver!!.listUsers!!.get(0)
+                                if (tempConver!!.isGroup == false) {
+                                    if ((tempConver!!.listUsers!!.get(0) == userid || tempConver!!.listUsers!!.get(1) == userid)) {
+//                                        //truong hop userid o vi tri 1 ta lay then o vi tri 2
+                                        var userFR = ""
+//                                        //get list userssss
+                                        if (tempConver!!.listUsers!!.get(0) == userid) {
+                                            userFR = tempConver!!.listUsers!!.get(1)
+                                        } else {
+                                            userFR = tempConver!!.listUsers!!.get(0)
+                                        }
+                                        var intent = Intent(v.context, activity_chat_active::class.java)
+                                       intent.putExtra("userfriend", userFR)
+                                        intent.putExtra("conversation", mArrayList[position].idConversation!!.toString())
+                                        intent.putExtra("group_check", false)
+
+                                    //   Log.d("RRR", "userfr " + userFR)
+                                        Log.d("RRR", "userfr " + position)
+                                        startActivity(v.context, intent, null)
                                     }
+                                } else {
                                     var intent = Intent(v.context, activity_chat_active::class.java)
-                                    intent.putExtra("userfriend", userFR)
-                                    Log.d("RRR", "userfr " + userFR)
-                                    Log.d("RRR", "userfr " + position)
+                                    intent.putExtra("conversation", mArrayList[position].idConversation!!.toString())
+                                    intent.putExtra("group_check", true)
+                                    intent.putExtra("nameconver",mArrayList[position].mName)
                                     startActivity(v.context, intent, null)
                                 }
-                                mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString()).removeEventListener(this)
-
                             } else {
                                 Log.d("RRR", "MESS NULL")
-                                mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString()).removeEventListener(this)
                             }
+                            mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString()).removeEventListener(this)
                         }
                     })
         }

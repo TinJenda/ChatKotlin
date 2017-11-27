@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <Button
+        android:id="@+id/btnThongTin"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/size_toolbar"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_button"
+        android:text="Vào trang cá nhân" />
+</LinearLayout>

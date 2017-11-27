@@ -140,7 +140,7 @@ class fragment_conversation : Fragment() {
                                                                                                     var seen: Boolean = false
                                                                                                     //xu ly thong bao tin nhan moi o day
                                                                                                     for (i in 0..tempMess.userSeen!!.size - 1) {
-                                                                                                        Log.d("RRR", "user = " + tempMess.userSeen!![i])
+                                                                                                        Log.d("RRR", "userSeen = " + tempMess.userSeen!![i])
                                                                                                         if (tempMess.userSeen!![i] == userid) {
                                                                                                             seen = true
                                                                                                             break
@@ -174,13 +174,87 @@ class fragment_conversation : Fragment() {
                                                                     }
 
                                                                 })
+                                                    } else { //truong hop day chinh la chat nhom
+                                                        if (tempConver!!.isGroup == true) {
+                                                            mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
+                                                                    .addValueEventListener(object : ValueEventListener {
+                                                                        override fun onCancelled(p0: DatabaseError?) {
+                                                                        }
+
+                                                                        override fun onDataChange(p0: DataSnapshot?) {
+                                                                            if (p0!!.value != null) {
+                                                                                for (snapMess in p0!!.children) {
+                                                                                    var tempContent = ""
+                                                                                    var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                                    tempContent = tempMess.content!!
+                                                                                    var isonline: Boolean = false
+                                                                                    var seen: Boolean = false
+                                                                                    //xu ly thong bao tin nhan moi o day
+                                                                                    for (i in 0..tempMess.userSeen!!.size - 1) {
+                                                                                        Log.d("RRR", "userChatNhom = " + tempMess.userSeen!![i])
+                                                                                        if (tempMess.userSeen!![i] == userid) {
+                                                                                            seen = true
+                                                                                            break
+                                                                                        }
+                                                                                    }
+
+                                                                                    var group_image = "https://firebasestorage.googleapis.com/v0/b/chatkotlin-tinjenda.appspot.com/o/group.png?alt=media&token=2fe5173a-e3d6-45c4-8a93-70af7200d075"
+
+                                                                                    var name = ""
+                                                                                    var count_online = 0
+                                                                                    for (i in 0..tempConver!!.listUsers!!.size - 1) {
+                                                                                        mDatabase!!.child("users").child(tempConver.listUsers!![i])
+                                                                                                .addValueEventListener(object : ValueEventListener {
+                                                                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                                                                    }
+
+                                                                                                    override fun onDataChange(p0: DataSnapshot?) {
+                                                                                                        if (p0!!.value != null) {
+                                                                                                            var tempUser: UserDC = (p0!!.getValue(UserDC::class.java))!!
+                                                                                                            if (tempUser.online == 1) {
+                                                                                                                count_online++
+                                                                                                            } else {
+                                                                                                                count_online--
+                                                                                                            }
+                                                                                                            if (i == tempConver!!.listUsers!!.size - 1) {
+                                                                                                                name += tempUser.name.toString() + " "
+                                                                                                                Log.d("Name", "Name " + name)
+                                                                                                            } else {
+                                                                                                                name += tempUser.name.toString() + ", "
+                                                                                                            }
+                                                                                                        // mDatabase!!.child("conversation").child(snap!!.value.toString()).child("conversationName").setValue(name)
+                                                                                                            var chatx: ChatDC = ChatDC(snap!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                                           (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chatx)
+                                                                                                        }
+                                                                                                    }
+
+                                                                                                })
+                                                                                    }
+                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                    // kiem tra contact da co trong list
+                                                                                    if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
+                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
+                                                                                    else {
+                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                    }
+                                                                                    (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
+
+
+                                                                                }
+                                                                            } else {
+                                                                                Log.d("RRR", "NULL MESSAGE LAST")
+                                                                            }
+                                                                        }
+
+                                                                    })
+                                                        }
                                                     }
-
-
                                                 } else {
                                                     Log.d("RRR", "MESS NULL")
                                                 }
+
                                             }
+
                                         })
                             }
                         } else {

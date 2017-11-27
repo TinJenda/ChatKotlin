@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@drawable/bg_item_list">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_user_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/space10"
+        android:layout_marginRight="@dimen/space10"
+        android:src="@drawable/avarta"/>
+    <RelativeLayout
+        android:id="@+id/ln_contact"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:paddingRight="@dimen/space10"
+        android:layout_toRightOf="@+id/iv_user_photo"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="18dp"
+            android:text="Tin Truong"
+            android:textColor="@color/colorBlack"
+            android:layout_gravity="center_vertical"/>
+        <CheckBox
+            android:id="@+id/id_checkbox"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="@dimen/space5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="left"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginBottom="5dp"/>
+    </RelativeLayout>
+    <View
+        android:layout_below="@+id/ln_contact"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="60dp"
+        android:background="@color/colorDefaultBackground"/>
+</RelativeLayout>

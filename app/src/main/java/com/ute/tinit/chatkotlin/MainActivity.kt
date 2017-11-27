@@ -1,5 +1,6 @@
 package com.ute.tinit.chatkotlin
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,24 +11,33 @@ import android.support.v7.widget.PopupMenu
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.*
 import com.ute.tinit.chatkotlin.Fragment.fragment_conversation
 import com.ute.tinit.chatkotlin.Fragment.fragment_contacts
 import com.ute.tinit.chatkotlin.Fragment.fragment_more
 import com.ute.tinit.chatkotlin.Fragment.fragment_time
 import com.ute.tinit.chatkotlin.Adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.Toast
+import com.chatkotlin.tintt.listview.AdapterListSelectFriends
 import com.ute.tinit.chatkotlin.Activity.activity_setting
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.ute.tinit.chatkotlin.Activity.activity_chat_active
 import com.ute.tinit.chatkotlin.Activity.activity_find_friend
-
+import com.ute.tinit.chatkotlin.DataClass.ConversationDC
+import com.ute.tinit.chatkotlin.DataClass.MessageDC
+import com.ute.tinit.chatkotlin.DataClass.SelectFriendsDC
+import com.ute.tinit.chatkotlin.DataClass.UserDC
+import kotlinx.android.synthetic.main.content_chat_activity.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     var doubleClickExit: Boolean = false
     var userid = ""
+    var userName = ""
     private var mDatabase: DatabaseReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
-        userid= mAuth!!.uid!!
+        userid = mAuth!!.uid!!
 //        mAuth = FirebaseAuth.getInstance()
 //        userid= mAuth!!.uid!!
 ////        var intent=intent
@@ -47,16 +57,26 @@ class MainActivity : AppCompatActivity() {
 //        val fragobj = fragment_more()
 //        fragobj.setArguments(bundle)
         mDatabase!!.child("users").child(userid).child("online").setValue(1)
+        mDatabase!!.child("users").child(userid).child("name").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+                if (p0!!.value != null) {
+                    userName = p0!!.value.toString()
+                }
+            }
+
+        })
         tabViewPage()
         btnSetting()
         btnInsertMore()
         btnInsertFriend()
-
     }
-    fun btnInsertFriend()
-    {
+
+    fun btnInsertFriend() {
         btnInsertFriend.setOnClickListener {
-            var intent=Intent(this@MainActivity, activity_find_friend::class.java)
+            var intent = Intent(this@MainActivity, activity_find_friend::class.java)
             startActivity(intent)
         }
     }
@@ -213,11 +233,99 @@ class MainActivity : AppCompatActivity() {
                     override fun onMenuItemClick(item: MenuItem): Boolean {
                         // Toast.makeText(this@MainActivity,"CLick "+item.title,Toast.LENGTH_SHORT).show()
                         if (item.title.toString().equals("Thêm bạn")) {
-                            Log.d("AAA", "Bạn click thêm bạn")
-                            toastShow("Bạn click thêm bạn", this@MainActivity)
+                            var intent = Intent(this@MainActivity, activity_find_friend::class.java)
+                            startActivity(intent)
                         } else {
-                            Log.d("AAA", "Bạn click tạo nhóm")
-                            toastShow("Bạn click tạo nhóm", this@MainActivity)
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_list_create_group)
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val lv = dialog.findViewById<ListView>(R.id.lv_select_friend)
+                            val taonhom = dialog.findViewById<Button>(R.id.taonhom)
+                            var arrtemp = ArrayList<SelectFriendsDC>()
+
+                            mDatabase!!.child("friends").child(userid)
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(p0: DatabaseError?) {
+                                        }
+                                        override fun onDataChange(p0: DataSnapshot?) {
+                                            if (p0!!.value != null) {
+                                                for (snap in p0!!.children) {
+                                                    mDatabase!!.child("users").child(snap.value.toString())
+                                                            .addValueEventListener(object : ValueEventListener {
+                                                                override fun onCancelled(p0: DatabaseError?) {
+                                                                }
+
+                                                                override fun onDataChange(p0: DataSnapshot?) {
+                                                                    if (p0!!.value != null) {
+                                                                        var tempUser: UserDC = p0!!.getValue(UserDC::class.java)!!
+                                                                        var save: SelectFriendsDC = SelectFriendsDC(tempUser.userID, tempUser.name, tempUser.avatar)
+                                                                        arrtemp.add(save)
+                                                                        (lv.adapter as AdapterListSelectFriends).notifyDataSetChanged()
+                                                                        mDatabase!!.child("users").child(snap.value.toString()).removeEventListener(this)
+                                                                    } else {
+                                                                        Log.d("mainx", "info null")
+                                                                    }
+                                                                }
+
+                                                            })
+                                                }
+                                                mDatabase!!.child("friends").child(userid).removeEventListener(this)
+                                            } else {
+                                                Log.d("mainx", "Friends null")
+                                            }
+                                        }
+
+                                    })
+
+                            lv.adapter = AdapterListSelectFriends(this@MainActivity, arrtemp)
+                            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//                            lv.setOnItemClickListener(object :AdapterView.OnItemClickListener{
+//                                override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                                    Toast.makeText(this@MainActivity,"item clcik",Toast.LENGTH_SHORT).show()
+//                                }
+//
+//                            })
+                            taonhom.setOnClickListener {
+                                var tempListUser = ArrayList<String>((lv.adapter as AdapterListSelectFriends).getListFriendChecked())
+                                if (tempListUser.size < 1) {
+                                    Toast.makeText(this@MainActivity, "Nhóm phải từ 2 người trở lên...", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(v.context, "Tao nhom", Toast.LENGTH_SHORT).show()
+                                    //them nhom chat tai day
+                                    Log.d("TTT", "DATA NULL")
+                                    //ko ton tai cai nao cung tao moi tai day
+                                    //tao cuoc tro chuyen moi tai day
+
+                                    var listMessage = arrayListOf<String>()
+                                    var myRef = mDatabase!!.child("conversation").push()
+                                    var conver = ConversationDC(myRef.key, "", tempListUser, true, listMessage)
+                                    myRef.setValue(conver).addOnCompleteListener {
+                                        for (user in tempListUser) {
+                                            mDatabase!!.child("user_listconver").child(user).push().setValue(myRef.key)
+                                        }
+                                        mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                    }
+
+                                    Log.d("TTT", "THEM CHAT DATANULL")
+                                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                    var userSeen = arrayListOf<String>(userid)
+                                    val currentTime = df.format(Calendar.getInstance().time)
+                                    var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, userName + " đã tạo cuộc trò chuyện nhóm", "0", currentTime, userSeen)
+                                    myRefMess.setValue(mess)
+                                    //them chat
+                                    dialog.dismiss()
+                                    var intent = Intent(v.context, activity_chat_active::class.java)
+                                    intent.putExtra("conversation", myRef.key)
+                                    intent.putExtra("group_check", true)
+                                    startActivity(intent)
+                                }
+                            }
+                            dialog.show()
                         }
                         return true
                     }
