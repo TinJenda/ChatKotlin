@@ -17,6 +17,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
         <RelativeLayout
+            android:id="@+id/rv_chat_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_rounded"

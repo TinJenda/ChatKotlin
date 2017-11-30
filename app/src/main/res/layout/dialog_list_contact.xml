@@ -1,14 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_button"
     android:orientation="vertical"
     android:padding="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHỌN"
+        android:textSize="18dp"
+        android:textAllCaps="true"
+        android:textColor="@color/mainColor"
+        android:gravity="center"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mainColor"
+        ></View>
     <Button
         android:id="@+id/btnThongTin"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/size_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:textAllCaps="false"
+        android:textSize="20dp"
         android:background="@drawable/bg_button"
         android:text="Vào trang cá nhân" />
-</LinearLayout>
+</LinearLayout >

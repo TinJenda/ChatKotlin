@@ -120,6 +120,7 @@ class ContactAdapter(private val mContext: Context, private val mArrayList: Arra
             val dialog = Dialog(view.context)
             // Include dialog.xml file
             dialog.setContentView(R.layout.dialog_list_contact)
+
             // Set dialog title
             dialog.setTitle("")
 

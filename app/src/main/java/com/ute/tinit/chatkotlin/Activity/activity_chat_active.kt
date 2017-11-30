@@ -1,45 +1,38 @@
 package com.ute.tinit.chatkotlin.Activity
 
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.RequiresApi
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
+import android.provider.Settings.ACTION_WIFI_SETTINGS
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ute.tinit.chatkotlin.ChatAction.ChatDataAdapter
-import com.ute.tinit.chatkotlin.DataClass.ChatDataDC
-import com.ute.tinit.chatkotlin.DataClass.ConversationDC
-import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.content_chat_activity.*
 import kotlinx.android.synthetic.main.toolbar_chat.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-import com.ute.tinit.chatkotlin.DataClass.MessageDC
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.layout_activity_chat_active.*
-import kotlinx.android.synthetic.main.layout_flash_screen.*
+import com.ute.tinit.chatkotlin.DataClass.*
 import kotlin.collections.ArrayList
 
 
@@ -55,7 +48,9 @@ class activity_chat_active : AppCompatActivity() {
     var group_check = false
     var converID: String = ""
     var currentPage: Double = 0.0
-    var nameconver = ""
+    var currentConver = ""
+    var checkExitsConver: Boolean = false
+    var isBlock = false
     val data = arrayListOf<ChatDataDC>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,19 +67,228 @@ class activity_chat_active : AppCompatActivity() {
         if (group_check.equals(false)) {
             userFR = intent.getStringExtra("userfriend")
             setData()
+            //xem cai nay ton tai ko. dc mo tu conversaion
+            if (intent.hasExtra("isfriend")) {
+                if (intent.getStringExtra("isfriend").equals("Người lạ")) {
+                    //kiem tra tin nhan dau tien, neu la minh ko hien thong bao, nguoc lai
+                    var temp=intent.getStringExtra("conversation")
+                    mDatabase!!.child("conversation").child(temp).child("messages").limitToFirst(1)
+                            .addValueEventListener(object :ValueEventListener{
+                                override fun onCancelled(p0: DatabaseError?) {
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot?) {
+                                    if(p0!!.value!=null) {
+                                        for (snap in p0.children) {
+                                            var tempMess: MessageDC = snap.getValue(MessageDC::class.java)!!
+                                            Log.d("tinnhandau", "x = " + tempMess.content)
+                                            Log.d("tinnhandau", "x = " + tempMess!!.idSender)
+
+                                            if (tempMess!!.idSender != userid) {
+                                                isFriendDialog()
+                                            }
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        Log.d("tinnhandau", "x = null")
+
+                                    }
+                                }
+
+                            })
+                }
+            }
         } else {
             converID = intent.getStringExtra("conversation")
-           // nameconver = intent.getStringExtra("nameconver")
+            // nameconver = intent.getStringExtra("nameconver")
             setDataChatGroup()
         }
+        checkExitsConversation()
+        checkBlock()
         btnSend()
         loadDATA()
         textEmply()
         profileFriend()
     }
 
-    fun loadChatGroup() {
 
+    fun checkExitsConversation() {
+        mDatabase!!.child("user_listconver").child(userid)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+
+                        if (p0!!.getValue() != null) {
+                            for (snap in p0!!.children) {
+                                //vao id cua conversation ma user do chat
+                                mDatabase!!.child("conversation").child("" + snap!!.value)
+                                        .addValueEventListener(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError?) {
+                                            }
+
+                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                if (p0!!.value != null) {
+                                                    var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+                                                    if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
+                                                            (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
+                                                        //xu ly them chat trong nay
+                                                        checkExitsConver = true
+                                                        currentConver = snap!!.value.toString()
+                                                        //them chat
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    checkExitsConver = false
+                                                }
+                                            }
+
+                                        })
+                            }
+                        }
+                    }
+                })
+    }
+
+    fun isFriendDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(this@activity_chat_active)
+        // khởi tạo dialog
+        alertDialogBuilder.setMessage("Người này không có trong danh sách bạn, bạn có muốn trò chuyện cùng người này không?")
+        // thiết lập nội dung cho dialog
+        alertDialogBuilder.setNegativeButton("Có") { dialog, which ->
+            dialog.dismiss()
+            // button "no" ẩn dialog đi
+        }
+        alertDialogBuilder.setPositiveButton("Block") { arg0, arg1 ->
+            //xoa request la ban
+            mDatabase!!.child("request_friend").orderByChild("userid1").equalTo(userid)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.getValue() != null) {
+                                for (postSnapshot in p0!!.getChildren()) {
+                                    Log.d("keyrf", postSnapshot.key)
+                                    mDatabase!!.child("request_friend").child(postSnapshot.key)
+                                            .addValueEventListener(object : ValueEventListener {
+                                                override fun onCancelled(p0: DatabaseError?) {
+                                                }
+
+                                                override fun onDataChange(p0: DataSnapshot?) {
+                                                    if (p0!!.getValue() != null) {
+                                                        var getRF: RequestFriendDC
+                                                        getRF = p0!!.getValue(RequestFriendDC::class.java)!!
+                                                        if (getRF.userid2 == userFR) {
+                                                            Log.d("statusx", "key = " + p0.key)
+                                                            mDatabase!!.child("request_friend").child(p0.key).removeValue()
+                                                        }
+                                                    }
+                                                    mDatabase!!.child("request_friend").child(postSnapshot.key).removeEventListener(this)
+                                                }
+                                            })
+                                }
+                            } else {
+                                Log.d("statusx", "Du lieu user1 null")
+                            }
+                            mDatabase!!.child("request_friend").orderByChild("userid1").equalTo(userid).removeEventListener(this)
+                        }
+                    })
+            mDatabase!!.child("request_friend").orderByChild("userid2").equalTo(userid)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.getValue() != null) {
+                                for (postSnapshot in p0!!.getChildren()) {
+                                    Log.d("keyrf", postSnapshot.key)
+                                    mDatabase!!.child("request_friend").child(postSnapshot.key)
+                                            .addValueEventListener(object : ValueEventListener {
+                                                override fun onCancelled(p0: DatabaseError?) {
+                                                }
+
+                                                override fun onDataChange(p0: DataSnapshot?) {
+                                                    if (p0!!.getValue() != null) {
+                                                        var getRF: RequestFriendDC
+                                                        getRF = p0!!.getValue(RequestFriendDC::class.java)!!
+                                                        if (getRF.userid1 == userFR) {
+                                                            Log.d("statusx", "key = " + p0.key)
+                                                            mDatabase!!.child("request_friend").child(p0.key).removeValue()
+                                                        }
+                                                    }
+                                                    mDatabase!!.child("request_friend").child(postSnapshot.key).removeEventListener(this)
+                                                }
+                                            })
+                                }
+                            } else {
+                                Log.d("statusxxx", "Du lieu user2 null")
+                            }
+                            mDatabase!!.child("request_friend").orderByChild("userid2").equalTo(userid).removeEventListener(this)
+                        }
+                    })
+            val handler: Handler = Handler()
+            handler.postDelayed(Runnable {
+                var setRF = RequestFriendDC(userid, userFR, userid, "3")
+                mDatabase!!.child("request_friend").push().setValue(setRF)
+            }, 2000)
+            finish()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        // tạo dialog
+        alertDialog.show()
+    }
+
+    fun checkBlock() {
+        mDatabase!!.child("request_friend").orderByChild("status").equalTo("3")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        if (p0!!.value != null) {
+                            for (snap in p0!!.children) {
+                                //  Log.d("ddd",snap.key +" "+snap.value)
+                                var tempRF: RequestFriendDC = snap.getValue(RequestFriendDC::class.java)!!
+                                if ((tempRF.userid1 == userid && tempRF.userid2 == userFR) || (tempRF.userid1 == userFR && tempRF.userid2 == userid)) {
+                                    isBlock = true
+                                    if (isBlock == true) {
+                                        Log.d("ddd", "dunggg")
+                                    } else {
+                                        Log.d("ddd", "saiiii")
+
+                                    }
+
+                                }
+                            }
+                        } else {
+                            Log.d("ddd", "nullllll")
+                        }
+                        mDatabase!!.child("request_friend").orderByChild("status").equalTo("3").removeEventListener(this)
+                    }
+
+                })
+        isBlock = false
+    }
+
+    fun haveNetworkConnection(): Boolean {
+        var haveConnectedWifi: Boolean = false
+        var haveConnectedMobile: Boolean = false
+        var cm: ConnectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var netInfo: Array<NetworkInfo> = cm.getAllNetworkInfo();
+        for (ni in netInfo) {
+            if (ni.getTypeName().equals("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equals("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
     fun profileFriend() {
@@ -95,7 +299,14 @@ class activity_chat_active : AppCompatActivity() {
 //        }
 
         btnMoreChat.setOnClickListener {
-            Toast.makeText(this@activity_chat_active, "Ahih", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this@activity_chat_active, "Ahih", Toast.LENGTH_SHORT).show()
+            if (haveNetworkConnection()) {
+                Toast.makeText(this@activity_chat_active, "Ahih", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@activity_chat_active, "Ahih x", Toast.LENGTH_SHORT).show()
+
+            }
+
         }
     }
 
@@ -173,108 +384,69 @@ class activity_chat_active : AppCompatActivity() {
 
     fun btnSend() {
         btnSend.setOnClickListener {
-            if (!text!!.text.equals("") || !text!!.text.equals(null)) {
+            Log.d("ddd", "nullllll")
+            if (isBlock == true) {
+                Log.d("ddd", "dunggg")
+            } else {
+                Log.d("ddd", "saiiii")
+
+            }
+
+            if (checkExitsConver == true) {
+                Log.d("ddd", "ton tai")
+            } else {
+                Log.d("ddd", "ko ton tai")
+            }
+
+            if ((!text!!.text.equals("") || !text!!.text.equals(null)) && haveNetworkConnection() == true) {
+                //chat don
                 if (group_check == false) {
-                    mDatabase!!.child("user_listconver").child(userid)
-                            .addValueEventListener(object : ValueEventListener {
-                                override fun onCancelled(p0: DatabaseError?) {
-                                }
+                    if (isBlock == false) { //xem bi block chua
+//                        edit_text_name.isFocusable=false
+//                        btnSend.isEnabled = false
+//                        btnSendMore.isEnabled = false
+                        if (checkExitsConver == true) {
+                            Log.d("ddd", "ton tai")
+                            //vao id cua conversation ma user do chat
+                            //xu ly them chat trong nay
+                            //them chat
+                            var myRefMess = mDatabase!!.child("conversation").child(currentConver).child("messages").push()
+                            Log.d("TTT", "THEM CHAT")
+                            val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                            val currentTime = df.format(Calendar.getInstance().time)
+                            var userSeen = arrayListOf<String>(userid)
+                            var mess = MessageDC(myRefMess.key, currentConver, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                            myRefMess.setValue(mess)
+                            text!!.setText("")
 
-                                override fun onDataChange(p0: DataSnapshot?) {
-                                    var checkExitsConver: Boolean = false
-                                    if (p0!!.getValue() != null) {
-                                        for (snap in p0!!.children) {
-                                            //vao id cua conversation ma user do chat
-                                            mDatabase!!.child("conversation").child("" + snap!!.value)
-                                                    .addValueEventListener(object : ValueEventListener {
-                                                        override fun onCancelled(p0: DatabaseError?) {
-                                                        }
+                        } else {
+                            Log.d("ddd", "ko ton tai")
+                            var tempListUser = arrayListOf<String>(userid, userFR)
+                            var listMessage = arrayListOf<String>()
+                            var myRef = mDatabase!!.child("conversation").push()
+                            var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
+                            myRef.setValue(conver).addOnCompleteListener {
+                                mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                            }
+                            //them chat
+                            //type=2 is me
+                            Log.d("TTT", "THEM CHAT checkExitsConver==false")
+                            val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                            val currentTime = df.format(Calendar.getInstance().time)
+                            var userSeen = arrayListOf<String>(userid)
+                            var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                            myRefMess.setValue(mess)
+                            text!!.setText("")
+                        }
+                    } else {
+//                        edit_text_name.isFocusable = true
+//                        btnSend.isEnabled = true
+//                        btnSendMore.isEnabled = true
+                    }
 
-                                                        override fun onDataChange(p0: DataSnapshot?) {
-                                                            if (p0!!.value != null) {
-                                                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
-                                                                if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
-                                                                        (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
-                                                                    //xu ly them chat trong nay
-                                                                    checkExitsConver = true
-                                                                    //them chat
-                                                                    var myRefMess = mDatabase!!.child("conversation").child("" + snap!!.value).child("messages").push()
-                                                                    Log.d("TTT", "THEM CHAT")
-                                                                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                                                    val currentTime = df.format(Calendar.getInstance().time)
-                                                                    var userSeen = arrayListOf<String>(userid)
-                                                                    var mess = MessageDC(myRefMess.key, "" + snap!!.value, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                                                    myRefMess.setValue(mess)
-                                                                    text!!.setText("")
-                                                                    mDatabase!!.child("conversation").child("" + snap!!.value).removeEventListener(this)
-
-                                                                }
-                                                            }
-                                                        }
-
-                                                    })
-                                            if (checkExitsConver == true) {
-                                                break
-                                            }
-                                        }
-
-                                        val handler: Handler = Handler()
-                                        handler.postDelayed(Runnable {
-                                            if (checkExitsConver == false) {
-                                                //tao cuoc tro chuyen moi tai day
-                                                var tempListUser = arrayListOf<String>(userid, userFR)
-                                                var listMessage = arrayListOf<String>()
-                                                var myRef = mDatabase!!.child("conversation").push()
-                                                var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
-                                                myRef.setValue(conver).addOnCompleteListener {
-                                                    mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
-                                                    mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
-                                                    mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                                    myRef.removeEventListener(this)
-                                                }
-                                                //them chat
-                                                //type=2 is me
-                                                Log.d("TTT", "THEM CHAT checkExitsConver==false")
-                                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                                val currentTime = df.format(Calendar.getInstance().time)
-                                                var userSeen = arrayListOf<String>(userid)
-                                                var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                                var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                                myRefMess.setValue(mess)
-                                                text!!.setText("")
-                                            }
-                                        }, 1000)
-                                        mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                    } else {
-                                        Log.d("TTT", "DATA NULL")
-                                        //ko ton tai cai nao cung tao moi tai day
-                                        //tao cuoc tro chuyen moi tai day
-                                        var tempListUser = arrayListOf<String>(userid, userFR)
-                                        var listMessage = arrayListOf<String>()
-                                        var myRef = mDatabase!!.child("conversation").push()
-                                        var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
-                                        myRef.setValue(conver).addOnCompleteListener {
-                                            mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
-                                            mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
-                                            mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                            myRef.removeEventListener(this)
-                                        }
-                                        //them chat
-                                        //type=2 is me
-                                        Log.d("TTT", "THEM CHAT DATANULL")
-                                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                        var userSeen = arrayListOf<String>(userid)
-                                        val currentTime = df.format(Calendar.getInstance().time)
-                                        var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                        var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                                        myRefMess.setValue(mess)
-                                        text!!.setText("")
-                                        mDatabase!!.child("user_listconver").child(userid).removeEventListener(this)
-                                    }
-                                }
-
-                            })
-                } else {
+                } else { //la group
                     mDatabase!!.child("conversation").child(converID)
                             .addValueEventListener(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError?) {
@@ -299,13 +471,33 @@ class activity_chat_active : AppCompatActivity() {
                                     }
                                 }
                             })
-
                 }
+            } else {
+                Toast.makeText(this@activity_chat_active, "Không có kết nối Internet!!!", Toast.LENGTH_SHORT).show()
+                createNetErrorDialog()
             }
-
         }
     }
 
+    fun createNetErrorDialog() {
+        var builder: AlertDialog.Builder = AlertDialog.Builder(this);
+        builder.setMessage("Mở kết nối Wifi hoặc mạng di động")
+                .setTitle("Không có kết nối Internet")
+                .setCancelable(false)
+                .setPositiveButton("Wifi Settting",
+                        DialogInterface.OnClickListener() { dialogInterface: DialogInterface, i: Int ->
+                            var i: Intent = Intent(ACTION_WIFI_SETTINGS)
+                            startActivity(i)
+                        }
+                )
+                .setNegativeButton("Cancel",
+                        DialogInterface.OnClickListener() { dialogInterface: DialogInterface, i: Int ->
+
+                        }
+                )
+        var alert: AlertDialog = builder.create()
+        alert.show()
+    }
 
     fun loadDATA() {
         mRecyclerView = findViewById(R.id.recyclerView)
@@ -396,7 +588,6 @@ class activity_chat_active : AppCompatActivity() {
                                                     //kiểm tra đâu là cuộc trò chuyện mình
                                                     if (temp!!.isGroup == false && ((temp!!.listUsers!!.get(0) == userid && temp!!.listUsers!!.get(1) == userFR) ||
                                                             (temp!!.listUsers!!.get(1) == userid && temp!!.listUsers!!.get(0) == userFR))) {
-
                                                         // load danh sach nguoi = mang
                                                         var userList = ArrayList<String>(temp!!.listUsers)
                                                         var avatar = ""
@@ -542,9 +733,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                     (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
                                                                 mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
                                                             }
-
                                                         })
-
                                             } else {
                                                 currentPage--
                                                 Log.d("TTT", "MESSAGE NULL")

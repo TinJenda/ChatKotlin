@@ -1,7 +1,10 @@
 package com.ute.tinit.chatkotlin.Activity
 
 //tin
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -75,6 +78,7 @@ class activity_login : AppCompatActivity() {
             btn_login.setVisibility(View.GONE)
 //            tv_user_email.setText( user.displayName)
 //            tv_user_id.setText(user.uid)
+            if(haveNetworkConnection())
             displayNext(user)
         } else {
 //            tv_user_id.setText(null)
@@ -82,7 +86,21 @@ class activity_login : AppCompatActivity() {
             btn_login.setVisibility(View.VISIBLE)
         }
     }
-
+    fun haveNetworkConnection(): Boolean {
+        var haveConnectedWifi: Boolean = false
+        var haveConnectedMobile: Boolean = false
+        var cm: ConnectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var netInfo: Array<NetworkInfo> = cm.getAllNetworkInfo();
+        for (ni in netInfo) {
+            if (ni.getTypeName().equals("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equals("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
     fun displayNext(user: FirebaseUser?) {
         var mDatabase: DatabaseReference? = null
         mDatabase = FirebaseDatabase.getInstance().getReference()
@@ -94,17 +112,17 @@ class activity_login : AppCompatActivity() {
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.getValue()!=null) {
                             var intent = Intent(this@activity_login, MainActivity::class.java)
-                            intent.putExtra("userid", user!!.uid)
-                            intent.putExtra("username", user!!.displayName)
-                            intent.putExtra("email", user!!.email)
+                            intent.putExtra("userid", user.uid)
+                            intent.putExtra("username", user.displayName)
+                            intent.putExtra("email", user.email)
                             startActivity(intent)
-                            mDatabase!!.child("users").child(user!!.uid).removeEventListener(this)
+                            mDatabase!!.child("users").child(user.uid).removeEventListener(this)
                             finish()
                         } else {
                             var intent = Intent(this@activity_login, activity_profile_firstlogin::class.java)
-                            intent.putExtra("userid", user!!.uid)
-                            intent.putExtra("username", user!!.displayName)
-                            intent.putExtra("email", user!!.email)
+                            intent.putExtra("userid", user.uid)
+                            intent.putExtra("username", user.displayName)
+                            intent.putExtra("email", user.email)
                             startActivity(intent)
                             finish()
                         }

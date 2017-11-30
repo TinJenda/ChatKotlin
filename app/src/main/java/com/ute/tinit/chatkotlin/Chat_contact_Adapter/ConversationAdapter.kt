@@ -151,7 +151,7 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
         override fun onClick(v: View) {
             //tra ve list conver user do tham gia
 
-            //   Toast.makeText(v.context,"id "+mArrayList[position].idConversation!!.toString(),Toast.LENGTH_SHORT).show()
+     //          Toast.makeText(v.context,"id "+mArrayList[position].idConversation!!.toString(),Toast.LENGTH_SHORT).show()
             mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!.toString())
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError?) {
@@ -173,7 +173,7 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
                                        intent.putExtra("userfriend", userFR)
                                         intent.putExtra("conversation", mArrayList[position].idConversation!!.toString())
                                         intent.putExtra("group_check", false)
-
+                                        intent.putExtra("isfriend",mArrayList[position].mName)
                                     //   Log.d("RRR", "userfr " + userFR)
                                         Log.d("RRR", "userfr " + position)
                                         startActivity(v.context, intent, null)

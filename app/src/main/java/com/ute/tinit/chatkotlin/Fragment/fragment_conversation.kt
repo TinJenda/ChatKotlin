@@ -64,10 +64,10 @@ class fragment_conversation : Fragment() {
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.value != null) {
                             listUser.clear()
-                            for (snap in p0.children) {
-                                Log.d("RRR", snap.value!!.toString())
+                            for (snapConver in p0.children) {
+                                Log.d("RRR", snapConver.value!!.toString())
                                 //tra ve list conver user do tham gia
-                                mDatabase!!.child("conversation").child(snap.value!!.toString())
+                                mDatabase!!.child("conversation").child(snapConver.value!!.toString())
                                         .addValueEventListener(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError?) {
                                             }
@@ -112,7 +112,7 @@ class fragment_conversation : Fragment() {
                                                                 listUser.add(userFR)
                                                             }
                                                         }
-                                                        mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
+                                                        mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("messages").limitToLast(1)
                                                                 .addValueEventListener(object : ValueEventListener {
                                                                     override fun onCancelled(p0: DatabaseError?) {
                                                                     }
@@ -123,6 +123,31 @@ class fragment_conversation : Fragment() {
                                                                                 var tempContent = ""
                                                                                 var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
                                                                                 tempContent = tempMess.content!!
+                                                                                var listFR= arrayListOf<String>()
+                                                                                //list friend check phai nguoi la ko
+                                                                                mDatabase!!.child("friends").child(userid)
+                                                                                        .addListenerForSingleValueEvent(object:ValueEventListener{
+                                                                                            override fun onCancelled(p0: DatabaseError?) {
+                                                                                            }
+
+                                                                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                                                                if(p0!!.value!=null)
+                                                                                                {
+                                                                                                    for(snap in p0.children)
+                                                                                                    {
+                                                                                                        listFR.add(snap.value.toString())
+                                                                                                        Log.d("nguoila","1 "+snap.value.toString())
+                                                                                                    }
+
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Log.d("nguoila","null friend")
+                                                                                                }
+                                                                                            }
+
+                                                                                        })
                                                                                 mDatabase!!.child("users").child(userFR)
                                                                                         .addValueEventListener(object : ValueEventListener {
                                                                                             override fun onCancelled(p0: DatabaseError?) {
@@ -153,14 +178,79 @@ class fragment_conversation : Fragment() {
                                                                                                         Log.d("RRR", "Seen = false")
                                                                                                     }
 
-                                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
-                                                                                                    // kiem tra contact da co trong list
-                                                                                                    if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
-                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
-                                                                                                    else {
-                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                    var nguoila=true
+                                                                                                    for(user in listFR)
+                                                                                                    {
+                                                                                                        if(user==userFR)
+                                                                                                        {
+                                                                                                            Log.d("nguoila","xet nguoi la dung")
+                                                                                                            nguoila=false
+                                                                                                            break
+                                                                                                        }
                                                                                                     }
-                                                                                                    (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
+                                                                                                    if(nguoila==true)
+                                                                                                    {
+                                                                                                        mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("messages").limitToFirst(1)
+                                                                                                                .addValueEventListener(object :ValueEventListener{
+                                                                                                                    override fun onCancelled(p0: DatabaseError?) {
+                                                                                                                    }
+
+                                                                                                                    override fun onDataChange(p0: DataSnapshot?) {
+                                                                                                                        if(p0!!.value!=null) {
+                                                                                                                            for (snapmess in p0.children) {
+                                                                                                                                var firstMess: MessageDC = snapmess.getValue(MessageDC::class.java)!!
+                                                                                                                                Log.d("tinnhandau", "x = " + tempMess.content)
+                                                                                                                                Log.d("tinnhandau", "x = " + tempMess!!.idSender)
+
+                                                                                                                                if (firstMess!!.idSender != userid) {
+                                                                                                                                    Log.d("nguoila","nguoi la dung")
+                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "Người lạ", tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                                                    // kiem tra contact da co trong list
+                                                                                                                                    if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
+                                                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
+                                                                                                                                    else {
+                                                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                                                    }
+                                                                                                                                    (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    Log.d("nguoila","nguoi la dung")
+                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(),tempUser.name , tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                                                    // kiem tra contact da co trong list
+                                                                                                                                    if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
+                                                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
+                                                                                                                                    else {
+                                                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                                                    }
+                                                                                                                                    (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
+                                                                                                                                }
+                                                                                                                            }
+
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            Log.d("tinnhandau", "x = null")
+
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                })
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        Log.d("nguoila","nguoi la sai")
+
+                                                                                                        var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                        // kiem tra contact da co trong list
+                                                                                                        if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
+                                                                                                            (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
+                                                                                                        else {
+                                                                                                            (mRecyclerView!!.adapter as ConversationAdapter).addItem(chat)
+                                                                                                        }
+                                                                                                        (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
+                                                                                                    }
+
                                                                                                 } else {
                                                                                                     Log.d("RRR", "USER KO TON TAI")
                                                                                                 }
@@ -176,7 +266,7 @@ class fragment_conversation : Fragment() {
                                                                 })
                                                     } else { //truong hop day chinh la chat nhom
                                                         if (tempConver!!.isGroup == true) {
-                                                            mDatabase!!.child("conversation").child(snap!!.value.toString()).child("messages").limitToLast(1)
+                                                            mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("messages").limitToLast(1)
                                                                     .addValueEventListener(object : ValueEventListener {
                                                                         override fun onCancelled(p0: DatabaseError?) {
                                                                         }
@@ -222,15 +312,15 @@ class fragment_conversation : Fragment() {
                                                                                                             } else {
                                                                                                                 name += tempUser.name.toString() + ", "
                                                                                                             }
-                                                                                                        // mDatabase!!.child("conversation").child(snap!!.value.toString()).child("conversationName").setValue(name)
-                                                                                                            var chatx: ChatDC = ChatDC(snap!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                                        // mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("conversationName").setValue(name)
+                                                                                                            var chatx: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
                                                                                                            (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chatx)
                                                                                                         }
                                                                                                     }
 
                                                                                                 })
                                                                                     }
-                                                                                    var chat: ChatDC = ChatDC(snap!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
                                                                                     // kiem tra contact da co trong list
                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
