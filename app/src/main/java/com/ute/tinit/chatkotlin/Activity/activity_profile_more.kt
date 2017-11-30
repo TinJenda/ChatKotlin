@@ -27,9 +27,10 @@ class activity_profile_more : AppCompatActivity() {
         mDatabase = FirebaseDatabase.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
         userid = mAuth!!.uid!!
-        btnThongTin()
-        listAddFriendRequest()
         loadData()
+        btnThongTin()
+        listBlock()
+        listAddFriendRequest()
     }
 
     fun loadData() {
@@ -97,6 +98,13 @@ class activity_profile_more : AppCompatActivity() {
 
     }
 
+    fun listBlock()
+    {
+        btn_linear_danhsachden.setOnClickListener {
+            var intent = Intent(this@activity_profile_more, activity_list_block::class.java)
+            startActivity(intent)
+        }
+    }
     fun listAddFriendRequest() {
         btn_linear_yeucauketban.setOnClickListener {
             var intent = Intent(this@activity_profile_more, activity_list_friend_request::class.java)

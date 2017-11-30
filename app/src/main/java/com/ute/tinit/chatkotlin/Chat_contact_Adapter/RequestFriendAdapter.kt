@@ -88,8 +88,7 @@ class RequestFriendAdapter(private val mContext: Context, private val mArrayList
     (row: View) : RecyclerView.ViewHolder(row), View.OnClickListener, View.OnLongClickListener {
         override fun onClick(v: View?) {
             var possitionItem= getAdapterPosition()
-            Toast.makeText(v!!.context, "hello " + tvName.text.toString() + "id " + mArrayList[possitionItem].idUser, Toast.LENGTH_SHORT).show()
-            var intent= Intent(v.context, activity_friend_profile::class.java)
+            var intent= Intent(v!!.context, activity_friend_profile::class.java)
             intent.putExtra("userfriend",mArrayList[possitionItem].idUser)
             ContextCompat.startActivity(v.context, intent, null)
         }

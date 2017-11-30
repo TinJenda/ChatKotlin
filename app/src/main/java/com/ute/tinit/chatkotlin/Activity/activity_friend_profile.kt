@@ -35,6 +35,7 @@ class activity_friend_profile : AppCompatActivity() {
     var status_rf = ""
     var keytemp = ""
     var key_request = ""
+    var key_request_fr = ""
     var checkExistRequest_userFR = false
     var key_conver_block = ""
     var checkExistRequest = false
@@ -65,7 +66,7 @@ class activity_friend_profile : AppCompatActivity() {
 
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.getValue() != null) {
-                            checkExistRequest=false
+                            checkExistRequest = false
                             for (postSnapshot in p0!!.getChildren()) {
                                 Log.d("keyrf", postSnapshot.key)
                                 mDatabase!!.child("request_friend").child(postSnapshot.key)
@@ -112,7 +113,7 @@ class activity_friend_profile : AppCompatActivity() {
                                                     getRF = p0!!.getValue(RequestFriendDC::class.java)!!
                                                     if ((getRF.userid1 == userid && getRF.userid2 == userFR) || (getRF.userid1 == userFR && getRF.userid2 == userid)) {
                                                         checkExistRequest_userFR = true
-                                                        keytemp = p0.key
+                                                        key_request_fr = p0.key
                                                     }
                                                 }
                                             }
@@ -496,24 +497,21 @@ class activity_friend_profile : AppCompatActivity() {
             ln_dongy_tuchoi.visibility = View.GONE
         }
         btnDongYYC.setOnClickListener {
-            mDatabase!!.child("request_friend").child(keytemp).addValueEventListener(object:ValueEventListener{
+            mDatabase!!.child("request_friend").child(keytemp).addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                 }
 
                 override fun onDataChange(p0: DataSnapshot?) {
-                    if(p0!!.value!=null)
-                    {
+                    if (p0!!.value != null) {
                         var setRFDY1 = RequestFriendDC(userid, userFR, userid, "1") //dong y
                         request_friends.visibility = View.GONE
-                        mDatabase!!.child("request_friend").child(keytemp).setValue(setRFDY1)
+                        mDatabase!!.child("request_friend").child(key_request_fr).setValue(setRFDY1)
                         //tinh so friendhien tai de them <list> loi chua xu ly dc
                         // them 2 friend vao ds cua nhau
                         mDatabase!!.child("friends").child(userid).push().setValue(userFR)
                         mDatabase!!.child("friends").child(userFR).push().setValue(userid)
                         Toast.makeText(this@activity_friend_profile, "Kết bạn thành công", Toast.LENGTH_SHORT).show()
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(this@activity_friend_profile, "Có gì đó sai sai!!!", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -521,14 +519,14 @@ class activity_friend_profile : AppCompatActivity() {
             })
         }
         btnTuChoiYC.setOnClickListener {
-            mDatabase!!.child("request_friend").child(keytemp).removeValue()
+            mDatabase!!.child("request_friend").child(key_request_fr).removeValue()
             btnHuyYCKetBan.visibility = View.GONE
             btnKetBan.visibility = View.VISIBLE
             ln_dongy_tuchoi.visibility = View.GONE
         }
         btnHuyYCKetBan.setOnClickListener {
             Log.d("statusx", "status btn huy kb" + status_rf)
-            mDatabase!!.child("request_friend").child(keytemp).removeValue()
+            mDatabase!!.child("request_friend").child(key_request).removeValue()
             btnHuyYCKetBan.visibility = View.GONE
             btnKetBan.visibility = View.VISIBLE
             ln_dongy_tuchoi.visibility = View.GONE
@@ -638,17 +636,8 @@ class activity_friend_profile : AppCompatActivity() {
                                                                     wall_friends.visibility = View.GONE
                                                                     btnFloatProfile.visibility = View.GONE
                                                                 }
-//                                                        else
-//                                                        {
-//                                                            btnFloatProfile.visibility = View.VISIBLE
-//                                                            wall_friends.visibility = View.VISIBLE
-//                                                            ln_dongy_tuchoi.visibility = View.GONE
-//                                                            btnKetBan.visibility = View.VISIBLE
-//                                                            btnHuyYCKetBan.visibility = View.GONE
-//                                                            request_friends.visibility=View.VISIBLE
 //                                                        }
                                                         Log.d("statusx", "status trong rf " + status_rf)
-                                                        keytemp = p0.key
                                                     }
                                                 }
 //
@@ -660,49 +649,60 @@ class activity_friend_profile : AppCompatActivity() {
                     }
                 })
         //check user gui yeu cau la minh
-        mDatabase!!.child("request_friend").child(key_request)
+        mDatabase!!.child("request_friend").orderByChild("useraction").equalTo(userid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
                     }
 
                     override fun onDataChange(p0: DataSnapshot?) {
                         if (p0!!.getValue() != null) {
-                            var getRF: RequestFriendDC
-                            getRF = p0!!.getValue(RequestFriendDC::class.java)!!
+                            for (snapRF in p0.children) {
+                                mDatabase!!.child("request_friend").child(snapRF.key.toString())
+                                        .addValueEventListener(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError?) {
+                                            }
 
-                            if ((getRF.userid1 == userid && getRF.userid2 == userFR) || (getRF.userid1 == userFR && getRF.userid2 == userid)) {
-                                status_rf = getRF.status!!
+                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                if (p0!!.getValue() != null) {
+                                                    var getRF: RequestFriendDC
+                                                    getRF = p0!!.getValue(RequestFriendDC::class.java)!!
 
-                                if (status_rf.equals("0")) {
-                                    btnKetBan.visibility = View.GONE
-                                    btnHuyYCKetBan.visibility = View.VISIBLE
-                                    request_friends.visibility = View.VISIBLE
-                                    wall_friends.visibility = View.VISIBLE
-                                } else
-                                    if (status_rf.equals("1")) {
-                                        ln_dongy_tuchoi.visibility = View.GONE
-                                        btnKetBan.visibility = View.GONE
-                                        request_friends.visibility = View.GONE
-                                        btnHuyYCKetBan.visibility = View.GONE
-                                        wall_friends.visibility = View.VISIBLE
-                                    } else
-                                        if (status_rf.equals("3")) {
-                                            Log.d("VVV", "Vao dayy")
-                                            request_friends.visibility = View.GONE
-                                            ln_dongy_tuchoi.visibility = View.GONE
-                                            btnKetBan.visibility = View.GONE
-                                            btnHuyYCKetBan.visibility = View.GONE
-                                            wall_friends.visibility = View.GONE
-                                        }
+                                                    if ((getRF.userid1 == userid && getRF.userid2 == userFR) || (getRF.userid1 == userFR && getRF.userid2 == userid)) {
+                                                        status_rf = getRF.status!!
+
+                                                        if (status_rf.equals("0")) {
+                                                            btnKetBan.visibility = View.GONE
+                                                            btnHuyYCKetBan.visibility = View.VISIBLE
+                                                            request_friends.visibility = View.VISIBLE
+                                                            wall_friends.visibility = View.VISIBLE
+                                                        } else
+                                                            if (status_rf.equals("1")) {
+                                                                ln_dongy_tuchoi.visibility = View.GONE
+                                                                btnKetBan.visibility = View.GONE
+                                                                request_friends.visibility = View.GONE
+                                                                btnHuyYCKetBan.visibility = View.GONE
+                                                                wall_friends.visibility = View.VISIBLE
+                                                            } else
+                                                                if (status_rf.equals("3")) {
+                                                                    Log.d("VVV", "Vao dayy")
+                                                                    request_friends.visibility = View.GONE
+                                                                    ln_dongy_tuchoi.visibility = View.GONE
+                                                                    btnKetBan.visibility = View.GONE
+                                                                    btnHuyYCKetBan.visibility = View.GONE
+                                                                    wall_friends.visibility = View.GONE
+                                                                }
 //
-                                Log.d("statusx", "status trong rf " + status_rf)
-                                keytemp = p0.key
+                                                        Log.d("statusx", "status trong rf " + status_rf)
+                                                    }
+
+                                                }
+                                            }
+                                        })
                             }
 
                         }
                     }
                 })
-
 
     }
 
