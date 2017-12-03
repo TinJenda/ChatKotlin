@@ -26,8 +26,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import com.ute.tinit.chatkotlin.R
@@ -284,19 +286,21 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    image_edit_timeline.setImageResource(R.drawable.default_avarta)
+                                    image_edit_timeline.setImageResource(R.drawable.color_timeline)
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                    image_edit_timeline.setImageResource(R.drawable.color_timeline)
                                 }
                             }
                             image_edit_timeline.setTag(target)
                             Picasso.with(this@activity_profile_more_editprofile)
                                     .load(IMAGE_URL)
-                                    .error(R.drawable.default_avarta)
-                                    .placeholder(R.drawable.default_avarta)
+                                    .error(R.drawable.color_timeline)
+                                    .placeholder(R.drawable.color_timeline)
                                     .centerCrop()
                                     .resize(800, 800)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(target)
                             //set image test
                             Log.d("BBB", imgUploadLink)
@@ -361,20 +365,20 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         longitude=getuser.longitude!!
                         Picasso.with(this@activity_profile_more_editprofile)
                                 .load(getuser.avatar!!)
-                                .error(R.drawable.default_avarta)
+                                .error(R.drawable.color_timeline)
                                 .into(image_editx)
-                        val handler: Handler = Handler()
-                        handler.postDelayed(Runnable {
+
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                                    image_edit_timeline.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                    image_edit_timeline.setImageBitmap(BlurBuilder.blur(this@activity_profile_more_editprofile,bitmap))
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    image_edit_timeline.setImageResource(R.drawable.default_avarta)
+                                    image_edit_timeline.setImageResource(R.drawable.color_timeline)
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                    image_edit_timeline.setImageResource(R.drawable.color_timeline)
                                 }
                             }
                             image_edit_timeline.setTag(target)
@@ -382,9 +386,10 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                                     .load(getuser.avatar!!)
                                     .error(R.drawable.default_avarta)
                                     .resize(800, 800)
-                                    .placeholder(R.drawable.default_avarta)
+                                    .placeholder(R.drawable.color_timeline)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(target)
-                        }, 50)
+
                         mDatabase!!.child("users").child(userid).removeEventListener(this)
                     }
 

@@ -1,9 +1,5 @@
 package com.ute.tinit.chatkotlin.Activity
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -13,19 +9,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ute.tinit.chatkotlin.R
 import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 import android.net.Uri
-import android.os.Handler
-import android.provider.MediaStore
-import android.util.Log
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.Toast
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import io.vrinda.kotlinpermissions.PermissionsActivity
@@ -107,29 +98,34 @@ class activity_profile_more_myprofile : PermissionsActivity() {
                         Picasso.with(this@activity_profile_more_myprofile)
                                 .load(getuser.avatar!!)
                                 .error(R.drawable.default_avarta)
+                                .placeholder(R.drawable.color_timeline)
                                 .into(image_myprofilex)
-                        val handler: Handler = Handler()
-                        handler.postDelayed(Runnable {
+
+
                             val target = object : Target {
+
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                                    image_timelinex.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                    image_timelinex.setImageBitmap(BlurBuilder.blur(this@activity_profile_more_myprofile,bitmap))
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    image_timelinex.setImageResource(R.drawable.default_avarta)
+                                    image_timelinex.setImageResource(R.drawable.color_timeline)
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                    image_timelinex.setImageResource(R.drawable.color_timeline)
                                 }
                             }
                             image_timelinex.setTag(target)
                             Picasso.with(this@activity_profile_more_myprofile)
                                     .load(getuser.avatar!!)
-                                    .error(R.drawable.default_avarta)
+                                    .placeholder(R.drawable.color_timeline)
+                                    .error(R.drawable.color_timeline)
+                                    .centerCrop()
                                     .resize(800, 800)
-                                    .placeholder(R.drawable.default_avarta)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(target)
-                        }, 100)
+
                         mDatabase!!.child("users").child(userid).removeEventListener(this)
                     }
                 })

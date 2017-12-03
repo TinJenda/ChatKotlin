@@ -12,8 +12,10 @@ import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import com.ute.tinit.chatkotlin.Adapter.BlurImage
 import com.ute.tinit.chatkotlin.DataClass.UserDC
 import kotlinx.android.synthetic.main.layout_activity_profile.*
@@ -101,22 +103,23 @@ class activity_profile : AppCompatActivity() {
                         handler.postDelayed(Runnable {
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                                    Image_profile_activity.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                    Image_profile_activity.setImageBitmap(BlurBuilder.blur(this@activity_profile,bitmap))
                                 }
-
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
-                                    Image_profile_activity.setImageResource(R.drawable.default_avarta)
+                                    Image_profile_activity.setImageResource(R.drawable.color_timeline)
                                 }
-
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable) {
+                                    Image_profile_activity.setImageResource(R.drawable.color_timeline)
+
                                 }
                             }
                             Image_profile_activity.setTag(target)
                             Picasso.with(this@activity_profile)
                                     .load(getuser.avatar!!)
-                                    .error(R.drawable.default_avarta)
+                                    .error(R.drawable.color_timeline)
                                     .resize(800, 800)
-                                    .placeholder(R.drawable.default_avarta)
+                                    .placeholder(R.drawable.color_timeline)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(target)
                         }, 100)
                     }

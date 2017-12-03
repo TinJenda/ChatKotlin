@@ -253,6 +253,7 @@ class MainActivity : AppCompatActivity() {
                                         }
                                         override fun onDataChange(p0: DataSnapshot?) {
                                             if (p0!!.value != null) {
+                                                arrtemp.clear()
                                                 for (snap in p0!!.children) {
                                                     mDatabase!!.child("users").child(snap.value.toString())
                                                             .addValueEventListener(object : ValueEventListener {
@@ -263,20 +264,27 @@ class MainActivity : AppCompatActivity() {
                                                                     if (p0!!.value != null) {
                                                                         var tempUser: UserDC = p0!!.getValue(UserDC::class.java)!!
                                                                         var save: SelectFriendsDC = SelectFriendsDC(tempUser.userID, tempUser.name, tempUser.avatar)
-                                                                        arrtemp.add(save)
-                                                                        (lv.adapter as AdapterListSelectFriends).notifyDataSetChanged()
-                                                                        mDatabase!!.child("users").child(snap.value.toString()).removeEventListener(this)
+                                                                        if((lv.adapter as AdapterListSelectFriends).isContactAdded(save))
+                                                                        {
+                                                                            (lv.adapter as AdapterListSelectFriends).notifyItemDataChange(save)
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            (lv.adapter as AdapterListSelectFriends).addItem(save)
+                                                                        }
                                                                     } else {
                                                                         Log.d("mainx", "info null")
                                                                     }
+                                                                    mDatabase!!.child("users").child(snap.value.toString()).removeEventListener(this)
+
                                                                 }
 
                                                             })
                                                 }
-                                                mDatabase!!.child("friends").child(userid).removeEventListener(this)
                                             } else {
                                                 Log.d("mainx", "Friends null")
                                             }
+                                            mDatabase!!.child("friends").child(userid).removeEventListener(this)
                                         }
 
                                     })

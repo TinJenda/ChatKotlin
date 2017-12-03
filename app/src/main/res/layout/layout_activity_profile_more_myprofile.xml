@@ -31,7 +31,6 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/default_avarta"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
@@ -60,7 +59,6 @@
                         android:layout_height="120dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/default_avarta"
                         app:civ_border_color="@color/colorWhile"
                         app:civ_border_width="1dp" />
                 </RelativeLayout>

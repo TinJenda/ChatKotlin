@@ -23,6 +23,8 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Handler
 import android.support.v4.content.ContextCompat
+import com.squareup.picasso.MemoryPolicy
+import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
 
@@ -90,6 +92,10 @@ class activity_friend_profile : AppCompatActivity() {
                                         })
                             }
                         }
+                        else
+                        {
+                            key_request = ""
+                        }
                     }
                 })
         mDatabase!!.child("request_friend").orderByChild("useraction").equalTo(userFR)
@@ -119,6 +125,10 @@ class activity_friend_profile : AppCompatActivity() {
                                             }
                                         })
                             }
+                        }
+                        else
+                        {
+                            key_request_fr = ""
                         }
                     }
 
@@ -497,7 +507,8 @@ class activity_friend_profile : AppCompatActivity() {
             ln_dongy_tuchoi.visibility = View.GONE
         }
         btnDongYYC.setOnClickListener {
-            mDatabase!!.child("request_friend").child(keytemp).addValueEventListener(object : ValueEventListener {
+            mDatabase!!.child("request_friend").child(keytemp)
+                    .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                 }
 
@@ -510,10 +521,11 @@ class activity_friend_profile : AppCompatActivity() {
                         // them 2 friend vao ds cua nhau
                         mDatabase!!.child("friends").child(userid).push().setValue(userFR)
                         mDatabase!!.child("friends").child(userFR).push().setValue(userid)
-                        Toast.makeText(this@activity_friend_profile, "Kết bạn thành công", Toast.LENGTH_SHORT).show()
+                        mDatabase!!.child("request_friend").child(keytemp).removeEventListener(this)
                     } else {
                         Toast.makeText(this@activity_friend_profile, "Có gì đó sai sai!!!", Toast.LENGTH_SHORT).show()
                     }
+                    Toast.makeText(this@activity_friend_profile, "Kết bạn thành công", Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -563,7 +575,7 @@ class activity_friend_profile : AppCompatActivity() {
 
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                                    Image_profile_activity.setImageBitmap(BlurImage.fastblur(bitmap, 40))
+                                    Image_profile_activity.setImageBitmap(BlurBuilder.blur(this@activity_friend_profile,bitmap))
                                 }
 
                                 override fun onBitmapFailed(errorDrawable: Drawable) {
@@ -580,6 +592,7 @@ class activity_friend_profile : AppCompatActivity() {
                                     .placeholder(R.drawable.default_avarta)
                                     .centerCrop()
                                     .resize(500, 500)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(target)
                         }
                     }

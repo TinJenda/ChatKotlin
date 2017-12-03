@@ -26,6 +26,30 @@ class AdapterListSelectFriends constructor(var context:Context,var arrSelectFrie
             id_checkbox=row.findViewById(R.id.id_checkbox)
         }
     }
+
+    fun isContactAdded(item: SelectFriendsDC): Boolean {
+        for (c in arrSelectFriend)
+            if (item.userID == c.userID)
+                return true
+        return false
+    }
+
+    fun notifyItemDataChange(item: SelectFriendsDC) {
+        for (i in 0..arrSelectFriend.size-1) {
+            if (arrSelectFriend[i].userID == item.userID) {
+                arrSelectFriend[i] = item
+                notifyDataSetChanged()
+                break
+            }
+        }
+    }
+
+
+    fun addItem(item: SelectFriendsDC) {
+        arrSelectFriend.add(item)
+        notifyDataSetChanged()
+    }
+
     fun getListFriendChecked():ArrayList<String>
     {
         return checkedFriend

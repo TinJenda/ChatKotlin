@@ -176,7 +176,7 @@
                             android:layout_width="150dp"
                             android:layout_height="50dp"
                             android:background="@drawable/custom_button_doithongtin"
-                            android:text="Hủy kết bạn"
+                            android:text="Hủy yêu cầu"
                             android:textColor="@color/colorWhile"
                             android:visibility="gone" />
 

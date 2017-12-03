@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ute.tinit.chatkotlin.Activity.activity_find_friend_location">
+    tools:context="com.ute.tinit.chatkotlin.Activity.activity_find_friend_location"
+    android:orientation="vertical">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_toolbar"
@@ -13,95 +14,52 @@
             layout="@layout/toolbar_more"/>
     </android.support.design.widget.AppBarLayout>
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/ln_load"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VT1: " />
-
-        <EditText
-            android:id="@+id/tvToaDoX_VT1"
-            android:layout_width="150dp"
-            android:layout_height="@dimen/size_toolbar"
-            android:hint="Toa do x"></EditText>
-
-        <EditText
-            android:id="@+id/tvToaDoY_VT1"
-            android:layout_width="150dp"
-            android:layout_height="@dimen/size_toolbar"
-            android:hint="Toa do y"></EditText>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="match_parent">
+        <com.tuyenmonkey.mkloader.MKLoader
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:mk_type="Radar"
+            android:layout_gravity="center"
+            app:mk_color="@color/mainColor"/>
     </LinearLayout>
-
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/ln_timquanhday"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="148dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VT2: " />
+            android:text="Tín Trương"
+            android:textColor="@color/mainColor"
+            android:textSize="22dp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/tvToaDoX_VT2"
-            android:layout_width="150dp"
-            android:layout_height="@dimen/size_toolbar"
-            android:hint="Toa do x 2"></EditText>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLineeee" />
 
-        <EditText
-            android:id="@+id/tvToaDoY_VT2"
-            android:layout_width="150dp"
-            android:layout_height="@dimen/size_toolbar"
-            android:hint="Toa do y 2"></EditText>
+        <LinearLayout
+            android:id="@+id/btn_liner_thongtin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_listFindFriend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnTinhKhoangCach"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="320dp"
-        android:text="Tinh khoang cach"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txtKetQua"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="412dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnGetViTri"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="240dp"
-        android:text="Get vi tri"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
