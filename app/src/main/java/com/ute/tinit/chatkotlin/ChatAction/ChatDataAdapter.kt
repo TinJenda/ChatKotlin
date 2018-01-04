@@ -1,11 +1,16 @@
 package com.ute.tinit.chatkotlin.ChatAction
 
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
@@ -22,8 +27,11 @@ import kotlinx.android.synthetic.main.layout_activity_profile_more_myprofile.*
 class ChatDataAdapter// Provide a suitable constructor (depends on the kind of dataset)
 (private val mContext: Context, // The items to display in your RecyclerView
  private val items: MutableList<ChatDataDC>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    //    private var mAuth: FirebaseAuth? = null
-//    private var mDatabase: DatabaseReference? = null
+
+    private var mAuth: FirebaseAuth? = null
+    private var mDatabase: DatabaseReference? = null
+    var userid = ""
+
     private val DATE = 0
     private val YOU = 1
     private val ME = 2
@@ -52,6 +60,10 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+        mAuth = FirebaseAuth.getInstance()
+        userid = mAuth!!.uid!!
+
         val viewHolder: RecyclerView.ViewHolder
         val inflater = LayoutInflater.from(viewGroup.context)
 
@@ -104,14 +116,6 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
         notifyItemInserted(items.size)
     }
 
-    fun removeItem(contactId: String) {
-        for (i in 0..items.size - 1) {
-            if (items[i].id == contactId) {
-                items.removeAt(i)
-                notifyItemRemoved(i)
-            }
-        }
-    }
 
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) =
@@ -119,13 +123,54 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
                 DATE -> {
                     val vh1 = viewHolder as HolderDate
                     configureViewHolder1(vh1, position)
+                    viewHolder.itemView.setOnLongClickListener(object : View.OnLongClickListener {
+                        override fun onLongClick(v: View?): Boolean {
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_delete_message)
+
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val btndelete = dialog.findViewById<Button>(R.id.btnXoaTN)
+
+                            btndelete.setOnClickListener {
+                                dialog.dismiss()
+                                mDatabase!!.child("conversation").child(items[position].idConver).child("messages").child(items[position].id).removeValue()
+                                Toast.makeText(v.context,"Đã xóa tin nhắn",Toast.LENGTH_SHORT).show()
+                                items.removeAt(position)
+                                notifyDataSetChanged()
+                            }
+                            dialog.show()
+                            return true
+                        }
+
+                    })
                 }
                 YOU -> {
                     val vh2 = viewHolder as HolderYou
                     configureViewHolder2(vh2, position)
-                    viewHolder.itemView.setOnLongClickListener(object :View.OnLongClickListener{
+                    viewHolder.itemView.setOnLongClickListener(object : View.OnLongClickListener {
                         override fun onLongClick(v: View?): Boolean {
-                            Log.d("ABC","CLICK LONG NE!!!")
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_delete_message)
+
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val btndelete = dialog.findViewById<Button>(R.id.btnXoaTN)
+
+                            btndelete.setOnClickListener {
+                                dialog.dismiss()
+                                mDatabase!!.child("conversation").child(items[position].idConver).child("messages").child(items[position].id).removeValue()
+                                Toast.makeText(v.context,"Đã xóa tin nhắn",Toast.LENGTH_SHORT).show()
+                                items.removeAt(position)
+                                notifyDataSetChanged()
+                            }
+                            dialog.show()
                             return true
                         }
 
@@ -134,14 +179,86 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
                 IMAGE_ME -> {
                     val vh3 = viewHolder as HolderImageMe
                     configureViewHolderImageMe(vh3, position)
+                    viewHolder.itemView.setOnLongClickListener(object : View.OnLongClickListener {
+                        override fun onLongClick(v: View?): Boolean {
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_delete_message)
+
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val btndelete = dialog.findViewById<Button>(R.id.btnXoaTN)
+
+                            btndelete.setOnClickListener {
+                                dialog.dismiss()
+                                mDatabase!!.child("conversation").child(items[position].idConver).child("messages").child(items[position].id).removeValue()
+                                Toast.makeText(v.context,"Đã xóa tin nhắn",Toast.LENGTH_SHORT).show()
+                                items.removeAt(position)
+                                notifyDataSetChanged()
+                            }
+                            dialog.show()
+                            return true
+                        }
+
+                    })
                 }
                 IMAGE_YOU -> {
                     val vh3 = viewHolder as HolderImageYou
                     configureViewHolderImageYOU(vh3, position)
+                    viewHolder.itemView.setOnLongClickListener(object : View.OnLongClickListener {
+                        override fun onLongClick(v: View?): Boolean {
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_delete_message)
+
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val btndelete = dialog.findViewById<Button>(R.id.btnXoaTN)
+
+                            btndelete.setOnClickListener {
+                                dialog.dismiss()
+                                mDatabase!!.child("conversation").child(items[position].idConver).child("messages").child(items[position].id).removeValue()
+                                Toast.makeText(v.context,"Đã xóa tin nhắn",Toast.LENGTH_SHORT).show()
+                                items.removeAt(position)
+                                notifyDataSetChanged()
+                            }
+                            dialog.show()
+                            return true
+                        }
+
+                    })
                 }
                 else -> {
                     val vh = viewHolder as HolderMe
                     configureViewHolder3(vh, position)
+                    viewHolder.itemView.setOnLongClickListener(object : View.OnLongClickListener {
+                        override fun onLongClick(v: View?): Boolean {
+                            val dialog = Dialog(v!!.context)
+                            // Include dialog.xml file
+                            dialog.setContentView(R.layout.dialog_delete_message)
+
+                            // Set dialog title
+                            dialog.setTitle("")
+
+                            // set values for custom dialog components - text, image and button
+                            val btndelete = dialog.findViewById<Button>(R.id.btnXoaTN)
+
+                            btndelete.setOnClickListener {
+                                dialog.dismiss()
+                                mDatabase!!.child("conversation").child(items[position].idConver).child("messages").child(items[position].id).removeValue()
+                                Toast.makeText(v.context,"Đã xóa tin nhắn",Toast.LENGTH_SHORT).show()
+                                items.removeAt(position)
+                                notifyDataSetChanged()
+                            }
+                            dialog.show()
+                            return true
+                        }
+
+                    })
                 }
             }
 
@@ -156,6 +273,7 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
                 .resize(800, 800)
                 .into(vh1.image!!)
     }
+
     private fun configureViewHolderImageYOU(vh1: HolderImageYou, position: Int) {
         vh1.time!!.setText(items[position].Time)
         Picasso.with(mContext)
@@ -170,6 +288,7 @@ class ChatDataAdapter// Provide a suitable constructor (depends on the kind of d
                 .error(R.drawable.color_timeline)
                 .into(vh1.avarta!!)
     }
+
     private fun configureViewHolder3(vh1: HolderMe, position: Int) {
         vh1.time!!.setText(items[position].Time)
         vh1.chatText!!.setText(items[position].text)

@@ -17,7 +17,6 @@ import com.squareup.picasso.Picasso
 import com.ute.tinit.chatkotlin.Activity.activity_find_friend_location
 import com.ute.tinit.chatkotlin.Activity.activity_profile
 import com.ute.tinit.chatkotlin.DataClass.UserDC
-import kotlinx.android.synthetic.main.layout_fragment_more.*
 import kotlinx.android.synthetic.main.layout_fragment_more.view.*
 import com.google.firebase.auth.FirebaseAuth
 import com.ute.tinit.chatkotlin.Activity.activity_list_friend_request

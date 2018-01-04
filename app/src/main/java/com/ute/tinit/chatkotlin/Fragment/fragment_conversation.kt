@@ -321,14 +321,14 @@ class fragment_conversation : Fragment() {
                                                                                                                 name += tempUser.name.toString() + ", "
                                                                                                             }
                                                                                                             // mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("conversationName").setValue(name)
-                                                                                                            var chatx: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + (tempConver.listUsers!!.size+1) + ") " + name, lastMess_gr, tempMess.date, group_image, isonline, seen)
+                                                                                                            var chatx: ChatDC = ChatDC(snapConver!!.value.toString(), name, lastMess_gr, tempMess.date, group_image, isonline, seen)
                                                                                                             (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chatx)
                                                                                                         }
                                                                                                     }
 
                                                                                                 })
                                                                                     }
-                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, lastMess_gr, tempMess.date, group_image, isonline, seen)
+                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(),  name, lastMess_gr, tempMess.date, group_image, isonline, seen)
                                                                                     // kiem tra contact da co trong list
                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)

@@ -1,0 +1,16 @@
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/btnXoaTN"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        android:background="@drawable/bg_button"
+        android:text="Xóa" />
+</LinearLayout >

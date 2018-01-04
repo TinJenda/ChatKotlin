@@ -707,7 +707,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                             val t = df.parse(getMessage.date)
                                                                             df.applyPattern("hh:mm")
 //
-                                                                            var itemx = ChatDataDC(getMessage.id, avatar, checkType, getMessage.content, df.format(t))
+                                                                            var itemx = ChatDataDC(getMessage.id, avatar, checkType, getMessage.content, df.format(t),getMessage.idConver)
                                                                             if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
                                                                                 (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
                                                                             else
@@ -795,7 +795,7 @@ class activity_chat_active : AppCompatActivity() {
                                                                 //parse ngày ở firebase sang dụng hh:mm
                                                                 val t = df.parse(getMessage.date)
                                                                 df.applyPattern("hh:mm")
-                                                                var itemx = ChatDataDC(getMessage.id, p0!!.getValue().toString(), checkType, getMessage.content, df.format(t))
+                                                                var itemx = ChatDataDC(getMessage.id, p0!!.getValue().toString(), checkType, getMessage.content, df.format(t),getMessage.idConver)
                                                                 if ((mRecyclerView!!.adapter as ChatDataAdapter).isAdded(itemx))
                                                                     (mRecyclerView!!.adapter as ChatDataAdapter).notifyDataSetChanged()
                                                                 else
