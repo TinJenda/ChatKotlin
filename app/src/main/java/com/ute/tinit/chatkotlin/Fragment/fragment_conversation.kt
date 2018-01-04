@@ -122,6 +122,7 @@ class fragment_conversation : Fragment() {
                                                                             for (snapMess in p0!!.children) {
                                                                                 var tempContent = ""
                                                                                 var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                                var lastMess=""
                                                                                 tempContent = tempMess.content!!
                                                                                 var listFR = arrayListOf<String>()
                                                                                 //list friend check phai nguoi la ko
@@ -195,9 +196,16 @@ class fragment_conversation : Fragment() {
                                                                                                                                 Log.d("tinnhandau", "x = " + tempMess.content)
                                                                                                                                 Log.d("tinnhandau", "x = " + tempMess!!.idSender)
 
+                                                                                                                                if(tempMess.type=="3"||tempMess.type=="4") {
+                                                                                                                                    lastMess="[HÌNH ẢNH]"
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    lastMess=""+tempMess.content
+                                                                                                                                }
                                                                                                                                 if (firstMess!!.idSender != userid) {
                                                                                                                                     Log.d("nguoila", "nguoi la dung")
-                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "Người lạ", tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "Người lạ", lastMess, tempMess.date, tempUser.avatar, isonline, seen)
                                                                                                                                     // kiem tra contact da co trong list
                                                                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
@@ -207,7 +215,7 @@ class fragment_conversation : Fragment() {
                                                                                                                                     (mRecyclerView!!.adapter as ConversationAdapter).notifyDataSetChanged()
                                                                                                                                 } else {
                                                                                                                                     Log.d("nguoila", "nguoi la dung")
-                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, lastMess, tempMess.date, tempUser.avatar, isonline, seen)
                                                                                                                                     // kiem tra contact da co trong list
                                                                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
@@ -228,7 +236,14 @@ class fragment_conversation : Fragment() {
                                                                                                     } else {
                                                                                                         Log.d("nguoila", "nguoi la sai")
 
-                                                                                                        var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, tempMess.content, tempMess.date, tempUser.avatar, isonline, seen)
+                                                                                                        if(tempMess.type=="3"||tempMess.type=="4") {
+                                                                                                            lastMess="[HÌNH ẢNH]"
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            lastMess=""+tempMess.content
+                                                                                                        }
+                                                                                                        var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, lastMess, tempMess.date, tempUser.avatar, isonline, seen)
                                                                                                         // kiem tra contact da co trong list
                                                                                                         if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                                             (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)
@@ -262,7 +277,15 @@ class fragment_conversation : Fragment() {
                                                                             if (p0!!.value != null) {
                                                                                 for (snapMess in p0!!.children) {
                                                                                     var tempContent = ""
+                                                                                    var lastMess_gr=""
                                                                                     var tempMess: MessageDC = snapMess!!.getValue(MessageDC::class.java)!!
+                                                                                    if(tempMess.type=="3"||tempMess.type=="4") {
+                                                                                        lastMess_gr="[HÌNH ẢNH]"
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        lastMess_gr=""+tempMess.content
+                                                                                    }
                                                                                     tempContent = tempMess.content!!
                                                                                     var isonline: Boolean = false
                                                                                     var seen: Boolean = false
@@ -298,14 +321,14 @@ class fragment_conversation : Fragment() {
                                                                                                                 name += tempUser.name.toString() + ", "
                                                                                                             }
                                                                                                             // mDatabase!!.child("conversation").child(snapConver!!.value.toString()).child("conversationName").setValue(name)
-                                                                                                            var chatx: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + (tempConver.listUsers!!.size+1) + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                                            var chatx: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + (tempConver.listUsers!!.size+1) + ") " + name, lastMess_gr, tempMess.date, group_image, isonline, seen)
                                                                                                             (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chatx)
                                                                                                         }
                                                                                                     }
 
                                                                                                 })
                                                                                     }
-                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, tempMess.content, tempMess.date, group_image, isonline, seen)
+                                                                                    var chat: ChatDC = ChatDC(snapConver!!.value.toString(), "(" + count_online + "/" + tempConver.listUsers!!.size + ") " + name, lastMess_gr, tempMess.date, group_image, isonline, seen)
                                                                                     // kiem tra contact da co trong list
                                                                                     if ((mRecyclerView!!.adapter as ConversationAdapter).isContactAdded(chat))
                                                                                         (mRecyclerView!!.adapter as ConversationAdapter).notifyItemDataChange(chat)

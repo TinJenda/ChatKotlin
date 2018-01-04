@@ -102,17 +102,17 @@ class fragment_contacts_childcontact : Fragment() {
                                             else
                                                 (mRecyclerView!!.adapter as ContactAdapter).addItem(contact)
                                         }
-
-
                                     })
                         } else {
                             Log.d("friendx", "DATA NULL")
+                            (mRecyclerView!!.adapter as ContactAdapter).notifyDataSetChanged()
                         }
                     }
 
                     override fun onChildRemoved(p0: DataSnapshot?) {
                         var removedFriendID = p0!!.value.toString()
                         (mRecyclerView!!.adapter as ContactAdapter).removeItem(removedFriendID)
+                        (mRecyclerView!!.adapter as ContactAdapter).notifyDataSetChanged()
                     }
 
                 })

@@ -1,14 +1,25 @@
 package com.ute.tinit.chatkotlin.Activity
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.net.Uri
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.provider.Settings.ACTION_WIFI_SETTINGS
+import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -21,6 +32,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ute.tinit.chatkotlin.ChatAction.ChatDataAdapter
@@ -32,12 +44,23 @@ import com.google.firebase.database.DataSnapshot
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.OnProgressListener
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
 import com.ute.tinit.chatkotlin.DataClass.*
+import io.vrinda.kotlinpermissions.PermissionCallBack
+import java.io.ByteArrayOutputStream
+import java.io.FileNotFoundException
+import java.io.IOException
 import kotlin.collections.ArrayList
 
 
 class activity_chat_active : AppCompatActivity() {
-
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: ChatDataAdapter? = null
     private var text: EditText? = null
@@ -47,11 +70,16 @@ class activity_chat_active : AppCompatActivity() {
     var userFR = ""
     var group_check = false
     var converID: String = ""
-    var currentPage: Double = 0.0
     var currentConver = ""
     var checkExitsConver: Boolean = false
     var isBlock = false
     val data = arrayListOf<ChatDataDC>()
+    private var DATA_UPDATE: ByteArray? = null
+    private var mStorageRef: StorageReference? = null
+    var imgUploadLink: String = ""
+    var imgUri: Uri? = null
+    private val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat_active)
@@ -60,6 +88,7 @@ class activity_chat_active : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
         mDatabase = FirebaseDatabase.getInstance().getReference()
+        mStorageRef = FirebaseStorage.getInstance().getReference()
         mAuth = FirebaseAuth.getInstance()
         userid = mAuth!!.uid!!
         var intent = intent
@@ -71,14 +100,14 @@ class activity_chat_active : AppCompatActivity() {
             if (intent.hasExtra("isfriend")) {
                 if (intent.getStringExtra("isfriend").equals("Người lạ")) {
                     //kiem tra tin nhan dau tien, neu la minh ko hien thong bao, nguoc lai
-                    var temp=intent.getStringExtra("conversation")
+                    var temp = intent.getStringExtra("conversation")
                     mDatabase!!.child("conversation").child(temp).child("messages").limitToFirst(1)
-                            .addValueEventListener(object :ValueEventListener{
+                            .addValueEventListener(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError?) {
                                 }
 
                                 override fun onDataChange(p0: DataSnapshot?) {
-                                    if(p0!!.value!=null) {
+                                    if (p0!!.value != null) {
                                         for (snap in p0.children) {
                                             var tempMess: MessageDC = snap.getValue(MessageDC::class.java)!!
                                             Log.d("tinnhandau", "x = " + tempMess.content)
@@ -89,9 +118,7 @@ class activity_chat_active : AppCompatActivity() {
                                             }
                                         }
 
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Log.d("tinnhandau", "x = null")
 
                                     }
@@ -140,9 +167,7 @@ class activity_chat_active : AppCompatActivity() {
                                                         currentConver = snap!!.value.toString()
                                                         //them chat
                                                     }
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     checkExitsConver = false
                                                 }
                                             }
@@ -422,23 +447,22 @@ class activity_chat_active : AppCompatActivity() {
                         } else {
                             Log.d("ddd", "ko ton tai")
                             var tempListUser = arrayListOf<String>(userid, userFR)
-                            var listMessage = arrayListOf<String>()
+                            var listMessage = arrayListOf<MessageDC>()
                             var myRef = mDatabase!!.child("conversation").push()
                             var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
                             myRef.setValue(conver).addOnCompleteListener {
                                 mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
                                 mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                                //them chat
+                                //type=2 is me
+                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                val currentTime = df.format(Calendar.getInstance().time)
+                                var userSeen = arrayListOf<String>(userid)
+                                var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                                var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
+                                myRefMess.setValue(mess)
+                                text!!.setText("")
                             }
-                            //them chat
-                            //type=2 is me
-                            Log.d("TTT", "THEM CHAT checkExitsConver==false")
-                            val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                            val currentTime = df.format(Calendar.getInstance().time)
-                            var userSeen = arrayListOf<String>(userid)
-                            var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                            var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, et_message.text.toString(), "2", currentTime, userSeen)
-                            myRefMess.setValue(mess)
-                            text!!.setText("")
                         }
                     } else {
 //                        edit_text_name.isFocusable = true
@@ -477,6 +501,44 @@ class activity_chat_active : AppCompatActivity() {
                 createNetErrorDialog()
             }
         }
+
+        btnSendMore.setOnClickListener {
+
+            if (ActivityCompat.checkSelfPermission(this@activity_chat_active, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this@activity_chat_active, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this@activity_chat_active, "ABC", Toast.LENGTH_SHORT).show()
+                val pickPhoto = Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(pickPhoto, 2)
+            } else {
+                Toast.makeText(this@activity_chat_active, "Vui lòng bật quyền vị trí!!!", Toast.LENGTH_SHORT).show()
+                ActivityCompat.requestPermissions(this@activity_chat_active, PERMISSIONS_STORAGE, 1)
+            }
+
+
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this@activity_chat_active, "Bạn đã không chấp nhận quyền :( ", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }// other 'case' lines to check for other
+        // permissions this app might request
     }
 
     fun createNetErrorDialog() {
@@ -627,12 +689,17 @@ class activity_chat_active : AppCompatActivity() {
                                                                                 checkType = "0"
                                                                             } else {
                                                                                 if (getMessage.idSender == userid) {
-                                                                                    checkType = "2"
+                                                                                    checkType = getMessage.type
                                                                                 } else {
-                                                                                    checkType = "1"
+                                                                                    if (getMessage.type == "2") {
+                                                                                        checkType = "1"
+                                                                                    } else {
+                                                                                        if (getMessage.type == "4")
+                                                                                            checkType = "3"
+                                                                                    }
                                                                                 }
                                                                             }
-                                                                            Log.d("ABCC", "VAO ELSE")
+                                                                            Log.d("ABCC", "check: " + checkType)
 
                                                                             //lấy định dạng ngày mặt định
                                                                             val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
@@ -647,7 +714,6 @@ class activity_chat_active : AppCompatActivity() {
                                                                                 (mRecyclerView!!.adapter as ChatDataAdapter).addItem(itemx)
                                                                             mRecyclerView!!.smoothScrollToPosition(mRecyclerView!!.adapter.itemCount - 1)
                                                                         } else {
-                                                                            currentPage--
                                                                             Log.d("TTT", "MESSAGE NULL")
                                                                         }
                                                                     }
@@ -687,9 +753,8 @@ class activity_chat_active : AppCompatActivity() {
                             Log.d("TTT", temp.idConver)
                             //kiểm tra đâu là cuộc trò chuyện mình
                             // load danh sach nguoi = mang
-                            var userList = ArrayList<String>(temp!!.listUsers)
-                            var avatar = ""
-                            avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
+
+                            var avatar = "http://1.gravatar.com/avatar/1771f433d2eed201bd40e6de0c3a74a7?s=1024&d=mm&r=g"
                             // load tin nhan
                             mDatabase!!.child("conversation").child(converID).child("messages")
                                     .addChildEventListener(object : ChildEventListener {
@@ -701,7 +766,6 @@ class activity_chat_active : AppCompatActivity() {
 
                                         override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
                                             if (p0!!.value != null) {
-
                                                 var getMessage: MessageDC = p0!!.getValue(MessageDC::class.java)!!
                                                 mDatabase!!.child("users").child(getMessage.idSender).child("avatar")
                                                         .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -714,12 +778,17 @@ class activity_chat_active : AppCompatActivity() {
                                                                     checkType = "0"
                                                                 } else {
                                                                     if (getMessage.idSender == userid) {
-                                                                        checkType = "2"
+                                                                        checkType = getMessage.type
                                                                     } else {
-                                                                        checkType = "1"
+                                                                        if (getMessage.type == "2") {
+                                                                            checkType = "1"
+                                                                        } else {
+                                                                            if (getMessage.type == "4")
+                                                                                checkType = "3"
+                                                                        }
                                                                     }
                                                                 }
-                                                                Log.d("ABCC", "VAO ELSE")
+                                                                Log.d("ABCC", "checkType: " + checkType)
 
                                                                 //lấy định dạng ngày mặt định
                                                                 val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
@@ -735,7 +804,6 @@ class activity_chat_active : AppCompatActivity() {
                                                             }
                                                         })
                                             } else {
-                                                currentPage--
                                                 Log.d("TTT", "MESSAGE NULL")
                                             }
                                         }
@@ -900,6 +968,154 @@ class activity_chat_active : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            Log.d("AAA", "requestCode = " + requestCode)
+            Log.d("AAA", "RESULT_OK = " + RESULT_OK)
+            Log.d("AAA", "resultCode = " + resultCode)
+
+            if (requestCode == 2 && resultCode == RESULT_OK) {
+                try {
+                    val selectedImage = data!!.getData()
+
+                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedImage)
+
+                    val baos = ByteArrayOutputStream()
+                    //giam dung luong truoc khi day len firebase :(
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
+                    DATA_UPDATE = baos.toByteArray()
+                    imgUri = selectedImage
+                    Toast.makeText(this@activity_chat_active, "Updating...", Toast.LENGTH_SHORT).show()
+                    Upload()
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+            }
+
+        } else {
+            Log.d("AAA", "DATA NULL")
+        }
+    }
+
+    fun Upload() {
+        if (DATA_UPDATE != null) {
+            var dialog = ProgressDialog(this@activity_chat_active)
+            dialog.setTitle("Uploading image")
+            dialog.show()
+            //resize
+            var ref: StorageReference = mStorageRef!!.child("IMAGESEND/" + System.currentTimeMillis() + "." + "JPEG")
+
+            ref.putBytes(DATA_UPDATE!!)
+                    .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
+                        override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
+                            dialog.dismiss()
+                            imgUploadLink = p0!!.getDownloadUrl().toString()
+                            Toast.makeText(this@activity_chat_active,
+                                    "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
+                            //set image test
+                            Log.d("BBB", imgUploadLink)
+                            sendLinkImage()
+                        }
+                    })
+                    .addOnFailureListener {
+                        dialog.dismiss()
+                        Toast.makeText(this@activity_chat_active,
+                                "Image Error", Toast.LENGTH_SHORT).show()
+
+                    }
+                    .addOnProgressListener(object : OnProgressListener<UploadTask.TaskSnapshot> {
+                        override fun onProgress(taskSnapshot: UploadTask.TaskSnapshot?) {
+                            var progress: Long = (100 * taskSnapshot!!.bytesTransferred) / taskSnapshot.totalByteCount
+                            dialog.setMessage("Uploading " + progress.toInt() + "%")
+                        }
+
+                    })
+        } else {
+            Toast.makeText(this@activity_chat_active,
+                    "Select Image Error", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun sendLinkImage()
+    {
+        if (group_check == false) {
+            if (isBlock == false) { //xem bi block chua
+//                        edit_text_name.isFocusable=false
+//                        btnSend.isEnabled = false
+//                        btnSendMore.isEnabled = false
+                if (checkExitsConver == true) {
+                    Log.d("ddd", "ton tai")
+                    //vao id cua conversation ma user do chat
+                    //xu ly them chat trong nay
+                    //them chat
+                    var myRefMess = mDatabase!!.child("conversation").child(currentConver).child("messages").push()
+                    Log.d("TTT", "THEM CHAT")
+                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                    val currentTime = df.format(Calendar.getInstance().time)
+                    var userSeen = arrayListOf<String>(userid)
+                    var mess = MessageDC(myRefMess.key, currentConver, userid, imgUploadLink, "4", currentTime, userSeen)
+                    myRefMess.setValue(mess)
+                    text!!.setText("")
+
+                } else {
+                    Log.d("ddd", "ko ton tai")
+                    var tempListUser = arrayListOf<String>(userid, userFR)
+                    var listMessage = arrayListOf<MessageDC>()
+                    var myRef = mDatabase!!.child("conversation").push()
+                    var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
+                    myRef.setValue(conver).addOnCompleteListener {
+                        mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                        mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                        //them chat
+                        //type=2 is me
+                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                        val currentTime = df.format(Calendar.getInstance().time)
+                        var userSeen = arrayListOf<String>(userid)
+                        var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                        var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, imgUploadLink, "4", currentTime, userSeen)
+                        myRefMess.setValue(mess)
+                        text!!.setText("")
+                    }
+                }
+            } else {
+//                        edit_text_name.isFocusable = true
+//                        btnSend.isEnabled = true
+//                        btnSendMore.isEnabled = true
+            }
+
+        } else { //la group
+            mDatabase!!.child("conversation").child(converID)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.value != null) {
+                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+
+                                //xu ly them chat trong nay
+                                //them chat
+                                var myRefMess = mDatabase!!.child("conversation").child(converID).child("messages").push()
+                                Log.d("TTT", "THEM CHAT")
+                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                val currentTime = df.format(Calendar.getInstance().time)
+                                var userSeen = arrayListOf<String>(userid)
+                                var mess = MessageDC(myRefMess.key, converID, userid, imgUploadLink, "4", currentTime, userSeen)
+                                myRefMess.setValue(mess)
+                                text!!.setText("")
+                                mDatabase!!.child("conversation").child(converID).removeEventListener(this)
+
+                            }
+                        }
+                    })
+        }
+    }
 }
 
 

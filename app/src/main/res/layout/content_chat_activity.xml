@@ -51,7 +51,7 @@
             android:layout_height="50dp"
             android:visibility="gone"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_adds"
+            app:srcCompat="@drawable/ic_image"
             android:layout_alignParentRight="true"
             android:background="@android:color/transparent"
             android:layout_centerVertical="true"/>

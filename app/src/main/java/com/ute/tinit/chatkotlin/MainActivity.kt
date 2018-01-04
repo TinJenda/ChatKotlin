@@ -308,7 +308,7 @@ class MainActivity : AppCompatActivity() {
                                     //ko ton tai cai nao cung tao moi tai day
                                     //tao cuoc tro chuyen moi tai day
 
-                                    var listMessage = arrayListOf<String>()
+                                    var listMessage = arrayListOf<MessageDC>()
                                     var myRef = mDatabase!!.child("conversation").push()
                                     var conver = ConversationDC(myRef.key, "", tempListUser, true, listMessage)
                                     myRef.setValue(conver).addOnCompleteListener {
@@ -316,15 +316,14 @@ class MainActivity : AppCompatActivity() {
                                             mDatabase!!.child("user_listconver").child(user).push().setValue(myRef.key)
                                         }
                                         mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                                        Log.d("TTT", "THEM CHAT DATANULL")
+                                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                        var userSeen = arrayListOf<String>(userid)
+                                        val currentTime = df.format(Calendar.getInstance().time)
+                                        var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                                        var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, userName + " đã tạo cuộc trò chuyện nhóm", "0", currentTime, userSeen)
+                                        myRefMess.setValue(mess)
                                     }
-
-                                    Log.d("TTT", "THEM CHAT DATANULL")
-                                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
-                                    var userSeen = arrayListOf<String>(userid)
-                                    val currentTime = df.format(Calendar.getInstance().time)
-                                    var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
-                                    var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, userName + " đã tạo cuộc trò chuyện nhóm", "0", currentTime, userSeen)
-                                    myRefMess.setValue(mess)
                                     //them chat
                                     dialog.dismiss()
                                     var intent = Intent(v.context, activity_chat_active::class.java)

@@ -72,7 +72,7 @@ class activity_login : AppCompatActivity() {
 
 
     private fun updateUI(user: FirebaseUser?) {
-        hideProgressDialog()
+        showProgressDialog()
         if (user != null) {
             Toast.makeText(this@activity_login, "Welcome...!", Toast.LENGTH_SHORT).show()
             btn_login.setVisibility(View.GONE)
@@ -84,6 +84,7 @@ class activity_login : AppCompatActivity() {
 //            tv_user_id.setText(null)
 //            login_succes.visibility=View.GONE
             btn_login.setVisibility(View.VISIBLE)
+            hideProgressDialog()
         }
     }
     fun haveNetworkConnection(): Boolean {
