@@ -22,6 +22,16 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_rounded"
             android:layout_centerVertical="true">
+            <ImageButton
+                android:id="@+id/btnEmoji"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:visibility="visible"
+                android:gravity="center"
+                android:src="@drawable/ic_emoji"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"/>
             <EditText
                 android:id="@+id/et_message"
                 android:layout_width="match_parent"
@@ -30,6 +40,7 @@
                 android:hint="@string/string_nhap_tin_nhan"
                 android:textSize="@dimen/h3"
                 android:maxLines="3"
+                android:layout_toRightOf="@id/btnEmoji"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorDefaultText"
                 android:background="@android:color/transparent"

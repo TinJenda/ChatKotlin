@@ -2,6 +2,7 @@ package com.ute.tinit.chatkotlin.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -26,11 +27,13 @@ import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -52,8 +55,11 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ute.tinit.chatkotlin.Adapter.BlurBuilder
+import com.ute.tinit.chatkotlin.Adapter.CustomAdapter
 import com.ute.tinit.chatkotlin.DataClass.*
 import io.vrinda.kotlinpermissions.PermissionCallBack
+import kotlinx.android.synthetic.main.bottom_sheet_chat.*
+import kotlinx.android.synthetic.main.bottom_sheet_chat.view.*
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -79,7 +85,7 @@ class activity_chat_active : AppCompatActivity() {
     var imgUploadLink: String = ""
     var imgUri: Uri? = null
     private val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
+    var logos = arrayListOf<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_activity_chat_active)
@@ -135,12 +141,57 @@ class activity_chat_active : AppCompatActivity() {
         checkExitsConversation()
         checkBlock()
         btnSend()
+        btnEmoji()
         loadDATA()
         textEmply()
         profileFriend()
+        loadEmoji()
     }
 
+    fun loadEmoji()
+    {
+        mDatabase!!.child("emoji")
+                .addValueEventListener(
+                        object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError?) {
+                            }
 
+                            override fun onDataChange(p0: DataSnapshot?) {
+                                if (p0!!.getValue() != null) {
+                                    logos.clear()
+                                   for(snap in p0.children)
+                                   {
+                                       logos.add(snap.value.toString())
+                                   }
+                                    mDatabase!!.child("emoji").removeEventListener(this)
+                                }
+                            }
+
+                        })
+    }
+    private fun eventClickEmoji() {
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_chat, null)
+        val mBottomSheetDialog = Dialog(this@activity_chat_active, R.style.JendaDialogSheet)
+        mBottomSheetDialog.setContentView(view)
+        mBottomSheetDialog.setCancelable(true)
+        mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM)
+        mBottomSheetDialog.show()
+        //check first
+        //check is friend
+        var customAdapter = CustomAdapter(getApplicationContext(), logos)
+        view.gridViewEmoji!!.setAdapter(customAdapter)
+        view.gridViewEmoji.setOnItemClickListener { parent, view, position, id ->
+            sendEmoji(logos[position])
+            Log.d("AAA","select "+position)
+        }
+    }
+    fun btnEmoji()
+    {
+        btnEmoji.setOnClickListener {
+            eventClickEmoji()
+        }
+    }
     fun checkExitsConversation() {
         mDatabase!!.child("user_listconver").child(userid)
                 .addValueEventListener(object : ValueEventListener {
@@ -315,6 +366,7 @@ class activity_chat_active : AppCompatActivity() {
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
+
 
     fun profileFriend() {
 //        tv_nameuser.setOnClickListener {
@@ -591,41 +643,6 @@ class activity_chat_active : AppCompatActivity() {
         }
     }
 
-//  private fun mCheckInforInServer(child: String) {
-//        FirebaseQuery().mReadDataOnce(child, object : OnGetDataListener {
-//            override fun onStart() {
-//                //DO SOME THING WHEN START GET DATA HERE
-//            }
-//
-//            override fun onSuccess(data: DataSnapshot) {
-//                //DO SOME THING WHEN GET DATA SUCCESS HERE
-//            }
-//
-//            override fun onFailed(databaseError: DatabaseError) {
-//                //DO SOME THING WHEN GET DATA FAILED HERE
-//            }
-//        })
-//
-//    }
-
-    //    override fun onPause() {
-//        Log.d("chatactive","OnPause")
-//        if (seenListener != null && mDatabase!=null) {
-//            Log.d("chatactive","OnPause seenListener")
-//            mDatabase!!.child("user_listconver").child(userid).removeEventListener(seenListener);
-//        }
-//        super.onPause()
-//    }
-//
-//    override fun onStop() {
-//        Log.d("chatactive","onStop")
-//        if (seenListener != null && mDatabase!=null) {
-//            Log.d("chatactive","onStop seenListener")
-//            mDatabase!!.child("user_listconver").child(userid).removeEventListener(seenListener);
-//        }
-//        super.onStop()
-//
-//    }
     fun setData() {
         //vào ds cuộc trò chuyện người mình
         mDatabase!!.child("user_listconver").child(userid)
@@ -694,8 +711,12 @@ class activity_chat_active : AppCompatActivity() {
                                                                                     if (getMessage.type == "2") {
                                                                                         checkType = "1"
                                                                                     } else {
-                                                                                        if (getMessage.type == "4")
+                                                                                        if (getMessage.type == "4") {
                                                                                             checkType = "3"
+                                                                                        }else {
+                                                                                            if (getMessage.type == "5")
+                                                                                                checkType = "6"
+                                                                                        }
                                                                                     }
                                                                                 }
                                                                             }
@@ -783,8 +804,13 @@ class activity_chat_active : AppCompatActivity() {
                                                                         if (getMessage.type == "2") {
                                                                             checkType = "1"
                                                                         } else {
-                                                                            if (getMessage.type == "4")
+                                                                            if (getMessage.type == "4") {
                                                                                 checkType = "3"
+                                                                            } else {
+                                                                                if (getMessage.type == "5") {
+                                                                                    checkType = "6"
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -1107,6 +1133,81 @@ class activity_chat_active : AppCompatActivity() {
                                 val currentTime = df.format(Calendar.getInstance().time)
                                 var userSeen = arrayListOf<String>(userid)
                                 var mess = MessageDC(myRefMess.key, converID, userid, imgUploadLink, "4", currentTime, userSeen)
+                                myRefMess.setValue(mess)
+                                text!!.setText("")
+                                mDatabase!!.child("conversation").child(converID).removeEventListener(this)
+
+                            }
+                        }
+                    })
+        }
+    }
+
+    fun sendEmoji(emoji:String)
+    {
+        if (group_check == false) {
+            if (isBlock == false) { //xem bi block chua
+//                        edit_text_name.isFocusable=false
+//                        btnSend.isEnabled = false
+//                        btnSendMore.isEnabled = false
+                if (checkExitsConver == true) {
+                    Log.d("ddd", "ton tai")
+                    //vao id cua conversation ma user do chat
+                    //xu ly them chat trong nay
+                    //them chat
+                    var myRefMess = mDatabase!!.child("conversation").child(currentConver).child("messages").push()
+                    Log.d("TTT", "THEM CHAT")
+                    val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                    val currentTime = df.format(Calendar.getInstance().time)
+                    var userSeen = arrayListOf<String>(userid)
+                    var mess = MessageDC(myRefMess.key, currentConver, userid, emoji, "5", currentTime, userSeen)
+                    myRefMess.setValue(mess)
+                    text!!.setText("")
+
+                } else {
+                    Log.d("ddd", "ko ton tai")
+                    var tempListUser = arrayListOf<String>(userid, userFR)
+                    var listMessage = arrayListOf<MessageDC>()
+                    var myRef = mDatabase!!.child("conversation").push()
+                    var conver = ConversationDC(myRef.key, "", tempListUser, false, listMessage)
+                    myRef.setValue(conver).addOnCompleteListener {
+                        mDatabase!!.child("user_listconver").child(userid).push().setValue(myRef.key)
+                        mDatabase!!.child("user_listconver").child(userFR).push().setValue(myRef.key)
+                        //them chat
+                        //type=2 is me
+                        val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                        val currentTime = df.format(Calendar.getInstance().time)
+                        var userSeen = arrayListOf<String>(userid)
+                        var myRefMess = mDatabase!!.child("conversation").child(myRef.key).child("messages").push()
+                        var mess = MessageDC(myRefMess.key, "" + myRef.key, userid, emoji, "5", currentTime, userSeen)
+                        myRefMess.setValue(mess)
+                        text!!.setText("")
+                    }
+                }
+            } else {
+//                        edit_text_name.isFocusable = true
+//                        btnSend.isEnabled = true
+//                        btnSendMore.isEnabled = true
+            }
+
+        } else { //la group
+            mDatabase!!.child("conversation").child(converID)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot?) {
+                            if (p0!!.value != null) {
+                                var temp: ConversationDC = p0!!.getValue(ConversationDC::class.java)!!
+
+                                //xu ly them chat trong nay
+                                //them chat
+                                var myRefMess = mDatabase!!.child("conversation").child(converID).child("messages").push()
+                                Log.d("TTT", "THEM CHAT")
+                                val df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss")
+                                val currentTime = df.format(Calendar.getInstance().time)
+                                var userSeen = arrayListOf<String>(userid)
+                                var mess = MessageDC(myRefMess.key, converID, userid, emoji, "5", currentTime, userSeen)
                                 myRefMess.setValue(mess)
                                 text!!.setText("")
                                 mDatabase!!.child("conversation").child(converID).removeEventListener(this)

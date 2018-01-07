@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="@dimen/space10"
+    android:layout_marginLeft="@dimen/spaceLR">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true">
+        <TextView
+            android:id="@+id/tv_time_emoji_me"
+            android:layout_marginRight="@dimen/space10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/space5"
+            android:drawableRight="@drawable/ic_clock"
+            android:text="5:04pm"
+            android:textColor="@color/colorDefaultText"
+            android:textSize="@dimen/h4"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/emoji_chat_me"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="right"
+                    android:scaleType="centerCrop"/>
+            </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -241,7 +241,12 @@ class fragment_conversation : Fragment() {
                                                                                                         }
                                                                                                         else
                                                                                                         {
-                                                                                                            lastMess=""+tempMess.content
+                                                                                                            if(tempMess.type=="5"||tempMess.type=="6") {
+                                                                                                                lastMess="[EMOJI]"
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                lastMess = "" + tempMess.content
+                                                                                                            }
                                                                                                         }
                                                                                                         var chat: ChatDC = ChatDC(snapConver!!.value.toString(), tempUser.name, lastMess, tempMess.date, tempUser.avatar, isonline, seen)
                                                                                                         // kiem tra contact da co trong list
@@ -284,7 +289,17 @@ class fragment_conversation : Fragment() {
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        lastMess_gr=""+tempMess.content
+                                                                                        if(tempMess.type=="5"||tempMess.type=="6") {
+                                                                                            lastMess_gr="[EMOJI]"
+                                                                                        }
+                                                                                        else {
+                                                                                            if(tempMess.type=="5"||tempMess.type=="6") {
+                                                                                                lastMess_gr="[EMOJI]"
+                                                                                            }
+                                                                                            else {
+                                                                                                lastMess_gr = "" + tempMess.content
+                                                                                            }
+                                                                                        }
                                                                                     }
                                                                                     tempContent = tempMess.content!!
                                                                                     var isonline: Boolean = false
