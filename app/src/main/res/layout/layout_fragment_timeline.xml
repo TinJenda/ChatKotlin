@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Tính năng newfeed\nsẽ được cập nhập sau xx day"
+        android:text="Tính năng này nhóm chưa hoàn thành \n được theo dự tính"
         android:textSize="20dp"
         tools:layout_editor_absoluteX="59dp"
         tools:layout_editor_absoluteY="25dp" />

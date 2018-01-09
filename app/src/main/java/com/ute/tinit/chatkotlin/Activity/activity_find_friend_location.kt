@@ -107,6 +107,7 @@ class activity_find_friend_location : PermissionsActivity(), LocationListener,
     }
 
     fun updateLocation(longitude: String, latitude: String) {
+        Log.d("BBB", "Location update .......................")
         mDatabase!!.child("users").child(userid).child("latitude").setValue(latitude)
         mDatabase!!.child("users").child(userid).child("longitude").setValue(longitude)
     }
@@ -121,8 +122,8 @@ class activity_find_friend_location : PermissionsActivity(), LocationListener,
             locationA.longitude = mCurrentLocation!!.getLongitude()
             updateLocation(mCurrentLocation!!.getLongitude().toString(), mCurrentLocation!!.getLatitude().toString())
             Log.d("BBB", "At Time: " + mLastUpdateTime + "\n" +
-                    "Latitude: " + lat + "\n" +
-                    "Longitude: " + lng + "\n" +
+                    "Latitude: " + mCurrentLocation!!.getLatitude() + "\n" +
+                    "Longitude: " + mCurrentLocation!!.getLongitude() + "\n" +
                     "Accuracy: " + mCurrentLocation!!.getAccuracy() + "\n" +
                     "Provider: " + mCurrentLocation!!.getProvider())
         } else {
@@ -155,6 +156,7 @@ class activity_find_friend_location : PermissionsActivity(), LocationListener,
 
     override fun onPause() {
         super.onPause()
+        Log.d("BBB", "pause .......................")
         stopLocationUpdates()
     }
 
@@ -343,9 +345,11 @@ class activity_find_friend_location : PermissionsActivity(), LocationListener,
                                 var formatNumber = DecimalFormat()
                                 formatNumber.minimumFractionDigits = 0
                                 formatNumber.maximumFractionDigits = 0
+                                var khoangcach=distanceBetween2Points(locationA.latitude,locationA.longitude,locationFriend.latitude,locationFriend.longitude)
                                 var distance = (formatNumber.format(locationA!!.distanceTo(locationFriend))) + "m"
+                                Log.d("AAA","= "+khoangcach)
                                 Log.d("AAA", " =" + (formatNumber.format(locationA!!.distanceTo(locationFriend))))
-                                var items: FindFriendLocationDC = FindFriendLocationDC(tempuser.userID, tempuser.name, tempuser.avatar, age, tempuser.sex, distance)
+                                var items: FindFriendLocationDC = FindFriendLocationDC(tempuser.userID, tempuser.name, tempuser.avatar, age, tempuser.sex, ""+khoangcach)
 
                                 if ((rv_listFindFriend!!.adapter as FindFriendLocationAdapter).isContactAdded(items))
                                     (rv_listFindFriend!!.adapter as FindFriendLocationAdapter).notifyItemDataChange(items)
@@ -358,6 +362,27 @@ class activity_find_friend_location : PermissionsActivity(), LocationListener,
                         }
                     }
 
+                    fun distanceBetween2Points2(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
+                        val earthRadius = 6371.0 //kilometers
+                        val dLat = Math.toRadians((lat2 - lat1).toDouble())
+                        val dLng = Math.toRadians((lng2 - lng1).toDouble())
+                        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1.toDouble())) * Math.cos(Math.toRadians(lat2.toDouble())) *
+                                Math.sin(dLng / 2) * Math.sin(dLng / 2)
+                        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+                        return (earthRadius * c).toDouble()
+                    }
+                    fun distanceBetween2Points(la1: Double, lo1: Double,
+                                               la2: Double, lo2: Double): Double {
+                        val dLat = (la2 - la1) * (Math.PI / 180)
+                        val dLon = (lo2 - lo1) * (Math.PI / 180)
+                        var R = 6371
+                        val la1ToRad = la1 * (Math.PI / 180)
+                        val la2ToRad = la2 * (Math.PI / 180)
+                        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + (Math.cos(la1ToRad)
+                                * Math.cos(la2ToRad) * Math.sin(dLon / 2) * Math.sin(dLon / 2))
+                        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+                        return R * c
+                    }
                     override fun onChildRemoved(p0: DataSnapshot?) {
                         (rv_listFindFriend!!.adapter as FindFriendLocationAdapter).removeItem(p0!!.key)
                     }

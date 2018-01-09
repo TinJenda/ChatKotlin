@@ -334,9 +334,14 @@ class activity_chat_active : AppCompatActivity() {
                                     isBlock = true
                                     if (isBlock == true) {
                                         Log.d("ddd", "dunggg")
+                                        btnSend.isEnabled=false
+                                        btnSendMore.isEnabled=false
+                                        btnEmoji.isEnabled=false
                                     } else {
                                         Log.d("ddd", "saiiii")
-
+                                        btnSend.isEnabled=true
+                                        btnSendMore.isEnabled=true
+                                        btnEmoji.isEnabled=true
                                     }
 
                                 }
@@ -558,7 +563,6 @@ class activity_chat_active : AppCompatActivity() {
 
             if (ActivityCompat.checkSelfPermission(this@activity_chat_active, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this@activity_chat_active, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this@activity_chat_active, "ABC", Toast.LENGTH_SHORT).show()
                 val pickPhoto = Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(pickPhoto, 2)
@@ -1042,8 +1046,6 @@ class activity_chat_active : AppCompatActivity() {
                         override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
                             dialog.dismiss()
                             imgUploadLink = p0!!.getDownloadUrl().toString()
-                            Toast.makeText(this@activity_chat_active,
-                                    "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
                             //set image test
                             Log.d("BBB", imgUploadLink)
                             sendLinkImage()

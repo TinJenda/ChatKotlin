@@ -49,7 +49,8 @@
         <activity android:name=".Activity.activity_find_friend" />
         <activity android:name=".Activity.activity_friend_profile" />
         <activity android:name=".Activity.activity_list_friend_request" />
-        <activity android:name=".Activity.activity_list_block"></activity>
+        <activity android:name=".Activity.activity_list_block" />
+        <activity android:name=".Activity.activity_friend_info"></activity>
     </application>
 
 </manifest>

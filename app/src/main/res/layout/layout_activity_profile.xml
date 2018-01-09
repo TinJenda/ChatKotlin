@@ -84,7 +84,7 @@
                         android:gravity="left"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
-                        android:text="\u02BD\u02BDCâu giới thiệu bản thân ghi gì vào cho trất\u02BC\u02BC"
+                        android:text="\u02BD\u02BDỨng dụng sẽ cập nhập vào thời gian tới\u02BC\u02BC"
                         android:textColor="@color/colorDefaultBackground"
                         android:textSize="@dimen/text_size_default"
                         android:textStyle="italic" />
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Tính năng sẽ không bao giờ được cập nhập"
+                    android:text="Tính năng sẽ được cập nhập ở phiên bản tới"
                     android:textAllCaps="false"
                     android:textSize="30dp" />
             </LinearLayout>

@@ -112,15 +112,18 @@ class ConversationAdapter(private val mContext: Context, private val mArrayList:
             val btnXoaTinNhan = dialog.findViewById<Button>(R.id.btnXoaTinNhan)
             val btnThongTin = dialog.findViewById<Button>(R.id.btnThongTin)
             val tv_user_name_chat = dialog.findViewById<TextView>(R.id.tv_user_name_chat)
-            tv_user_name_chat.setText("SETTEXTTAIDAY")
+            tv_user_name_chat.setText("CHỌN")
             btnXoaTinNhan.setOnClickListener {
-                Toast.makeText(v.context, "Hello xoa tin nhan", Toast.LENGTH_SHORT).show()
+
+
+                mDatabase!!.child("conversation").child(mArrayList[position].idConversation!!).removeValue { databaseError, databaseReference ->
+                    mArrayList.removeAt(position)
+                    notifyDataSetChanged()
+                    Toast.makeText(v.context, "Đã xóa cuộc hội thoại", Toast.LENGTH_SHORT).show()
+                }
                 dialog.dismiss()
             }
-            btnThongTin.setOnClickListener {
-                Toast.makeText(v.context, "Hello thong tin ", Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            }
+
             dialog.show()
             return true
         }

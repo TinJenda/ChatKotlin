@@ -264,8 +264,6 @@ class activity_profile_firstlogin : PermissionsActivity() {
                         override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
                             dialog.dismiss()
                             imgUploadLink = p0!!.getDownloadUrl().toString()
-                            Toast.makeText(this@activity_profile_firstlogin,
-                                    "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
                             //set image test
                             IMAGE_URL = imgUploadLink
                             val target = object : Target {

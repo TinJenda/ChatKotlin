@@ -473,7 +473,9 @@ class activity_friend_profile : AppCompatActivity() {
             mBottomSheetDialog.dismiss()
         }
         view.btnInfomation.setOnClickListener {
-            Toast.makeText(this@activity_friend_profile, "Clicked btnInfomation", Toast.LENGTH_SHORT).show()
+            var intent=Intent(this@activity_friend_profile,activity_friend_info::class.java)
+            intent.putExtra("userfriend",userFR)
+            startActivity(intent)
             mBottomSheetDialog.dismiss()
         }
     }

@@ -170,7 +170,6 @@
                 android:text="Điện thoại:     "
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/text_size_default" />
-
             <TextView
                 android:id="@+id/tv_sdt"
                 android:layout_width="wrap_content"
@@ -182,13 +181,11 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@color/colorLine" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center|left"
             android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -206,16 +203,4 @@
         </LinearLayout>
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/btn_doithongtin"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/custom_button_doithongtin"
-        android:gravity="center"
-        android:text="ĐỔI THÔNG TIN"
-        android:textColor="@color/colorYellow"
-        android:textSize="18dp" />
 </LinearLayout>
