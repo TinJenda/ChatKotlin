@@ -59,36 +59,6 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@color/colorLine" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/mainColor"
-        android:text="Tài khoản"/>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLineeee" />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLine" />
-    <LinearLayout
-        android:id="@+id/btn_linear_dangxuat"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@drawable/bg_button_1"
-        android:layout_height="@dimen/size_toolbar">
-        <TextView
-            android:layout_width="match_parent"
-            android:gravity="center|left"
-            android:layout_height="@dimen/size_toolbar"
-            android:textSize="@dimen/text_size_default"
-            android:text="@string/string_dang_xuat"/>
-    </LinearLayout>
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"

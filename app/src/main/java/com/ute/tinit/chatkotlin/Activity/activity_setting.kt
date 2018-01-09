@@ -64,6 +64,15 @@ class activity_setting : AppCompatActivity() {
             alertDialog.show()
             // hiển thị dialog
         }
+        btn_cap_nhap_anh_dai_dien.setOnClickListener {
+            var intent = Intent(this@activity_setting, activity_profile_more_editprofile::class.java)
+            startActivity(intent)
+        }
+        btn_liner_thongtin.setOnClickListener {
+            var intent2 = Intent(this@activity_setting, activity_profile_more_myprofile::class.java)
+            intent2.putExtra("userfriend",userid)
+            startActivity(intent2)
+        }
     }
 
     override fun onBackPressed() {

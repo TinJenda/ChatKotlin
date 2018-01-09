@@ -276,9 +276,7 @@ class activity_profile_more_editprofile : PermissionsActivity() {
                         override fun onSuccess(p0: UploadTask.TaskSnapshot?) {
                             dialog.dismiss()
                             imgUploadLink = p0!!.getDownloadUrl().toString()
-                            Toast.makeText(this@activity_profile_more_editprofile,
-                                    "Image Uploaded -> " + imgUploadLink, Toast.LENGTH_SHORT).show()
-                            //set image test
+
                             IMAGE_URL = imgUploadLink
                             val target = object : Target {
                                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {

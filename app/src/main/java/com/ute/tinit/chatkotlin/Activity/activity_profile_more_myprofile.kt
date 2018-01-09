@@ -75,6 +75,7 @@ class activity_profile_more_myprofile : PermissionsActivity() {
     fun doiThongTin() {
         btn_doithongtin.setOnClickListener {
             var intent = Intent(this@activity_profile_more_myprofile, activity_profile_more_editprofile::class.java)
+            intent.putExtra("userfriend",userid)
             startActivity(intent)
         }
     }
